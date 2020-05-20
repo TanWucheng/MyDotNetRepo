@@ -96,10 +96,10 @@ namespace ValidatePasswordConsoleDemo
             {
                 if (arr[i] == arr[i + 1] && arr[i + 1] == arr[i + 2])
                 {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -438,46 +438,46 @@ namespace ValidatePasswordConsoleDemo
         {
             if (string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentNullException("密码为空(password is empty)");
+                throw new PasswordValidationException("密码为空(password is empty)");
             }
             if (password.Length < 8)
             {
-                throw new ArgumentException("At least 8 bits in length(长度至少8位)");
+                throw new PasswordValidationException("At least 8 bits in length(长度至少8位)");
             }
 
             var passwordTypes = GetPasswordTypes(password);
             if ((from t in passwordTypes where t == CharacterType.Number select t).Count() < 1)
             {
-                throw new Exception("Password must contain numbers(密码必须含有数字)");
+                throw new PasswordValidationException("Password must contain numbers(密码必须含有数字)");
             }
             if ((from t in passwordTypes where t == CharacterType.LowercaseLetter select t).Count() < 1)
             {
-                throw new Exception("Password must contain lowercase letters(密码必须含有小写字母)");
+                throw new PasswordValidationException("Password must contain lowercase letters(密码必须含有小写字母)");
             }
             if ((from t in passwordTypes where t == CharacterType.UppercaseLetter select t).Count() < 1)
             {
-                throw new Exception("Password must contain uppercase letters(密码必须含有大写字母)");
+                throw new PasswordValidationException("Password must contain uppercase letters(密码必须含有大写字母)");
             }
             if ((from t in passwordTypes where t == CharacterType.OtherChar select t).Count() < 1)
             {
-                throw new Exception("Password must contain special characters(密码必须含有特殊字符)");
+                throw new PasswordValidationException("Password must contain special characters(密码必须含有特殊字符)");
             }
 
             var isPwdContinuous = CheckIsCharContinuous(password, 3);
             if (isPwdContinuous)
             {
-                throw new Exception("Cannot have three consecutive numbers or letters, for example 123 ABC(不能有三位连续的数字或者字母，例如123 abc)");
+                throw new PasswordValidationException("Cannot have three consecutive numbers or letters, for example 123 ABC(不能有三位连续的数字或者字母，例如123 abc)");
             }
 
             var isPwdRepetitive = CheckIsPasswordRepetitive(password);
             if (isPwdRepetitive)
             {
-                throw new Exception("Cannot have more than three consecutive alphanumeric characters, such as AAA 111(不能有连续三次以上重复的数字字母字符，例如AAA 111)");
+                throw new PasswordValidationException("Cannot have more than three consecutive alphanumeric characters, such as AAA 111(不能有连续三次以上重复的数字字母字符，例如AAA 111)");
             }
 
             if (SimplePasswordDic.Contains(password))
             {
-                throw new Exception("Can't have common words(不能有常用的单词)");
+                throw new PasswordValidationException("Can't have common words(不能有常用的单词)");
             }
 
             var userNameLength = userName.Length;
@@ -490,14 +490,14 @@ namespace ValidatePasswordConsoleDemo
             {
                 if (password.ToLower().IndexOf(item) != -1)
                 {
-                    throw new Exception("You cannot use content that contains bytes of your name as part of your password(不能使用包含你名字部分字节的内容作为密码的组成部分)");
+                    throw new PasswordValidationException("You cannot use content that contains bytes of your name as part of your password(不能使用包含你名字部分字节的内容作为密码的组成部分)");
                 }
             }
 
             var newPassword = password.Replace("0", "o").Replace("1", "l").Replace("$", "s").Replace("@", "a");
             if (SimplePasswordDic.Contains(newPassword))
             {
-                throw new Exception("Can't have common words(不能有常用的单词)");
+                throw new PasswordValidationException("Can't have common words(不能有常用的单词)");
             }
 
             return true;
