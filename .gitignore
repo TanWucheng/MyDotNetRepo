@@ -4,3 +4,7 @@ MyTimingWebAppDemo/.vs
 MyTimingWebAppDemo/log
 MyTimingWebAppDemo/bin/*
 MyTimingWebAppDemo/obj/*
+
+ValidatePasswordConsoleDemo/.vscode
+ValidatePasswordConsoleDemo/bin/*
+ValidatePasswordConsoleDemo/obj/*
