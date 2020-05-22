@@ -48,11 +48,13 @@ namespace ValidatePasswordConsoleDemo
         {
             try
             {
-                PrintLn("请输入用户名,回车结束:");
+                PrintLn("请输入用户名,回车结束,输入exit退出过程:");
                 var userName = Console.ReadLine();
-            InputPassword:
-                PrintLn("请输入要验证的密码,回车结束:");
+                if (string.Equals("exit", userName)) return;
+                InputPassword:
+                PrintLn("请输入要验证的密码,回车结束,输入exit退出过程:");
                 var password = Console.ReadLine();
+                if (string.Equals("exit", userName)) return;
                 var result = DoValidation(userName, password);
                 if (result)
                 {
