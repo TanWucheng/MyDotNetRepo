@@ -5,7 +5,7 @@ using Quartz.Spi;
 namespace MyTimingWebAppDemo.Quartz
 {
     ///<summary>
-    ///IocQuartzJobFactory:实现在Timer触发的时候注入生成对应的 Job 组件
+    /// IocQuartzJobFactory:实现在Timer触发的时候注入生成对应的 Job 组件
     ///</summary>
     public class IocQuartzJobFactory : IJobFactory
     {
