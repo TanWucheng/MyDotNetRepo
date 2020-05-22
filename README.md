@@ -4,19 +4,19 @@
 
 **克隆**
 
-```shell
+```bash
 git clone https://github.com/TanWucheng/DotNetCoreDemos.git
 ```
 
 **Restore**
 
-```shell
+```bash
 dotnet restore
 ```
 
 **Build\&Run**
 
-```shell
+```bash
 dotnet build && dotnet run
 ```
 

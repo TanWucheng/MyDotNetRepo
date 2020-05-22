@@ -26,6 +26,9 @@ namespace ValidatePasswordConsoleDemo
             goto Recycle;
         }
 
+        /// <summary>
+        /// 输入密码按照规则进行校验
+        /// </summary>
         private static void ValidatePassword()
         {
             try
