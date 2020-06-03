@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ValidatePasswordConsoleDemo
 {
     class Program
     {
         static void Main(string[] args)
+        {
+            PasswordValidation();
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
+        }
+
+        private static void PasswordValidation()
         {
         Startup:
             PrintLn("功能选择:\n1) 校验密码\n2) 校验密码强度\nexit)退出 \n输入数字选择功能，回车结束");
@@ -23,8 +33,6 @@ namespace ValidatePasswordConsoleDemo
                     PrintLn("请输入1或2选择功能，输入exit退出");
                     goto Startup;
             }
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey(true);
         }
 
         /// <summary>
