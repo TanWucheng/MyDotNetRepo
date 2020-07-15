@@ -9,16 +9,16 @@ namespace MyTimingWebAppDemo.Models
         /// 属性名称
         /// </summary>
         /// <value></value>
-        public string N { get; set; }
+        public string AttrName { get; set; }
         /// <summary>
         /// 中文描述
         /// </summary>
         /// <value></value>
-        public string T { get; set; }
+        public string AttrDesc { get; set; }
         /// <summary>
         /// 属性类型
         /// </summary>
         /// <value></value>
-        public string P { get; set; }
+        public string DataType { get; set; }
     }
 }

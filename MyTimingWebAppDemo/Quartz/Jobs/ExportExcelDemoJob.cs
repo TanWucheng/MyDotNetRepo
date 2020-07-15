@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.Extensions.Options;
-using MyTimingWebAppDemo.DataAccessLayer.Services;
 using MyTimingWebAppDemo.Models;
-using MyTimingWebAppDemo.Utils;
+using MyTimingWebAppDemo.Services;
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Style;
@@ -20,16 +18,14 @@ namespace MyTimingWebAppDemo.Quartz.Jobs
     {
         private readonly ILog _log;
         private readonly ExportFileAddress _exportFileAddress;
-        private readonly IPersonService _service;
 
         private static readonly string[] MonthNames = { "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月" };
         private static readonly string[] CompanyNames = { "Microsoft", "IBM", "Oracle", "Google", "Yahoo", "HP" };
 
-        public ExportExcelDemoJob(IOptions<ExportFileAddress> options, IPersonService service)
+        public ExportExcelDemoJob(IOptions<ExportFileAddress> options)
         {
             _log = LogManager.GetLogger(Startup.LoggerRepository.Name, typeof(ExportExcelDemoJob));
             _exportFileAddress = options.Value;
-            _service = service;
         }
 
         public Task Execute(IJobExecutionContext context)

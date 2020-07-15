@@ -71,7 +71,7 @@ namespace MyTimingWebAppDemo.Utils
         private static void FillRows(IEnumerable<T> list, ExcelWorksheet worksheet, List<RowTitleInfo> rowHeads)
         {
             var rowIndex = 2;
-            var propertyList = (from row in rowHeads select row.N).ToList();
+            var propertyList = (from row in rowHeads select row.AttrName).ToList();
             var entities = list as T[] ?? list.ToArray();
             var keyTypeDic = ReflectPropertyUtil<T>.ReflectGetPropertyKeyTypePairs(entities.FirstOrDefault(), propertyList);
 
@@ -112,7 +112,7 @@ namespace MyTimingWebAppDemo.Utils
             {
                 for (var i = 0; i < rowHeads.Count; i++)
                 {
-                    worksheet.Cells[1, i + 1].Value = rowHeads[i].T;
+                    worksheet.Cells[1, i + 1].Value = rowHeads[i].AttrDesc;
                 }
                 return true;
             }
@@ -158,7 +158,7 @@ namespace MyTimingWebAppDemo.Utils
         {
             for (var cellIndex = 0; cellIndex < rowHeads.Count; cellIndex++)
             {
-                if (keyValueDic.TryGetValue(rowHeads[cellIndex].N, out var obj) && keyTypeDic.TryGetValue(rowHeads[cellIndex].N, out var propertyType))
+                if (keyValueDic.TryGetValue(rowHeads[cellIndex].AttrName, out var obj) && keyTypeDic.TryGetValue(rowHeads[cellIndex].AttrName, out var propertyType))
                 {
                     var value = obj?.ToString();
                     switch (propertyType)

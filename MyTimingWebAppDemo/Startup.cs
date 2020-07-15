@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyTimingWebAppDemo.DataAccessLayer.Repositories;
-using MyTimingWebAppDemo.DataAccessLayer.Services;
 using MyTimingWebAppDemo.Filters;
 using MyTimingWebAppDemo.Models;
 using MyTimingWebAppDemo.Quartz;
 using MyTimingWebAppDemo.Quartz.Jobs;
+using MyTimingWebAppDemo.Services;
 
 namespace MyTimingWebAppDemo
 {

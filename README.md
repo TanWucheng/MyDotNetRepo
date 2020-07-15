@@ -1,4 +1,4 @@
-# DotNetCoreDemos
+# 个人.NET Core练习示例仓库
 
 欢迎下载[我的.Net core示例](https://github.com/TanWucheng/DotNetCoreDemos)仓库
 

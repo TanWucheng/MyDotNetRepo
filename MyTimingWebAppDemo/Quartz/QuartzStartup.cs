@@ -45,31 +45,31 @@ namespace MyTimingWebAppDemo.Quartz
             //_scheduler.ScheduleJob(job1, trigger1).Wait();
             //_scheduler.TriggerJob(new JobKey("HelloJob"));
 
-            //var job2 = JobBuilder.Create<ExportExcelDemoJob>()
-            //   .WithIdentity("ExportExcelDemoJob")
-            //   .Build();
-            //var trigger2 = TriggerBuilder.Create()
-            //   .WithIdentity("ExportExcelDemoJobCron")
-            //   .StartNow()
-            //   .WithSimpleSchedule(x => x
-            //       .WithIntervalInSeconds(3600)
-            //       .RepeatForever())
-            //   .Build();
-            //_scheduler.ScheduleJob(job2, trigger2).Wait();
-            //_scheduler.TriggerJob(new JobKey("ExportExcelDemoJob"));
-
-            var job3 = JobBuilder.Create<ExportExcelFromDbDemoJob>()
-               .WithIdentity("ExportExcelFromDbDemoJob")
-               .Build();
-            var trigger3 = TriggerBuilder.Create()
-              .WithIdentity("ExportExcelFromDbDemoJobCron")
+            var job2 = JobBuilder.Create<ExportExcelDemoJob>()
+              .WithIdentity("ExportExcelDemoJob")
+              .Build();
+            var trigger2 = TriggerBuilder.Create()
+              .WithIdentity("ExportExcelDemoJobCron")
               .StartNow()
               .WithSimpleSchedule(x => x
                   .WithIntervalInSeconds(3600)
                   .RepeatForever())
               .Build();
-            _scheduler.ScheduleJob(job3, trigger3).Wait();
-            _scheduler.TriggerJob(new JobKey("ExportExcelFromDbDemoJob"));
+            _scheduler.ScheduleJob(job2, trigger2).Wait();
+            _scheduler.TriggerJob(new JobKey("ExportExcelDemoJob"));
+
+            // var job3 = JobBuilder.Create<ExportExcelFromDbDemoJob>()
+            //    .WithIdentity("ExportExcelFromDbDemoJob")
+            //    .Build();
+            // var trigger3 = TriggerBuilder.Create()
+            //   .WithIdentity("ExportExcelFromDbDemoJobCron")
+            //   .StartNow()
+            //   .WithSimpleSchedule(x => x
+            //       .WithIntervalInSeconds(3600)
+            //       .RepeatForever())
+            //   .Build();
+            // _scheduler.ScheduleJob(job3, trigger3).Wait();
+            // _scheduler.TriggerJob(new JobKey("ExportExcelFromDbDemoJob"));
         }
 
         /// <summary>

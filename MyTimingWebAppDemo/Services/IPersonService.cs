@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MyTimingWebAppDemo.Models;
 
-namespace MyTimingWebAppDemo.DataAccessLayer.Services
+namespace MyTimingWebAppDemo.Services
 {
     internal interface IPersonService
     {

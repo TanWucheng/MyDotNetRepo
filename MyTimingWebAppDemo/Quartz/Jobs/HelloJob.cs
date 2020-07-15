@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using log4net;
-using MyTimingWebAppDemo.DataAccessLayer.Services;
+using MyTimingWebAppDemo.Services;
 using Quartz;
 
 namespace MyTimingWebAppDemo.Quartz.Jobs

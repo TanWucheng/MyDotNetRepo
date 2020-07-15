@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MyTimingWebAppDemo.DataAccessLayer.Repositories;
 using MyTimingWebAppDemo.Models;
 
-namespace MyTimingWebAppDemo.DataAccessLayer.Services
+namespace MyTimingWebAppDemo.Services
 {
     internal class PersonService : IPersonService
     {
