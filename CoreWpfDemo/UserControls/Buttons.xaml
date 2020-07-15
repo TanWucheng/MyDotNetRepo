@@ -1,0 +1,589 @@
+﻿<UserControl
+    x:Class="CoreWpfDemo.UserControls.Buttons"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:materialDesignConverters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userControls="clr-namespace:CoreWpfDemo.UserControls"
+    d:DesignHeight="1024"
+    d:DesignWidth="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <materialDesignConverters:BooleanToVisibilityConverter
+                x:Key="InvertedBooleanToVisibilityConverter"
+                FalseValue="Visible"
+                TrueValue="Collapsed" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Height="auto" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Style="{StaticResource MaterialDesignHeadline4TextBlock}">按钮</TextBlock>
+        <StackPanel Grid.Row="1">
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <Button Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" ToolTip="MaterialDesignFloatingActionMiniLightButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="Alarm" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    ToolTip="MaterialDesignFloatingActionMiniButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="Add" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                    ToolTip="MaterialDesignFloatingActionMiniDarkButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="ThumbsUp" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                    ToolTip="MaterialDesignFloatingActionMiniAccentButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="InfoOutline" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFloatingActionLightButton}"
+                    ToolTip="MaterialDesignFloatingActionLightButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="Input" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}"
+                    ToolTip="MaterialDesignFloatingActionButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="InvertColors" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
+                    ToolTip="MaterialDesignFloatingActionDarkButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="Label" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
+                    ToolTip="MaterialDesignFloatingActionAccentButton">
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="Language" />
+                </Button>
+            </StackPanel>
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <Button
+                    Width="100"
+                    Style="{StaticResource MaterialDesignRaisedLightButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedLightButton">
+                    _LIGHT
+                </Button>
+                <Button
+                    Width="100"
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedButton">
+                    _MID
+                </Button>
+                <Button
+                    Width="100"
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedLightDarkButton">
+                    _DARK
+                </Button>
+                <Button
+                    Width="100"
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedAccentButton">
+                    ACCENT
+                </Button>
+            </StackPanel>
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <materialDesign:Badged Badge="3">
+                    <Button>MAIL</Button>
+                </materialDesign:Badged>
+                <materialDesign:Badged
+                    Margin="32,0,0,0"
+                    Badge="{materialDesign:PackIcon Heart}"
+                    BadgeColorZoneMode="Accent">
+                    <Button>LOVE</Button>
+                </materialDesign:Badged>
+                <materialDesign:Badged
+                    Margin="32,0,0,0"
+                    Badge="DANGER"
+                    BadgeColorZoneMode="Dark">
+                    <Button>STATUS</Button>
+                </materialDesign:Badged>
+                <materialDesign:Badged
+                    x:Name="CountingBadge"
+                    Margin="32,0,0,0"
+                    BadgeColorZoneMode="PrimaryDark">
+                    <Button Click="CountingButton_OnClick" Style="{StaticResource MaterialDesignRaisedLightButton}">CLICK ME!</Button>
+                </materialDesign:Badged>
+                <Button
+                    Width="150"
+                    Margin="32,0,0,0"
+                    Command="{Binding IncrementOrClickMeCountCommand}"
+                    Content="{Binding OrClickMeCount}"
+                    ContentStringFormat="OR CLICK ME {0}"
+                    Style="{StaticResource MaterialDesignRaisedLightButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedLightButton" />
+                <Button
+                    Margin="32,0,0,0"
+                    Content="{materialDesign:PackIcon AirplaneTakeoff}"
+                    ToolTip="Icon" />
+            </StackPanel>
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <Button
+                    Width="150"
+                    materialDesign:RippleAssist.Feedback="#DD000000"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedAccentButton">
+                    CUSTOM RIPPLE
+                </Button>
+                <Button
+                    Width="150"
+                    Margin="12,0,0,0"
+                    materialDesign:RippleAssist.IsDisabled="True"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    ToolTip="Resource name: MaterialDesignRaisedAccentButton">
+                    NO RIPPLE
+                </Button>
+                <RepeatButton
+                    Width="100"
+                    Margin="12,0,0,0"
+                    ToolTip="Resource name: MaterialDesignRaisedButton">
+                    REPEAT
+                </RepeatButton>
+            </StackPanel>
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <Button
+                    Click="ButtonBase_OnClick"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="MaterialDesignFlatButton">
+                    ACCEPT
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    ToolTip="MaterialDesignFlatButton">
+                    CANCEL
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFlatLightBgButton}"
+                    ToolTip="MaterialDesignFlatLightButton">
+                    Okay
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                    ToolTip="MaterialDesignFlatMidButton">
+                    Okay
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFlatDarkBgButton}"
+                    ToolTip="MaterialDesignFlatDarkButton">
+                    Okay
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignFlatAccentBgButton}"
+                    ToolTip="MaterialDesignFlatAccentBackgroundButton">
+                    Okay
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    ToolTip="MaterialDesignOutlinedButton">
+                    LEARN MORE
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    IsEnabled="False"
+                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                    LEARN LESS
+                </Button>
+            </StackPanel>
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <Button Style="{StaticResource MaterialDesignIconButton}" ToolTip="MaterialDesignIconButton">
+                    <materialDesign:PackIcon Kind="Play" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    IsEnabled="False"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    ToolTip="MaterialDesignIconButton">
+                    <materialDesign:PackIcon Kind="Play" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    ToolTip="MaterialDesignIconForegroundButton">
+                    <materialDesign:PackIcon Kind="Play" />
+                </Button>
+                <Button
+                    Margin="12,0,0,0"
+                    Background="{DynamicResource MaterialDesignTextFieldBoxBackground}"
+                    Style="{StaticResource MaterialDesignIconButton}"
+                    ToolTip="MaterialDesignIconButton">
+                    <materialDesign:PackIcon Kind="Play" />
+                </Button>
+            </StackPanel>
+        </StackPanel>
+        <Border
+            Grid.Row="2"
+            Margin="0,24,0,0"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="0,1,0,0" />
+        <TextBlock
+            Grid.Row="3"
+            Margin="0,24"
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+            按钮 - 设置自定义圆角
+        </TextBlock>
+        <StackPanel Grid.Row="4" Orientation="Horizontal">
+            <Grid Width="124">
+                <Button
+                    Height="50"
+                    materialDesign:ButtonAssist.CornerRadius="5"
+                    Style="{StaticResource MaterialDesignRaisedLightButton}"
+                    ToolTip="MaterialDesignRaisedLightButton with Round Corners">
+                    <TextBlock Text="5/50 Radius" />
+                </Button>
+            </Grid>
+            <Grid Width="124" Margin="12,0,0,0">
+                <Button
+                    Height="50"
+                    materialDesign:ButtonAssist.CornerRadius="10"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    ToolTip="MaterialDesignRaisedButton with Round Corners">
+                    <TextBlock Text="10/50 Radius" />
+                </Button>
+            </Grid>
+            <Grid Width="124" Margin="12,0,0,0">
+                <Button
+                    Height="50"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
+                    <TextBlock Text="25/50 Radius" />
+                </Button>
+            </Grid>
+            <Grid Width="124" Margin="12,0,0,0">
+                <Button
+                    Height="50"
+                    materialDesign:ButtonAssist.CornerRadius="25 25 0 0"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    ToolTip="MaterialDesignRaisedAccentButton with Round Top Corners">
+                    <TextBlock Text="25/50 Radius" />
+                </Button>
+            </Grid>
+        </StackPanel>
+        <Border
+            Grid.Row="5"
+            Margin="0,24,0,0"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="0,1,0,0" />
+        <TextBlock
+            Grid.Row="6"
+            Margin="0,24"
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+            按钮 - 设置进度条
+        </TextBlock>
+        <StackPanel Grid.Row="7">
+            <StackPanel Orientation="Horizontal">
+                <Grid Width="124">
+                    <!--  raised button with progress, useful to auto dismiss/accept something  -->
+                    <Button
+                        HorizontalAlignment="Left"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                        materialDesign:ButtonProgressAssist.Value="{Binding DismissButtonProgress}"
+                        Command="{Binding DismissCommand}"
+                        Style="{StaticResource MaterialDesignRaisedButton}"
+                        Visibility="{Binding ShowDismissButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>DISMISS</TextBlock>
+                            <materialDesign:PackIcon Margin="4,.5,0,0" Kind="Close" />
+                        </StackPanel>
+                    </Button>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="{Binding DemoRestartCountdownText}"
+                        Visibility="{Binding ShowDismissButton, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+                </Grid>
+                <Grid Width="124" Margin="12,0,0,0">
+                    <Button
+                        Margin="2,0"
+                        materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                        materialDesign:ButtonProgressAssist.Value="-1"
+                        Content="Indeterminate"
+                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                </Grid>
+                <StackPanel Margin="12,0,0,0" Orientation="Horizontal">
+                    <!--  floating action button with progress  -->
+                    <TextBlock Margin="0,0,8,0" VerticalAlignment="Center">Click Me:</TextBlock>
+                    <Button
+                        Margin="8,0,0,0"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding IsSaving}"
+                        materialDesign:ButtonProgressAssist.Value="{Binding SaveProgress}"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource MaterialDesignFloatingActionLightButton}">
+                        <!--  simple example of toggling/animating pack icon with a data trigger  -->
+                        <materialDesign:PackIcon Width="24" Height="24">
+                            <materialDesign:PackIcon.Style>
+                                <Style BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}" TargetType="materialDesign:PackIcon">
+                                    <Setter Property="Kind" Value="CloudSync" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSaveComplete}" Value="True">
+                                            <Setter Property="Kind" Value="Check" />
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation
+                                                            Storyboard.TargetProperty="Opacity"
+                                                            From="0"
+                                                            To="1"
+                                                            Duration="0:0:0.8" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </materialDesign:PackIcon.Style>
+                        </materialDesign:PackIcon>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Margin="0,24,0,0" Orientation="Horizontal">
+                <TextBlock Margin="8,0" VerticalAlignment="Center">变动:</TextBlock>
+                <Button
+                    materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                    materialDesign:ButtonProgressAssist.Value="-1"
+                    Content="{materialDesign:PackIcon DotsHorizontal}"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}" />
+                <Button
+                    Margin="12,0,0,0"
+                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                    materialDesign:ButtonProgressAssist.Value="50"
+                    Content="{materialDesign:PackIcon DotsHorizontal}"
+                    Style="{StaticResource MaterialDesignFloatingActionAccentButton}" />
+                <Button
+                    Margin="12,0,0,0"
+                    materialDesign:ButtonProgressAssist.IndicatorBackground="#ffcc80"
+                    materialDesign:ButtonProgressAssist.IndicatorForeground="#e65100"
+                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                    materialDesign:ButtonProgressAssist.Value="25"
+                    Background="#81d4fa"
+                    BorderBrush="#81d4fa"
+                    Content="{materialDesign:PackIcon DotsHorizontal}"
+                    Foreground="#DD000000"
+                    Style="{StaticResource MaterialDesignFloatingActionButton}" />
+                <Button
+                    Margin="12,0,0,0"
+                    materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                    materialDesign:ButtonProgressAssist.Value="75"
+                    Content="{materialDesign:PackIcon DotsHorizontal}"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}" />
+            </StackPanel>
+        </StackPanel>
+        <Border
+            Grid.Row="8"
+            Margin="0,24,0,0"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="0,1,0,0" />
+        <TextBlock
+            Grid.Row="9"
+            Margin="0,24"
+            Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+            弹出框
+        </TextBlock>
+        <StackPanel
+            Grid.Row="10"
+            Margin="0,0,0,12"
+            Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Name="PopupEnabled" IsChecked="True">Enable Popup</CheckBox>
+                <materialDesign:PopupBox IsEnabled="{Binding IsChecked, ElementName=PopupEnabled}" StaysOpen="True">
+                    <Grid Width="300" Margin="8,8,8,8">
+                        <Grid.Resources>
+                            <Style BasedOn="{StaticResource MaterialDesignCheckBox}" TargetType="CheckBox">
+                                <Setter Property="Margin" Value="8,8,10,8" />
+                            </Style>
+                            <Style BasedOn="{StaticResource MaterialDesignTextBox}" TargetType="TextBox">
+                                <Setter Property="materialDesign:HintAssist.IsFloating" Value="True" />
+                                <Setter Property="Margin" Value="8,8,8,8" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="8,8,8,16"
+                            Style="{StaticResource MaterialDesignHeadline6TextBlock}">
+                            OPTIONS
+                        </TextBlock>
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            materialDesign:HintAssist.Hint="Setting 1"
+                            Text="200" />
+                        <TextBox
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            materialDesign:HintAssist.Hint="Setting 2"
+                            Text="400" />
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            materialDesign:HintAssist.Hint="Setting 3"
+                            Text="600" />
+                        <CheckBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom" />
+                        <CheckBox
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom"
+                            IsChecked="True" />
+                        <CheckBox
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            VerticalAlignment="Bottom" />
+                        <ComboBox
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Margin="8,8,8,8"
+                            materialDesign:HintAssist.Hint="Setting 4"
+                            materialDesign:HintAssist.IsFloating="True"
+                            MaxDropDownHeight="200">
+                            <ComboBoxItem>25%</ComboBoxItem>
+                            <ComboBoxItem>50%</ComboBoxItem>
+                            <ComboBoxItem>75%</ComboBoxItem>
+                            <ComboBoxItem>100%</ComboBoxItem>
+                            <ComboBoxItem>150%</ComboBoxItem>
+                            <ComboBoxItem>200%</ComboBoxItem>
+                            <ComboBoxItem>250%</ComboBoxItem>
+                            <ComboBoxItem>501%</ComboBoxItem>
+                        </ComboBox>
+
+                        <StackPanel
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button Command="{x:Static materialDesign:PopupBox.ClosePopupCommand}" Content="_Save" />
+                            <Button Command="{x:Static materialDesign:PopupBox.ClosePopupCommand}" Content="_Cancel">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource MaterialDesignPopupBoxButton}" TargetType="Button">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:PopupBox>
+            </StackPanel>
+            <materialDesign:PopupBox
+                Margin="12,0,0,0"
+                PlacementMode="LeftAndAlignMiddles"
+                Style="{StaticResource MaterialDesignMultiFloatingActionAccentPopupBox}"
+                ToggleCheckedContentCommand="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=userControls:Buttons}, Path=FloatingActionDemoCommand}"
+                ToggleCheckedContentCommandParameter="wowsers"
+                ToolTip="PopupBox, Style MaterialDesignMultiFloatingActionAccentPopupBox">
+                <materialDesign:PopupBox.ToggleCheckedContent>
+                    <materialDesign:PackIcon
+                        Width="24"
+                        Height="24"
+                        Kind="Pencil" />
+                </materialDesign:PopupBox.ToggleCheckedContent>
+                <StackPanel>
+                    <Button ToolTip="One">1</Button>
+                    <Button IsEnabled="False" ToolTip="Two">2</Button>
+                    <Button ToolTip="Three">3</Button>
+                </StackPanel>
+            </materialDesign:PopupBox>
+            <materialDesign:PopupBox
+                Margin="12,0,0,0"
+                Closed="PopupBox_OnClosed"
+                Opened="PopupBox_OnOpened"
+                Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                ToolTip="PopupBox, Style MaterialDesignMultiFloatingActionPopupBox"
+                ToolTipService.Placement="Right">
+                <StackPanel>
+                    <Button Opacity="0.5" ToolTip="One with custom opacity">1</Button>
+                    <Button ToolTip="Two">2</Button>
+                    <Button ToolTip="Three">3</Button>
+                </StackPanel>
+            </materialDesign:PopupBox>
+        </StackPanel>
+    </Grid>
+</UserControl>
