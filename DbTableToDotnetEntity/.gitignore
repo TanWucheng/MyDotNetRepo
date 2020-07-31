@@ -1,0 +1,5 @@
+.vscode
+.vs
+DbTableToDotnetEntity/bin
+DbTableToDotnetEntity/obj
+DbTableToDotnetEntity/*.user

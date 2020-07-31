@@ -5,18 +5,33 @@
     <Compile Update="UserControls\Buttons.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="UserControls\Dialogs.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Widget\DocumentationLinks.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UserControls\Home.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Widget\Sample4Dialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Widget\SampleDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Widget\SampleMessageDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Widget\SampleProgressDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UserControls\Buttons.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UserControls\Dialogs.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Widget\DocumentationLinks.xaml">
@@ -25,7 +40,16 @@
     <Page Update="UserControls\Home.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Widget\Sample4Dialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Widget\SampleDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Widget\SampleMessageDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Widget\SampleProgressDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

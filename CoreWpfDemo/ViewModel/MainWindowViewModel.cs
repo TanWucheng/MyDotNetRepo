@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Controls;
 using CoreWpfDemo.Domain;
 using CoreWpfDemo.UserControls;
-using CoreWpfDemo.Widget;
 using MaterialDesignThemes.Wpf;
 
 namespace CoreWpfDemo.ViewModel
@@ -115,6 +114,14 @@ namespace CoreWpfDemo.ViewModel
                 {
                     VerticalScrollBarVisibilityRequirement = ScrollBarVisibility.Auto
                 },
+                new DemoItem("Dialogs", new Dialogs { DataContext = new DialogsViewModel()},
+                    new []
+                    {
+                        DocumentationLink.WikiLink("Dialogs", "Dialogs"),
+                        DocumentationLink.DemoPageLink<Dialogs>("Demo View"),
+                        DocumentationLink.DemoPageLink<DialogsViewModel>("Demo View Model", "Domain"),
+                        DocumentationLink.ApiLink<DialogHost>()
+                    }),
             };
         }
 

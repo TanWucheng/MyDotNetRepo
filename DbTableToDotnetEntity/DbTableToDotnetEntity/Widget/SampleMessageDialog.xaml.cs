@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace CoreWpfDemo.Widget
+namespace DbTableToDotnetEntity.Widget
 {
     /// <summary>
     /// SampleMessageDialog.xaml 的交互逻辑
