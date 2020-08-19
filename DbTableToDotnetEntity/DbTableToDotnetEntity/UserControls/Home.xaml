@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="DbTableToDotnetEntity.UserControls.Home"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="{DynamicResource MaterialDesignPaper}"
+    mc:Ignorable="d">
+    <materialDesign:Card Width="600" Margin="0,40">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="400" />
+            </Grid.ColumnDefinitions>
+            <materialDesign:PackIcon
+                Width="160"
+                Height="160"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Kind="DatabaseExport" />
+            <StackPanel Grid.Row="0" Grid.Column="1">
+                <TextBlock Margin="16,16,16,8" Style="{StaticResource MaterialDesignHeadline5TextBlock}">使用说明</TextBlock>
+                <TextBlock
+                    Margin="16,0,16,8"
+                    VerticalAlignment="Top"
+                    Foreground="{DynamicResource MaterialDesignBodyLight}"
+                    TextWrapping="Wrap">
+                    本软件用于连接各种数据库，查询表的基本信息，转换表的基本信息为C#实体类，并保存到文件，简化在实际的项目中建立Entity的繁琐工作
+                </TextBlock>
+            </StackPanel>
+            <Border
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Padding="8"
+                BorderBrush="{DynamicResource MaterialDesignDivider}"
+                BorderThickness="0,1,0,0">
+                <DockPanel>
+                    <Button
+                        x:Name="GithubButton"
+                        DockPanel.Dock="Right"
+                        Style="{DynamicResource MaterialDesignFlatButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Github" />
+                            <TextBlock Margin="8,0,0,0" VerticalAlignment="Center">
+                                <Hyperlink Click="Hyperlink_OnClick" NavigateUri="https://github.com/TanWucheng/DotNetCoreDemos/tree/master/DbTableToDotnetEntity">Github</Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <TextBlock
+                        Margin="16"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource MaterialDesignBodyLight}"
+                        TextWrapping="Wrap">
+                        本软件在Github上开源，欢迎访问下载并反馈项目问题，共同探讨解决问题，以改进软件让它更加易用
+                    </TextBlock>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </materialDesign:Card>
+</UserControl>

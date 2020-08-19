@@ -1,0 +1,506 @@
+﻿<UserControl
+    x:Class="DbTableToDotnetEntity.UserControls.ExportEntity"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:domain="clr-namespace:DbTableToDotnetEntity.Domain"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    d:DesignHeight="640"
+    d:DesignWidth="1024"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <materialDesign:DialogHost
+            x:Name="MsSqlCodeCreateDialog"
+            Identifier="MsSqlCodeCreateDialog"
+            IsOpen="{Binding IsDialogOpened}">
+            <materialDesign:DialogHost.DialogContent>
+                <Grid
+                    Width="640"
+                    Height="480"
+                    Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                        Text="数据表或视图的基本信息" />
+                    <ScrollViewer Grid.Row="1">
+                        <DataGrid
+                            x:Name="DataGridColumnInfo"
+                            Margin="0,4,0,0"
+                            materialDesign:DataGridAssist.CellPadding="13 8 8 8"
+                            materialDesign:DataGridAssist.ColumnHeaderPadding="8"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserSortColumns="True"
+                            ItemsSource="{Binding ColumnInfoItems}">
+                            <DataGrid.Columns>
+                                <materialDesign:DataGridTextColumn
+                                    Binding="{Binding TableName}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
+                                    Header="表或视图名称" />
+                                <materialDesign:DataGridTextColumn
+                                    Binding="{Binding ColumnName}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
+                                    Header="字段名称" />
+                                <materialDesign:DataGridTextColumn
+                                    Binding="{Binding DataType}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
+                                    Header="数据类型" />
+                                <materialDesign:DataGridTextColumn
+                                    Binding="{Binding DataLength}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
+                                    Header="数据长度" />
+                                <materialDesign:DataGridTextColumn
+                                    Binding="{Binding ColumnComment}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnPopupEditingStyle}"
+                                    Header="字段注释" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                    <Grid Grid.Row="2" Margin="0,16,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="TextBoxNameSpace"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Width="200"
+                            Margin="0,0,0,16"
+                            materialDesign:HintAssist.Hint="命名空间"
+                            materialDesign:HintAssist.IsFloating="True">
+                            <TextBox.Text>
+                                <Binding
+                                    Mode="TwoWay"
+                                    Path="NameSpace"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBox
+                            x:Name="TextBoxFilePath"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,0,0,16"
+                            materialDesign:HintAssist.FloatingScale="1"
+                            materialDesign:HintAssist.Hint="代码文件保存路径"
+                            materialDesign:HintAssist.IsFloating="True">
+                            <TextBox.Text>
+                                <Binding Path="FilePath" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <Button
+                            x:Name="ButtonFindPath"
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Command="{Binding RunFindFilePathCommand}"
+                            Content="{materialDesign:PackIcon Kind=FileFind,
+                                                              Size=24}"
+                            Style="{StaticResource MaterialDesignToolForegroundButton}" />
+                        <Button
+                            x:Name="ButtonCreateConfirm"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,16,0,0"
+                            Command="{Binding RunGenFileCommand}"
+                            Content="确定"
+                            IsDefault="True"
+                            Style="{DynamicResource MaterialDesignRaisedDarkButton}" />
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="8,16,0,0"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                            Content="取消"
+                            IsCancel="True"
+                            Style="{DynamicResource MaterialDesignFlatButton}">
+                            <Button.CommandParameter>
+                                <system:Boolean>False</system:Boolean>
+                            </Button.CommandParameter>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </materialDesign:DialogHost.DialogContent>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <materialDesign:Card
+                    Grid.Row="0"
+                    Margin="2,1,4,4"
+                    Padding="4,12,4,4">
+                    <StackPanel Orientation="Vertical">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Margin="12,0,0,0"
+                                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                Text="连接信息" />
+                            <StackPanel
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                                <TextBlock Name="PopupEnabled" Margin="10,6,0,0">输入历史</TextBlock>
+                                <materialDesign:PopupBox x:Name="DbHistoryPopupBox" StaysOpen="False">
+                                    <ListBox
+                                        x:Name="DbHistoryListBox"
+                                        Margin="0,16,0,16"
+                                        ItemsSource="{Binding DbServerHistoryItems}"
+                                        SelectionChanged="DbHistoryListBox_OnSelectionChanged">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style BasedOn="{StaticResource MaterialDesignListBoxItem}" TargetType="{x:Type ListBoxItem}">
+                                                <EventSetter Event="PreviewGotKeyboardFocus" Handler="ListBoxItem_PreviewGotKeyboardFocus" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate DataType="domain:DbServerHistoryItem">
+                                                <Grid Width="400">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="0.05*" />
+                                                        <ColumnDefinition Width="0.25*" />
+                                                        <ColumnDefinition Width="0.1*" />
+                                                        <ColumnDefinition Width="0.2*" />
+                                                        <ColumnDefinition Width="0.1*" />
+                                                        <ColumnDefinition Width="0.25*" />
+                                                        <ColumnDefinition Width="0.05*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock
+                                                        Grid.Column="0"
+                                                        Margin="0,0,4,0"
+                                                        Text="IP" />
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Style="{StaticResource GradientUnderlineTextBlock}"
+                                                        Text="{Binding Ip}" />
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        Margin="0,0,4,0"
+                                                        Text="数据库" />
+                                                    <TextBlock
+                                                        Grid.Column="3"
+                                                        Style="{StaticResource GradientUnderlineTextBlock}"
+                                                        Text="{Binding Database}" />
+                                                    <TextBlock
+                                                        Grid.Column="4"
+                                                        Margin="0,0,4,0"
+                                                        Text="类型" />
+                                                    <TextBlock
+                                                        Grid.Column="5"
+                                                        Style="{StaticResource GradientUnderlineTextBlock}"
+                                                        Text="{Binding DatabaseType}" />
+                                                    <RadioButton
+                                                        x:Name="IpRadioButton"
+                                                        Grid.Column="6"
+                                                        GroupName="IP_Check"
+                                                        Style="{StaticResource MaterialDesignRadioButton}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </materialDesign:PopupBox>
+                            </StackPanel>
+                        </Grid>
+                        <Grid>
+                            <i:Interaction.Behaviors>
+                                <domain:ValidationExceptionBehavior />
+                            </i:Interaction.Behaviors>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="12,12,12,0"
+                                materialDesign:HintAssist.Hint="服务器"
+                                Style="{DynamicResource MaterialDesignFloatingHintTextBox}">
+                                <TextBox.Text>
+                                    <Binding
+                                        Mode="TwoWay"
+                                        NotifyOnValidationError="True"
+                                        Path="CurrentDbServerInfoItem.Ip"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="12,12,12,0"
+                                materialDesign:HintAssist.Hint="数据库"
+                                materialDesign:HintAssist.IsFloating="True">
+                                <TextBox.Text>
+                                    <Binding
+                                        NotifyOnValidationError="True"
+                                        Path="CurrentDbServerInfoItem.Database"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="12,12,12,0"
+                                materialDesign:HintAssist.Hint="端口号"
+                                materialDesign:HintAssist.IsFloating="True">
+                                <TextBox.Text>
+                                    <Binding
+                                        NotifyOnValidationError="True"
+                                        Path="CurrentDbServerInfoItem.TcpIpPort"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="12,24,12,0"
+                                materialDesign:HintAssist.Hint="用户名"
+                                materialDesign:HintAssist.IsFloating="True">
+                                <TextBox.Text>
+                                    <Binding
+                                        NotifyOnValidationError="True"
+                                        Path="CurrentDbServerInfoItem.UserId"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                            <PasswordBox
+                                Name="PwdBoxUserPwd"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="12,24,12,0"
+                                domain:PasswordBoxHelper.Attach="True"
+                                domain:PasswordBoxHelper.Password="{Binding Path=CurrentDbServerInfoItem.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                                materialDesign:HintAssist.Hint="密码"
+                                materialDesign:HintAssist.IsFloating="True"
+                                PasswordChanged="PwdBox_UserPwd_PasswordChanged" />
+                            <StackPanel
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Margin="12,24,0,0"
+                                Orientation="Horizontal">
+                                <ComboBox
+                                    materialDesign:HintAssist.Hint="编码类型"
+                                    ItemsSource="{Binding Encodings}"
+                                    SelectedItem="{Binding CurrentDbServerInfoItem.Encoding}" />
+                                <ComboBox
+                                    Margin="32,0,0,0"
+                                    materialDesign:HintAssist.Hint="数据库类型"
+                                    ItemsSource="{Binding DbTypes}"
+                                    SelectedItem="{Binding CurrentDbServerInfoItem.DatabaseType}" />
+                            </StackPanel>
+                        </Grid>
+                        <Separator Margin="0,18,0,0" Style="{StaticResource MaterialDesignDarkSeparator}" />
+                        <StackPanel
+                            Margin="8,0,8,8"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                x:Name="ButtonClearDbInfo"
+                                Width="40"
+                                Margin="0,0,8,0"
+                                Padding="2"
+                                HorizontalAlignment="Right"
+                                materialDesign:RippleAssist.IsCentered="True"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                ToolTip="Clear">
+                                <materialDesign:PackIcon Kind="Close" />
+                            </Button>
+                            <Button
+                                x:Name="ButtonGetDbObject"
+                                Width="40"
+                                Padding="2"
+                                HorizontalAlignment="Right"
+                                materialDesign:RippleAssist.IsCentered="True"
+                                Command="{Binding RunGetTableInfoCommand}"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                ToolTip="Get database's objects">
+                                <materialDesign:PackIcon Kind="Check" />
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+                <materialDesign:Card Grid.Row="1" Margin="2,4,4,2">
+                    <ScrollViewer>
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            HeadersVisibility="All"
+                            ItemsSource="{Binding TableInfoItems}">
+                            <DataGrid.Resources>
+                                <domain:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <!--<DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox IsChecked="{Binding Data.IsAllItems1Selected, UpdateSourceTrigger=PropertyChanged, Source={StaticResource DataContextProxy}}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding Data.SelectAllCommand, Source={StaticResource DataContextProxy}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </CheckBox>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding SelectCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn
+                    Binding="{Binding Path=IsSelected, UpdateSourceTrigger=PropertyChanged}"
+                    EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"
+                    ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding Data.SelectCommand, Source={StaticResource DataContextProxy}}" CommandParameter="{Binding TableInfo.Id}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <DataGridCheckBoxColumn.Header>
+                        <Border Background="Transparent">
+                            <CheckBox IsChecked="{Binding Data.IsAllItems1Selected, Source={StaticResource DataContextProxy}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding Data.SelectAllCommand, Source={StaticResource DataContextProxy}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </CheckBox>
+                        </Border>
+                    </DataGridCheckBoxColumn.Header>
+                    <DataGridCheckBoxColumn.HeaderStyle>
+                        <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        </Style>
+                    </DataGridCheckBoxColumn.HeaderStyle>
+                </DataGridCheckBoxColumn>-->
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.Header>
+                                        <CheckBox IsChecked="{Binding Data.IsSelectAll, Source={StaticResource DataContextProxy}}">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <i:InvokeCommandAction Command="{Binding Data.SelectAllCommand, Source={StaticResource DataContextProxy}}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </CheckBox>
+                                    </DataGridTemplateColumn.Header>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="3" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="Click">
+                                                        <i:InvokeCommandAction Command="{Binding DataContext.SelectCommand, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}" CommandParameter="{Binding TableInfo.Id}" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </CheckBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn
+                                    Binding="{Binding TableInfo.TableName}"
+                                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                    Header="数据表名称"
+                                    IsReadOnly="True" />
+                                <DataGridTextColumn
+                                    Binding="{Binding TableInfo.EntityClassName}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
+                                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                    Header="对应Entity类名" />
+                                <DataGridTextColumn
+                                    Binding="{Binding TableInfo.TableComment}"
+                                    EditingElementStyle="{StaticResource MaterialDesignDataGridTextColumnEditingStyle}"
+                                    ElementStyle="{StaticResource MaterialDesignDataGridTextColumnStyle}"
+                                    Header="数据表注释" />
+                                <DataGridTemplateColumn Header="生成Entity Class">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Command="{Binding DataContext.RunGenEntityCommand, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1}}"
+                                                CommandParameter="{Binding TableInfo.TableName}"
+                                                Style="{StaticResource MaterialDesignFlatButton}">
+                                                <materialDesign:PackIcon Kind="CheckboxBlankCircleOutline" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="生成Mapping XML">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Style="{StaticResource MaterialDesignFlatButton}" Tag="{Binding TableInfo.TableName}">
+                                                <materialDesign:PackIcon Kind="CheckboxBlankCircleOutline" />
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                </materialDesign:Card>
+            </Grid>
+        </materialDesign:DialogHost>
+    </Grid>
+</UserControl>
