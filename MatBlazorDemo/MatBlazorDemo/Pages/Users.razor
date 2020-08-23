@@ -1,0 +1,106 @@
+﻿@page "/users"
+
+@using MatBlazor.Models.Entity
+@using System.Linq
+@inject IUserService UserService
+
+<h1>用户清单</h1>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @*<table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>生日</th>
+                    <th>电话号码</th>
+                    <th>住址</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Name</td>
+                        <td>@user.Sex</td>
+                        <td>@user.Birthday</td>
+                        <td>@user.PhoneNum</td>
+                        <td>@user.Address</td>
+                    </tr>
+                }
+            </tbody>
+        </table>*@
+
+
+    <MatTable Items="@users"
+              LoadInitialData="true"
+              Striped="true"
+              AllowSelection="true"
+              FilterByColumnName="Name"
+              DebounceMilliseconds="150"
+              UseSortHeaderRow="true"
+              class="mat-elevation-z5">
+        <MatTableHeader>
+            <MatSortHeaderRow SortChanged="@SortData">
+                <MatSortHeader SortId="id">Id</MatSortHeader>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>生日</th>
+                <th>电话号码</th>
+                <th>住址</th>
+            </MatSortHeaderRow>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@String.Format("{0:d}", @context.Id)</td>
+            <td>@context.Name</td>
+            <td>@context.Sex</td>
+            <td>@context.Birthday</td>
+            <td>@context.PhoneNum</td>
+            <td>@context.Address</td>
+        </MatTableRow>
+    </MatTable>
+}
+
+@code {
+    private User[] users;
+    private User[] sortedData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await UserService.GetAllUsersAsync();
+        users = result.ToArray();
+    }
+
+    private void SortData(MatSortChangedEvent sort)
+    {
+        sortedData = users;
+        if (!(sort == null || sort.Direction == MatSortDirection.None || string.IsNullOrEmpty(sort.SortId)))
+        {
+            Comparison<User> comparison = null;
+            switch (sort.SortId)
+            {
+                case "id":
+                    comparison = (s1, s2) => s1.Id.CompareTo(s2.Id);
+                    break;
+            }
+            if (comparison != null)
+            {
+                if (sort.Direction == MatSortDirection.Desc)
+                {
+                    Array.Sort(sortedData, (s1, s2) => -1 * comparison(s1, s2));
+                }
+                else
+                {
+                    Array.Sort(sortedData, comparison);
+                }
+            }
+        }
+    }
+}

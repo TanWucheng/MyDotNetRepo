@@ -1,0 +1,4 @@
+bin
+obj
+database/Ten.db
+Migrations
