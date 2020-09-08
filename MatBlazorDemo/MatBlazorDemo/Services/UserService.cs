@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using MatBlazor.Models.Entity;
+using MatBlazor.Model.Entity;
 using MatBlazorDemo.Data;
 using MatBlazorDemo.Domain;
 using MatBlazorDemo.Services.Interfaces;

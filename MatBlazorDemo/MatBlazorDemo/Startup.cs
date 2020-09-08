@@ -94,6 +94,9 @@ namespace MatBlazorDemo
 
             app.UseEndpoints(endpoints =>
             {
+                //Install-BlazorPlus
+                endpoints.Map("/_blazorplus_handler", BlazorPlus.BlazorSession.ProcessRequestAsync);
+
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

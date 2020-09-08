@@ -37,7 +37,8 @@ app {
     justify-content: center;
     background-attachment: fixed;
     background-size: 100% 100%;
-    background-image: url(../img/welcome.jpg);
+    /*background-image: url(../img/welcome.jpg);*/
+    background-image: url(https://api.berryapi.net/?service=App.Bing.Images);
     background-repeat: no-repeat;
 }
 
@@ -193,7 +194,8 @@ app {
         height: 100%;
         justify-content: center;
         background-size: auto 100%;
-        background-image: url(../img/welcome.jpg);
+        /*background-image: url(../img/welcome.jpg);*/
+        background-image: url(https://api.berryapi.net/?service=App.Bing.Images);
         background-repeat: no-repeat;
     }
 

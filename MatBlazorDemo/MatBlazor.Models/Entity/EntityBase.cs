@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MatBlazor.Models.Entity
+namespace MatBlazor.Model.Entity
 {
     public class EntityBase
     {

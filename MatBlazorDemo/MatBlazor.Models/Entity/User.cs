@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MatBlazor.Models.Entity
+namespace MatBlazor.Model.Entity
 {
     [Table("users")]
     public class User : EntityBase

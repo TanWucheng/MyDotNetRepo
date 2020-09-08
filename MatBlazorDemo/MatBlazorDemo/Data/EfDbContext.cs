@@ -1,5 +1,5 @@
 ﻿using System;
-using MatBlazor.Models.Entity;
+using MatBlazor.Model.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace MatBlazorDemo.Data

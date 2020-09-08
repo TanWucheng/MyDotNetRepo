@@ -1,9 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatBlazorDemo", "MatBlazorDemo\MatBlazorDemo.csproj", "{070DC671-8961-42AC-9084-2CF1FC959E20}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatBlazorDemo", "MatBlazorDemo\MatBlazorDemo.csproj", "{070DC671-8961-42AC-9084-2CF1FC959E20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatBlazor.Models", "MatBlazor.Models\MatBlazor.Models.csproj", "{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatBlazor.Model", "MatBlazor.Models\MatBlazor.Model.csproj", "{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,5 +20,11 @@ Global
 		{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {77C44645-8049-43C8-8710-AC5D90AC386A}
 	EndGlobalSection
 EndGlobal
