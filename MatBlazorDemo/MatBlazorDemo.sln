@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatBlazorDemo", "MatBlazorDemo\MatBlazorDemo.csproj", "{070DC671-8961-42AC-9084-2CF1FC959E20}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatBlazor.Model", "MatBlazor.Models\MatBlazor.Model.csproj", "{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatBlazor.Model", "MatBlazor.Model\MatBlazor.Model.csproj", "{1CCC44CC-E5FE-43BC-8E19-E9C6A894E899}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
