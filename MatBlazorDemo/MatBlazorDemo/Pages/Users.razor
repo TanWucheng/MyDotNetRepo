@@ -1,44 +1,22 @@
 ﻿@page "/users"
 @using System.Linq
-@using MatBlazor.Model.Entity
+@using MatBlazor.Model.Model
+@using MatBlazor.Model.ViewModel
+@inject IMatToaster Toaster
 @inject IUserService UserService
 
-<h1>用户清单</h1>
+<h3>用户清单</h3>
 
-@if (users == null)
+@if (_viewModel == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    @*<table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>姓名</th>
-                    <th>性别</th>
-                    <th>生日</th>
-                    <th>电话号码</th>
-                    <th>住址</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in users)
-                {
-                    <tr>
-                        <td>@user.Id</td>
-                        <td>@user.Name</td>
-                        <td>@user.Sex</td>
-                        <td>@user.Birthday</td>
-                        <td>@user.PhoneNum</td>
-                        <td>@user.Address</td>
-                    </tr>
-                }
-            </tbody>
-        </table>*@
-
-
-    <MatTable Items="@users"
+    <p>
+        <MatButton Raised="true" @bind-Disabled="@_viewModel.BatchDelDisabled" TrailingIcon="delete">批量删除</MatButton>
+    </p>
+    <MatTable Items="@_viewModel.UserModels"
               LoadInitialData="true"
               Striped="true"
               AllowSelection="true"
@@ -48,58 +26,64 @@ else
               class="mat-elevation-z5">
         <MatTableHeader>
             <MatSortHeaderRow SortChanged="@SortData">
+                <th><MatCheckbox @bind-Value="@_viewModel.IsCheckAll"></MatCheckbox></th>
                 <MatSortHeader SortId="id">Id</MatSortHeader>
                 <th>姓名</th>
                 <th>性别</th>
                 <th>生日</th>
                 <th>电话号码</th>
                 <th>住址</th>
+                <th></th>
             </MatSortHeaderRow>
         </MatTableHeader>
         <MatTableRow>
-            <td>@String.Format("{0:d}", @context.Id)</td>
-            <td>@context.Name</td>
-            <td>@context.Sex</td>
-            <td>@context.Birthday</td>
-            <td>@context.PhoneNum</td>
-            <td>@context.Address</td>
+            <td><MatCheckbox @bind-Value="@context.Checked" @onclick="CheckBoxOnClick"></MatCheckbox></td>
+            <td>@string.Format("{0:d}", @context.User.Id)</td>
+            <td>@context.User.Name</td>
+            <td>@context.User.Sex</td>
+            <td>@context.User.Birthday</td>
+            <td>@context.User.PhoneNum</td>
+            <td>@context.User.Address</td>
+            <td>
+                <MatButton Dense="true" TrailingIcon="edit">编辑</MatButton>
+                <MatButton Dense="true" TrailingIcon="delete">删除</MatButton>
+            </td>
         </MatTableRow>
     </MatTable>
 }
 
 @code {
-    private User[] users;
-    private User[] sortedData;
+    private UserViewModel _viewModel;
+    private UserModel[] _sortedData;
 
     protected override async Task OnInitializedAsync()
     {
         var result = await UserService.GetAllUsersAsync();
-        users = result.ToArray();
+        _viewModel = new UserViewModel
+        {
+            UserModels = (from user in result select new UserModel { User = user, Checked = false }).ToArray(),
+            BatchDelDisabled = true
+        };
     }
 
     private void SortData(MatSortChangedEvent sort)
     {
-        sortedData = users;
-        if (!(sort == null || sort.Direction == MatSortDirection.None || string.IsNullOrEmpty(sort.SortId)))
+        _sortedData = _viewModel.UserModels;
+        if (sort == null || sort.Direction == MatSortDirection.None || string.IsNullOrEmpty(sort.SortId)) return;
+        Comparison<UserModel> comparison = sort.SortId switch
         {
-            Comparison<User> comparison = null;
-            switch (sort.SortId)
-            {
-                case "id":
-                    comparison = (s1, s2) => s1.Id.CompareTo(s2.Id);
-                    break;
-            }
-            if (comparison != null)
-            {
-                if (sort.Direction == MatSortDirection.Desc)
-                {
-                    Array.Sort(sortedData, (s1, s2) => -1 * comparison(s1, s2));
-                }
-                else
-                {
-                    Array.Sort(sortedData, comparison);
-                }
-            }
+            "id" => (s1, s2) => s1.User.Id.CompareTo(s2.User.Id),
+            _ => null
+        };
+        if (comparison != null)
+        {
+            Array.Sort(_sortedData, sort.Direction == MatSortDirection.Desc ? (s1, s2) => -1 * comparison(s1, s2) : comparison);
         }
+    }
+
+    private void CheckBoxOnClick(EventArgs args)
+    {
+        var count = _viewModel.UserModels.Count(x => x.Checked);
+        Toaster.Add($"选中的数量:{count}", MatToastType.Info, "消息", "check_circle");
     }
 }

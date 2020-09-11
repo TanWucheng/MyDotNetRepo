@@ -1,95 +1,53 @@
 ﻿@inherits LayoutComponentBase
 @inject IMatToaster Toaster
 @inject IIdentityService IdentityService
-@*<div class="sidebar">
-        <NavMenu />
-    </div>
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Whe
 
-    <div class="main">
-        <div class="top-row px-4">
-                <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-            </div>
-
-            <div class="content px-4">
-                @Body
-            </div>
-    </div>*@
 @if (BlazorSession.Current.Browser == null)
 {
     BlazorSession.Current.SetTimeout(10, StateHasChanged);
     return;
 }
 
-@if (viewmode == null)
+@if (_viewMode == null)
 {
-    @if (BlazorSession.Current.Browser.GetMemoryItem("LogonOk") as string == "OK")
+    @if (BlazorSession.Current.Browser.GetMemoryItem("LogonOk") as string != "OK")
     {
-
-        <MatAppBar Style="z-index: 100;" Class="mat">
-            <MatAppBarRow>
-                <MatAppBarSection>
-                    <MatIconButton Icon="menu" OnClick="@((e) => MenuButtonClicked())"></MatIconButton>
-                    <MatAppBarTitle>MatBlazor练习示例</MatAppBarTitle>
-                </MatAppBarSection>
-                <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                    <MatIconButton Icon="person">
-                    </MatIconButton>
-                    <MatIconButton Icon="logout" OnClick="@OnClick"></MatIconButton>
-                </MatAppBarSection>
-            </MatAppBarRow>
-        </MatAppBar>
-
-        <MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="mat">
-
-            <MatHidden Breakpoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up" HiddenChanged="@ModelDrawerHiddenChanged">
-                <ChildContent>
-                    <MatDrawer Style="box-shadow: 2px 0px 2px 0px rgba(199, 199, 199, 0.29);" @bind-Opened="@navMenuOpened" Mode="@MatDrawerMode.Modal">
-                        <MatAppBarAdjust></MatAppBarAdjust>
-                        <NavMenu />
-                    </MatDrawer>
-                </ChildContent>
-                <ElseContent>
-                    <MatDrawer Style="box-shadow: 2px 0px 2px 0px rgba(199, 199, 199, 0.29);" @bind-Opened="@navMenuOpened" Mode="@MatDrawerMode.Dismissible">
-                        <MatAppBarAdjust></MatAppBarAdjust>
-                        <NavMenu />
-                    </MatDrawer>
-                </ElseContent>
-            </MatHidden>
-
-
-            <MatDrawerContent Class="mdc-theme--background" Style="--mdc-theme-background: #fafafa;">
-                <MatAppBarAdjust></MatAppBarAdjust>
-                <div class="body-wrapper container pt-5">
-                    @Body
+        if (Whe.EnvironmentName == "Development")
+        {
+            <div style="display:flex;flex-direction:column;align-items:center;width:100%;padding:32px;">
+                <h1>
+                    Development
+                </h1>
+                <div>
+                    In Development mode , you can use this app directly.
                 </div>
-            </MatDrawerContent>
+                <div>
+                    In Production mode , you must login into linux via ssh localhost:22
+                </div>
+                <button class="btn btn-primary" style="margin:32px;width:100px;" @onclick="LoginForDev">
+                    OK
+                </button>
+            </div>
 
-        </MatDrawerContainer>
+            void LoginForDev()
+            {
+                BlazorSession.Current.Browser.SetMemoryItem("LogonOk", "OK");
+            }
 
-        <MatDialog @bind-IsOpen="@dialogIsOpen">
-            <MatDialogTitle>提示</MatDialogTitle>
-            <MatDialogContent>
-                <MatHeadline6>现在退出吗？</MatHeadline6>
-            </MatDialogContent>
-            <MatDialogActions>
-                <MatButton OnClick="@DoLogout" Raised="true">确认</MatButton>
-                <MatButton OnClick="@(e => { dialogIsOpen = false; })" Dense="true">取消</MatButton>
-            </MatDialogActions>
-        </MatDialog>
-    }
-    else
-    {
-        viewmode = "login";
+            return;
+        }
+        _viewMode = "login";
     }
 }
 
-@if (viewmode == "login")
+@if (_viewMode == "login")
 {
     <div class="login-container">
         <div class="login-box">
             <h2>请登录</h2>
             <p>
-                <MatTextField @bind-Value="@loginDialogName"
+                <MatTextField @bind-Value="@_loginDialogName"
                               Label="用户名"
                               Icon="person"
                               FullWidth="true"
@@ -97,7 +55,7 @@
                               Required="true"></MatTextField>
             </p>
             <p>
-                <MatTextField @bind-Value="@loginDialogPassword"
+                <MatTextField @bind-Value="@_loginDialogPassword"
                               Label="密码"
                               Icon="lock"
                               Type="password"
@@ -107,57 +65,107 @@
             </p>
             <p>
                 <MatButton OnClick="@DoLogin" Raised="true">登陆</MatButton>
-                <MatButton OnClick="@(e => { dialogIsOpen = false; })" Dense="true">取消</MatButton>
+                <MatButton OnClick="@(e => { _dialogIsOpen = false; })" Dense="true">取消</MatButton>
             </p>
         </div>
     </div>
 }
 
-<MatSnackbar @bind-IsOpen="@lazySnackbarIsOpen">
+<MatAppBar Style="z-index: 100;" Class="mat">
+    <MatAppBarRow>
+        <MatAppBarSection>
+            <MatIconButton Icon="menu" OnClick="@((e) => MenuButtonClicked())"></MatIconButton>
+            <MatAppBarTitle>MatBlazor练习示例</MatAppBarTitle>
+        </MatAppBarSection>
+        <MatAppBarSection Align="@MatAppBarSectionAlign.End">
+            <MatIconButton Icon="person">
+            </MatIconButton>
+            <MatIconButton Icon="logout" OnClick="@OnClick"></MatIconButton>
+        </MatAppBarSection>
+    </MatAppBarRow>
+</MatAppBar>
+
+<MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="mat">
+
+    <MatHidden Breakpoint="@MatBreakpoint.SM" Direction="@MatHiddenDirection.Up" HiddenChanged="@ModelDrawerHiddenChanged">
+        <ChildContent>
+            <MatDrawer Style="box-shadow: 2px 0px 2px 0px rgba(199, 199, 199, 0.29);" @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Modal">
+                <MatAppBarAdjust></MatAppBarAdjust>
+                <NavMenu />
+            </MatDrawer>
+        </ChildContent>
+        <ElseContent>
+            <MatDrawer Style="box-shadow: 2px 0px 2px 0px rgba(199, 199, 199, 0.29);" @bind-Opened="@_navMenuOpened" Mode="@MatDrawerMode.Dismissible">
+                <MatAppBarAdjust></MatAppBarAdjust>
+                <NavMenu />
+            </MatDrawer>
+        </ElseContent>
+    </MatHidden>
+
+
+    <MatDrawerContent Class="mdc-theme--background" Style="--mdc-theme-background: #fafafa;">
+        <MatAppBarAdjust></MatAppBarAdjust>
+        <div class="body-wrapper container pt-5">
+            @Body
+        </div>
+    </MatDrawerContent>
+
+</MatDrawerContainer>
+
+<MatDialog @bind-IsOpen="@_dialogIsOpen">
+    <MatDialogTitle>提示</MatDialogTitle>
+    <MatDialogContent>
+        <MatHeadline6>现在退出吗？</MatHeadline6>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@DoLogout" Raised="true">确认</MatButton>
+        <MatButton OnClick="@(e => { _dialogIsOpen = false; })" Dense="true">取消</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatSnackbar @bind-IsOpen="@_lazySnackbarIsOpen">
     <MatSnackbarContent>If you like MatBlazor, please put a star on GitHub.</MatSnackbarContent>
     <MatSnackbarActions>
         @* <MatButton Raised="true">Star</MatButton> *@
         <MatIconButton Icon="@MatIconNames.Stars" Link="https://github.com/BlazorComponents/MatBlazor" style="color: white;" target="_blank"></MatIconButton>
     </MatSnackbarActions>
-
 </MatSnackbar>
-
 <MatToastContainer />
 
 @code {
-    private string viewmode = null;
+    private string _viewMode;
 
-    private bool lazySnackbarIsOpen = false;
-    private bool navMenuOpened = true;
-    private bool dialogIsOpen;
-    private string loginDialogName = string.Empty;
-    private string loginDialogPassword = string.Empty;
+    private bool _lazySnackbarIsOpen;
+    private bool _navMenuOpened = true;
+    private bool _dialogIsOpen;
+    private string _loginDialogName = string.Empty;
+    private string _loginDialogPassword = string.Empty;
 
     protected void ModelDrawerHiddenChanged(bool hidden)
     {
         if (!hidden)
         {
-            navMenuOpened = false;
+            _navMenuOpened = false;
         }
     }
 
     public void OnClick(MouseEventArgs e)
     {
-        dialogIsOpen = true;
+        _dialogIsOpen = true;
     }
 
     void MenuButtonClicked()
     {
-        navMenuOpened = !navMenuOpened;
+        _navMenuOpened = !_navMenuOpened;
         this.StateHasChanged();
     }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        await Task.Delay(TimeSpan.FromSeconds(5))
-             .ContinueWith((_) => { this.lazySnackbarIsOpen = true; });
+        //await Task.Delay(TimeSpan.FromSeconds(5))
+        //     .ContinueWith((_) => { this._lazySnackbarIsOpen = true; });
     }
 
     public void Dispose()
@@ -166,26 +174,26 @@
 
     private void DoLogin()
     {
-        var result = IdentityService.LoginAsync(loginDialogName, loginDialogPassword);
+        var result = IdentityService.LoginAsync(_loginDialogName, _loginDialogPassword);
         if (result.Result)
         {
-            loginDialogName = string.Empty;
-            loginDialogPassword = string.Empty;
+            _loginDialogName = string.Empty;
+            _loginDialogPassword = string.Empty;
             Toaster.Add("登陆成功", MatToastType.Info, "消息", "check_circle");
             BlazorSession.Current.Browser.SetMemoryItem("LogonOk", "OK");
-            viewmode = null;
+            _viewMode = null;
         }
         else
         {
-            viewmode = "login";
+            _viewMode = "login";
             Toaster.Add("登陆失败，请检查输入！", MatToastType.Danger, "警告", "cancel");
         }
     }
 
     private void DoLogout()
     {
-        dialogIsOpen = false;
+        _dialogIsOpen = false;
         BlazorSession.Current.Browser.SetMemoryItem("LogonOk", string.Empty);
-        viewmode = "login";
+        _viewMode = "login";
     }
 }

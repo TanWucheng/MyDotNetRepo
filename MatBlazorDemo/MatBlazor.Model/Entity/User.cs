@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
+using MatBlazor.Model.Annotations;
 
 namespace MatBlazor.Model.Entity
 {
