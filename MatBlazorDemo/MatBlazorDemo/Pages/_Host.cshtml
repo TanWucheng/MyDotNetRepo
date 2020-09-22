@@ -12,18 +12,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MatBlazorDemo</title>
     <base href="~/" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
     <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
     <script src="_content/MatBlazor/dist/matBlazor.js"></script>
     @*Install-BlazorPlus*@
     <script src="/_blazorplus_handler?action=script" type="text/javascript"></script>
-
-    <script>//after blazorplus script override the implementation
+    <script>
+        // after blazorplus script override the implementation
         function GetWaitingMaskHTML() {
             return "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='80px' height='80px' viewBox='0 0 40 40' enable-background='new 0 0 40 40' xml:space='preserve'><path opacity='0.2' fill='#000' d='M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z'></path><path fill='#000' d='M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z' transform='rotate(228 20 20)'><animateTransform attributeType='xml' attributeName='transform' type='rotate' from='0 20 20' to='360 20 20' dur='0.5s' repeatCount='indefinite'></animateTransform></path></svg>";
         }
     </script>
+    @*<script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>*@
+    @*<script src="js/autoload.js"></script>*@
+
+    <script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
+    <script>
+        L2Dwidget.init({
+            "model": {
+                jsonPath: "https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json",
+                "scale": 1
+            },
+            "display": {
+                "position": "right",
+                "width": 80,
+                "height": 160,
+                "hOffset": 0,
+                "vOffset": -20
+            },
+            "mobile": {
+                "show": true,
+                "scale": 0.5
+            },
+            "react": {
+                "opacityDefault": 0.8,
+                "opacityOnHover": 1
+            }
+        });
+    </script>
+    <link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
     <div style="height:30px">
@@ -33,7 +61,8 @@
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
 
-    <script>new function () {
+    <script>
+        new function () {
             var div = document.querySelector("div");
             var app = document.querySelector("app");
             var html = app.innerHTML;

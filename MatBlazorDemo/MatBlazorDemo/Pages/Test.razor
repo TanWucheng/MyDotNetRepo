@@ -1,0 +1,86 @@
+﻿@page "/test"
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2">
+            <MatCheckbox Value="@AllSelected"
+                         ValueChanged="@((bool? s) => OnChangeAllSelected(s))"
+                         ValueExpression="@(() => AllSelected)"
+                         Indeterminate="true">
+                <h4>Group</h4>
+            </MatCheckbox>
+        </div>
+        @foreach (var element in _selectElements)
+        {
+            <div class="col-sm-2">
+                <MatCheckbox Value="@element.Selected"
+                             ValueChanged="@((bool value) => OnValueChanged(element, value))"
+                             ValueExpression="@(() => element.Selected)"
+                             Label="@element.Name">
+                </MatCheckbox>
+            </div>
+        }
+    </div>
+</div>
+
+@code
+{
+    private readonly List<SelectableElement> _selectElements = new List<SelectableElement>();
+
+    bool? AllSelected { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        _selectElements.Add(new SelectableElement(false, "1"));
+        _selectElements.Add(new SelectableElement(false, "2"));
+        _selectElements.Add(new SelectableElement(false, "3"));
+
+        AllSelected = _selectElements.All(element => element.Selected);
+
+        return Task.CompletedTask;
+    }
+
+    void OnChangeAllSelected(bool? s)
+    {
+        AllSelected = s;
+        if (AllSelected == null) return;
+
+        foreach (var element in _selectElements)
+        {
+            element.Selected = AllSelected == true;
+        }
+    }
+
+    Task OnValueChanged(SelectableElement element, bool s)
+    {
+        element.Selected = s;
+
+        var all = _selectElements.All(r => r.Selected);
+        var any = all || _selectElements.Any(r => r.Selected);
+
+        if (any && !all)
+        {
+            AllSelected = null;
+        }
+        else
+        {
+            AllSelected = all;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    class SelectableElement
+    {
+        public bool Selected { get; set; }
+
+        public string Name { get; }
+
+        public SelectableElement(bool selected, string name)
+        {
+            Selected = selected;
+            Name = name;
+        }
+    }
+
+}

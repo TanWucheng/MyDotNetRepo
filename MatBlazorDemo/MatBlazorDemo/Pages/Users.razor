@@ -26,7 +26,12 @@ else
               class="mat-elevation-z5">
         <MatTableHeader>
             <MatSortHeaderRow SortChanged="@SortData">
-                <th><MatCheckbox @bind-Value="@_viewModel.IsCheckAll"></MatCheckbox></th>
+                <th>
+                    <MatCheckbox Value="@_viewModel.IsCheckAll"
+                                 ValueChanged="@((bool? s) => OnChangeAllSelected(s))"
+                                 ValueExpression="@(() => _viewModel.IsCheckAll)"
+                                 Indeterminate="true"></MatCheckbox>
+                </th>
                 <MatSortHeader SortId="id">Id</MatSortHeader>
                 <th>姓名</th>
                 <th>性别</th>
@@ -37,7 +42,13 @@ else
             </MatSortHeaderRow>
         </MatTableHeader>
         <MatTableRow>
-            <td><MatCheckbox @bind-Value="@context.Checked" @onclick="CheckBoxOnClick"></MatCheckbox></td>
+            <td>
+                <MatCheckbox Value="@context.Checked"
+                             ValueChanged="@((bool value) => OnValueChanged(context, value))"
+                             ValueExpression="@(() => context.Checked)">
+                </MatCheckbox>
+
+            </td>
             <td>@string.Format("{0:d}", @context.User.Id)</td>
             <td>@context.User.Name</td>
             <td>@context.User.Sex</td>
@@ -81,9 +92,45 @@ else
         }
     }
 
-    private void CheckBoxOnClick(EventArgs args)
+    private void CheckBoxOnClick(MouseEventArgs args)
     {
-        var count = _viewModel.UserModels.Count(x => x.Checked);
-        Toaster.Add($"选中的数量:{count}", MatToastType.Info, "消息", "check_circle");
+        //var count = _viewModel.UserModels.Count(x => x.Checked);
+        //Toaster.Add($"选中的数量:{count}", MatToastType.Info, "消息", "check_circle");
+        Toaster.Add(args.Type, MatToastType.Info, "OnChange");
+    }
+
+    private void OnChangeAllSelected(bool? s)
+    {
+        _viewModel.IsCheckAll = s;
+        _viewModel.BatchDelDisabled = s ?? false;
+        if (_viewModel.IsCheckAll == null) return;
+
+        foreach (var element in _viewModel.UserModels)
+        {
+            element.Checked = _viewModel.IsCheckAll == true;
+        }
+    }
+
+    Task OnValueChanged(UserModel element, bool s)
+    {
+        // element.Checked = s;
+
+        _viewModel.UserModels.First(x => x.User.Id == element.User.Id).Checked = s;
+
+        var all = _viewModel.UserModels.All(r => r.Checked);
+        var any = all || _viewModel.UserModels.Any(r => r.Checked);
+
+        _viewModel.BatchDelDisabled = !any;
+
+        if (any && !all)
+        {
+            _viewModel.IsCheckAll = null;
+        }
+        else
+        {
+            _viewModel.IsCheckAll = all;
+        }
+
+        return Task.CompletedTask;
     }
 }

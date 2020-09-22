@@ -6,22 +6,29 @@ namespace MatBlazor.Model.ViewModel
 {
     public class UserViewModel : INotifyPropertyChanged
     {
-        private bool _isCheckAll;
+        private bool? _isCheckAll;
 
         private UserModel[] _userModels;
 
-        public bool IsCheckAll
+        public bool? IsCheckAll
         {
             get => _isCheckAll;
             set
             {
                 _isCheckAll = value;
-                foreach (var userModel in UserModels)
-                {
-                    userModel.Checked = value;
-                }
+                //foreach (var userModel in UserModels)
+                //{
+                //    userModel.Checked = value ?? false;
+                //}
 
-                BatchDelDisabled = !value;
+                //if (value.HasValue)
+                //{
+                //    BatchDelDisabled = !value.Value;
+                //}
+                //else
+                //{
+                //    BatchDelDisabled = true;
+                //}
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCheckAll)));
             }
         }
