@@ -21,7 +21,42 @@ namespace MatBlazorDemo.Services
         public Task<User> GetUserAsync(string name, string password)
         {
             var pwd = Encryption.Md5(Encryption.Md5(password));
-            return GetOneAsync(PredicateBuilder.True<User>().And<User>(x => x.Name == name).And<User>(x => x.Password == pwd));
+            return GetOneAsync(PredicateBuilder.True<User>().And(x => x.Name == name).And(x => x.Password == pwd));
+        }
+
+        public Task<User> GetUserAsync(int id)
+        {
+            return GetOneAsync(id);
+        }
+
+        public Task<IEnumerable<User>> PaginationSelectUserAsync(int pageIndex, int pageSize)
+        {
+            return PaginationSelectAsync(pageIndex, pageSize);
+        }
+
+        public Task<int> GetUserTotalCount()
+        {
+            return GetTotalCountAsync();
+        }
+
+        public Task<int> UpdateUserAsync(User user)
+        {
+            return UpdateOneAsync(user);
+        }
+
+        public Task<int> InsertUserAsync(User user)
+        {
+            return InsertOneAsync(user);
+        }
+
+        public Task<int> DeleteUserAsync(int id)
+        {
+            return DeleteOneAsync(id);
+        }
+
+        public Task<int> DeleteUsersAsync(IEnumerable<int> idCollection)
+        {
+            return DeleteRangeAsync(idCollection);
         }
     }
 }

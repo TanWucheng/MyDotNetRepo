@@ -16,19 +16,6 @@ namespace MatBlazor.Model.ViewModel
             set
             {
                 _isCheckAll = value;
-                //foreach (var userModel in UserModels)
-                //{
-                //    userModel.Checked = value ?? false;
-                //}
-
-                //if (value.HasValue)
-                //{
-                //    BatchDelDisabled = !value.Value;
-                //}
-                //else
-                //{
-                //    BatchDelDisabled = true;
-                //}
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCheckAll)));
             }
         }
@@ -43,8 +30,45 @@ namespace MatBlazor.Model.ViewModel
             }
         }
 
+        /// <summary>
+        /// 对话框标题
+        /// </summary>
+        public string DialogTitle { get; set; }
+
+        /// <summary>
+        /// 批量删除按钮不可用性
+        /// </summary>
         public bool BatchDelDisabled { get; set; }
 
+        /// <summary>
+        /// 编辑对话框是否打开
+        /// </summary>
+        public bool EditDialogOpened { get; set; }
+
+        /// <summary>
+        /// 批量删除确认对话框是否打开
+        /// </summary>
+        public bool BatchDelConfirmDialogOpened { get; set; }
+
+        /// <summary>
+        /// 单行删除确认对话框是否打开
+        /// </summary>
+        public bool DelConfirmDialogOpened { get; set; }
+
+        /// <summary>
+        /// 进度条是否关闭
+        /// </summary>
+        public bool ProgressClosed { get; set; }
+
+        /// <summary>
+        /// 对话框取消按钮不可用性
+        /// </summary>
+        public bool DialogCancelDisabled { get; set; }
+
+        /// <summary>
+        /// 对话框确认按钮不可用性
+        /// </summary>
+        public bool DialogConfirmDisabled { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

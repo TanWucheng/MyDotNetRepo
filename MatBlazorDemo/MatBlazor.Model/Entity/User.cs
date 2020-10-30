@@ -1,8 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.CompilerServices;
-using MatBlazor.Model.Annotations;
 
 namespace MatBlazor.Model.Entity
 {
@@ -11,7 +8,7 @@ namespace MatBlazor.Model.Entity
     {
         public string Name { get; set; }
 
-        public string Sex { get; set; }
+        public Sex Sex { get; set; }
 
         public DateTime Birthday { get; set; }
 

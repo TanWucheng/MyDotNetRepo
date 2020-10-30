@@ -31,13 +31,13 @@ namespace AspNetCoreSwaggerUse
                 options.UseSqlite(Configuration.GetConnectionString("EfDbContext"));
             });
 
-            // 注入業務模塊
+            // 注入业务模块
             services.AddTransient<IUserService, UserService>();
 
             // 注册Swagger生成器
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My AspNet Web API", Version = "v1" });
             });
         }
 
@@ -67,7 +67,7 @@ namespace AspNetCoreSwaggerUse
             // 如果您想公开交互式文档，可以选择插入Swagger -ui中间件，并指定用于支持它的Swagger JSON端点。
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My AspNet Web API V1");
             });
 
             app.UseEndpoints(endpoints =>

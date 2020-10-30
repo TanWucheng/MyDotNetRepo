@@ -195,7 +195,7 @@ else
         }
         else
         {
-            Toaster.Add("登陆失败，请检查输入！", MatToastType.Danger, "警告", "cancel");
+            Toaster.Add("登陆失败，请检查输入！", MatToastType.Danger, "提示", "warning");
             BlazorSession.Current.Browser.SetMemoryItem("LogonOk", "NO");
             _viewMode = "login";
         }

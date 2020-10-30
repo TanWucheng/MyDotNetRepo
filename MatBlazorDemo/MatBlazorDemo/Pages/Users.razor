@@ -2,6 +2,7 @@
 @using System.Linq
 @using MatBlazor.Model.Model
 @using MatBlazor.Model.ViewModel
+@using MatBlazor.Model.Entity
 @inject IMatToaster Toaster
 @inject IUserService UserService
 
@@ -9,20 +10,27 @@
 
 @if (_viewModel == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>加载中...</em></p>
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
 }
 else
 {
     <p>
-        <MatButton Raised="true" @bind-Disabled="@_viewModel.BatchDelDisabled" TrailingIcon="delete">批量删除</MatButton>
+        <MatButton Raised="true" TrailingIcon="add" OnClick="@NewOnClicked">新增</MatButton>
+        <MatButton Outlined="true"
+                   @bind-Disabled="@_viewModel.BatchDelDisabled"
+                   TrailingIcon="delete"
+                   OnClick="@(e => { _viewModel.BatchDelConfirmDialogOpened = true;})">批量删除</MatButton>
     </p>
     <MatTable Items="@_viewModel.UserModels"
-              LoadInitialData="true"
+              LoadInitialData="false"
               Striped="true"
               AllowSelection="true"
               FilterByColumnName="Name"
               DebounceMilliseconds="150"
               UseSortHeaderRow="true"
+              ShowPaging="false"
+              PageSize="@_pageSize"
               class="mat-elevation-z5">
         <MatTableHeader>
             <MatSortHeaderRow SortChanged="@SortData">
@@ -38,6 +46,7 @@ else
                 <th>生日</th>
                 <th>电话号码</th>
                 <th>住址</th>
+                <th>电子邮件</th>
                 <th></th>
             </MatSortHeaderRow>
         </MatTableHeader>
@@ -49,31 +58,113 @@ else
                 </MatCheckbox>
 
             </td>
-            <td>@string.Format("{0:d}", @context.User.Id)</td>
+            <td>@string.Format("{0:d}", context.User.Id)</td>
             <td>@context.User.Name</td>
             <td>@context.User.Sex</td>
             <td>@context.User.Birthday</td>
             <td>@context.User.PhoneNum</td>
             <td>@context.User.Address</td>
+            <td>@context.User.Email</td>
             <td>
-                <MatButton Dense="true" TrailingIcon="edit">编辑</MatButton>
-                <MatButton Dense="true" TrailingIcon="delete">删除</MatButton>
+                <MatButton Dense="true" TrailingIcon="edit"
+                           OnClick="@(e => { EditOnClicked(context.User.Id); })">
+                    编辑
+                </MatButton>
+                <MatButton Dense="true" TrailingIcon="delete" OnClick="@(e => { OpenDelDialog(context.User.Id);})">删除</MatButton>
             </td>
         </MatTableRow>
     </MatTable>
+
+    <div>
+        <MatPaginator Length="@_totalCount" PageSize="@_pageSize" Page="@OnPage"></MatPaginator>
+    </div>
+
+    <MatDialog IsOpen="@_viewModel.EditDialogOpened" CanBeClosed="false">
+        <MatDialogTitle>@_viewModel.DialogTitle</MatDialogTitle>
+        <MatDialogContent>
+            <p style="margin-top: 1em;">
+                <MatTextField @bind-Value="@_editModel.Name" Label="姓名" Outlined="true" Required="true"></MatTextField>
+                @*<MatTextField @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true"></MatTextField>*@
+                <MatDatePicker @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true" Format="yyyy年MM月dd日" Required="true"></MatDatePicker>
+            </p>
+            <p>
+                <MatTextField @bind-Value="@_editModel.Address" Label="住址" Outlined="true" Required="true"></MatTextField>
+                <MatTextField @bind-Value="@_editModel.Email" Label="电子邮件" Outlined="true" Required="true"></MatTextField>
+            </p>
+            <p>
+                <MatTextField @bind-Value="@_editModel.PhoneNum" Label="联系电话" Outlined="true" Required="true"></MatTextField>
+                <MatRadioGroup @bind-Value="_editModel.Sex" TValue="Sex">
+                    <MatRadioButton Value="@Sex.Male" TValue="Sex">男</MatRadioButton>
+                    <MatRadioButton Value="@Sex.Female" TValue="Sex">女</MatRadioButton>
+                </MatRadioGroup>
+            </p>
+            <MatProgressBar Indeterminate="true" Closed="@_viewModel.ProgressClosed"></MatProgressBar>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { _viewModel.EditDialogOpened = false; })" Disabled="@_viewModel.DialogCancelDisabled">取消</MatButton>
+            <MatButton Raised="true" OnClick="@EditDialogOnConfirmed" Disabled="@_viewModel.DialogConfirmDisabled">保存</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+    <MatDialog IsOpen="@_viewModel.BatchDelConfirmDialogOpened" CanBeClosed="false">
+        <MatDialogTitle>警告</MatDialogTitle>
+        <MatDialogContent>
+            <MatSubtitle2 Style="color: #ff5722;">确认删除选中的用户？</MatSubtitle2>
+            <MatProgressBar Indeterminate="true" Closed="@_viewModel.ProgressClosed"></MatProgressBar>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { _viewModel.BatchDelConfirmDialogOpened = false; })">取消</MatButton>
+            <MatButton Raised="true" OnClick="@BatchDelDialogConfirmed">确定</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+    <MatDialog IsOpen="@_viewModel.DelConfirmDialogOpened" CanBeClosed="false">
+        <MatDialogTitle>警告</MatDialogTitle>
+        <MatDialogContent>
+            <MatSubtitle2 Style="color: #ff5722;">确认删除选中的用户:@_editModel.Name？</MatSubtitle2>
+            <MatProgressBar Indeterminate="true" Closed="@_viewModel.ProgressClosed"></MatProgressBar>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { _viewModel.DelConfirmDialogOpened = false; })">取消</MatButton>
+            <MatButton Raised="true" OnClick="@DelDialogConfirmed">确定</MatButton>
+        </MatDialogActions>
+    </MatDialog>
 }
 
 @code {
     private UserViewModel _viewModel;
     private UserModel[] _sortedData;
+    private User _editModel;
+    private EditMode _editMode;
+    private int _pageSize;
+    private int _pageIndex;
+    private int _totalCount;
+
+    private enum EditMode
+    {
+        Edit,
+        New
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await UserService.GetAllUsersAsync();
+        _pageIndex = 0;
+        _pageSize = 5;
+        _totalCount = await UserService.GetUserTotalCount();
+        var result = await UserService.PaginationSelectUserAsync(_pageIndex, _pageSize);
         _viewModel = new UserViewModel
         {
             UserModels = (from user in result select new UserModel { User = user, Checked = false }).ToArray(),
-            BatchDelDisabled = true
+            BatchDelDisabled = true,
+            DialogTitle = string.Empty,
+            ProgressClosed = true
+        };
+        _editModel = new User
+        {
+            Address = string.Empty,
+            Email = string.Empty,
+            Name = string.Empty,
+            PhoneNum = string.Empty,
+            Sex = Sex.Male,
+            Birthday = new DateTime()
         };
     }
 
@@ -92,11 +183,19 @@ else
         }
     }
 
-    private void CheckBoxOnClick(MouseEventArgs args)
+    private void OnPage(MatPaginatorPageEvent e)
     {
-        //var count = _viewModel.UserModels.Count(x => x.Checked);
-        //Toaster.Add($"选中的数量:{count}", MatToastType.Info, "消息", "check_circle");
-        Toaster.Add(args.Type, MatToastType.Info, "OnChange");
+        _pageSize = e.PageSize;
+        _pageIndex = e.PageIndex;
+        _totalCount = UserService.GetUserTotalCount().Result;
+        var result = UserService.PaginationSelectUserAsync(_pageIndex, _pageSize).Result;
+        _viewModel = new UserViewModel
+        {
+            UserModels = (from user in result select new UserModel { User = user, Checked = false }).ToArray(),
+            BatchDelDisabled = true,
+            DialogTitle = string.Empty,
+            ProgressClosed = true
+        };
     }
 
     private void OnChangeAllSelected(bool? s)
@@ -113,8 +212,6 @@ else
 
     Task OnValueChanged(UserModel element, bool s)
     {
-        // element.Checked = s;
-
         _viewModel.UserModels.First(x => x.User.Id == element.User.Id).Checked = s;
 
         var all = _viewModel.UserModels.All(r => r.Checked);
@@ -132,5 +229,132 @@ else
         }
 
         return Task.CompletedTask;
+    }
+
+    private async void EditOnClicked(int id)
+    {
+        _editMode = EditMode.Edit;
+        _viewModel.DialogTitle = "用户编辑";
+        _viewModel.EditDialogOpened = true;
+        _editModel = await UserService.GetUserAsync(id);
+    }
+
+    private void NewOnClicked()
+    {
+        _editModel = new User
+        {
+            Address = string.Empty,
+            Email = string.Empty,
+            Name = string.Empty,
+            PhoneNum = string.Empty,
+            Sex = Sex.Male
+        };
+        _editMode = EditMode.New;
+        _viewModel.DialogTitle = "新增用户";
+        _viewModel.EditDialogOpened = true;
+    }
+
+    private void EditDialogOnConfirmed()
+    {
+        _viewModel.ProgressClosed = false;
+        _viewModel.DialogCancelDisabled = true;
+        _viewModel.DialogConfirmDisabled = true;
+        var isSuccess = false;
+        switch (_editMode)
+        {
+            case EditMode.Edit:
+                {
+                    var count = UserService.UpdateUserAsync(_editModel).Result;
+                    if (count > 0)
+                    {
+                        Toaster.Add("更新用户成功", MatToastType.Success, "消息", "check_circle");
+                        isSuccess = true;
+                    }
+                    else
+                    {
+                        Toaster.Add("更新用户失败", MatToastType.Warning, "提示", "warning");
+                    }
+                    break;
+                }
+            case EditMode.New:
+                {
+                    var count = UserService.InsertUserAsync(_editModel).Result;
+                    if (count > 0)
+                    {
+                        Toaster.Add("新增用户成功", MatToastType.Success, "消息", "check_circle");
+                        isSuccess = true;
+                    }
+                    else
+                    {
+                        Toaster.Add("新增用户失败", MatToastType.Warning, "提示", "warning");
+                    }
+                    break;
+                }
+        }
+        _viewModel.ProgressClosed = true;
+        if (isSuccess)
+        {
+            _viewModel.EditDialogOpened = false;
+        }
+        _viewModel.DialogCancelDisabled = false;
+        _viewModel.DialogConfirmDisabled = false;
+    }
+
+    private void BatchDelDialogConfirmed()
+    {
+        _viewModel.ProgressClosed = false;
+        var idCollection = (from userModel in _viewModel.UserModels where userModel.Checked select userModel.User.Id).ToArray();
+        var count = UserService.DeleteUsersAsync(idCollection).Result;
+        if (count == idCollection.Length)
+        {
+            Toaster.Add("全部删除成功", MatToastType.Success, "消息", "check_circle");
+        }
+        else if (count > 0)
+        {
+            Toaster.Add("部分删除成功", MatToastType.Warning, "提示", "warning");
+        }
+        else
+        {
+            Toaster.Add("删除失败", MatToastType.Warning, "提示", "warning");
+        }
+        _viewModel.ProgressClosed = true;
+        _viewModel.BatchDelConfirmDialogOpened = false;
+        RefreshData();
+    }
+
+    private void OpenDelDialog(int id)
+    {
+        _editModel = _viewModel.UserModels.FirstOrDefault(x => x.User.Id == id)?.User;
+        _viewModel.DelConfirmDialogOpened = true;
+    }
+
+    private void DelDialogConfirmed()
+    {
+        _viewModel.ProgressClosed = false;
+        var count = UserService.DeleteUserAsync(_editModel.Id).Result;
+        if (count > 0)
+        {
+            Toaster.Add("删除成功", MatToastType.Success, "消息", "check_circle");
+        }
+        else
+        {
+            Toaster.Add("删除失败", MatToastType.Warning, "提示", "warning");
+        }
+        _viewModel.ProgressClosed = true;
+        _viewModel.DelConfirmDialogOpened = false;
+        RefreshData();
+    }
+
+    private void RefreshData()
+    {
+        _totalCount = UserService.GetUserTotalCount().Result;
+        var result = UserService.PaginationSelectUserAsync(_pageIndex, _pageSize).Result;
+        _viewModel = new UserViewModel
+        {
+            UserModels = (from user in result select new UserModel { User = user, Checked = false }).ToArray(),
+            BatchDelDisabled = true,
+            DialogTitle = string.Empty,
+            ProgressClosed = true
+        };
     }
 }

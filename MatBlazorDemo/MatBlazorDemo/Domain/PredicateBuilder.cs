@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace MatBlazorDemo.Domain
@@ -99,6 +101,38 @@ namespace MatBlazorDemo.Domain
             var invokedExpr = Expression.Invoke(expr2, expr1.Parameters);
             return Expression.Lambda<Func<T, bool>>
                 (Expression.And(expr1.Body, invokedExpr), expr1.Parameters);
+        }
+
+        public static Expression<Func<TElement, bool>> BuildContainsExpression<TElement, TValue>(Expression<Func<TElement, TValue>> valueSelector,
+            IEnumerable<TValue> values)
+        {
+            var startsWithMethod = typeof(string).GetMethod("StartsWith", new[] { typeof(string) });
+            var startWithCollection = values.Select(value => (Expression)Expression.Call(valueSelector.Body, startsWithMethod!, Expression.Constant(value, typeof(TValue))));
+            var body = startWithCollection.Aggregate((Expression.Or));
+            var p = Expression.Parameter(typeof(TElement));
+            return Expression.Lambda<Func<TElement, bool>>(body, p);
+        }
+
+        public static IQueryable<TElement> WhereOrLike<TElement, TValue>(this IQueryable<TElement> query,
+            Expression<Func<TElement, TValue>> valueSelector, IEnumerable<TValue> values)
+        {
+            return query.Where(BuildContainsExpression<TElement, TValue>(valueSelector, values));
+        }
+
+        public static Expression<Func<TElement, bool>> BuildEqualsExpression<TElement, TValue>(Expression<Func<TElement, TValue>> valueSelector,
+            IEnumerable<TValue> values)
+        {
+            var equalsWithMethod = typeof(string).GetMethod("Equals", new[] { typeof(string) });
+            var equalCollection = values.Select(value => (Expression)Expression.Call(valueSelector.Body, equalsWithMethod!, Expression.Constant(value, typeof(TValue))));
+            var body = equalCollection.Aggregate((Expression.Or));
+            var p = Expression.Parameter(typeof(TElement));
+            return Expression.Lambda<Func<TElement, bool>>(body, p);
+        }
+
+        public static IQueryable<TElement> WhereOrIn<TElement, TValue>(this IQueryable<TElement> query,
+            Expression<Func<TElement, TValue>> valueSelector, IEnumerable<TValue> values)
+        {
+            return query.Where(BuildEqualsExpression<TElement, TValue>(valueSelector, values));
         }
     }
 }
