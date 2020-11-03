@@ -61,7 +61,7 @@ else
             <td>@string.Format("{0:d}", context.User.Id)</td>
             <td>@context.User.Name</td>
             <td>@context.User.Sex</td>
-            <td>@context.User.Birthday</td>
+            <td>@context.User.Birthday.ToString("yyyy年MM月dd日")</td>
             <td>@context.User.PhoneNum</td>
             <td>@context.User.Address</td>
             <td>@context.User.Email</td>
@@ -85,7 +85,7 @@ else
             <p style="margin-top: 1em;">
                 <MatTextField @bind-Value="@_editModel.Name" Label="姓名" Outlined="true" Required="true"></MatTextField>
                 @*<MatTextField @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true"></MatTextField>*@
-                <MatDatePicker @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true" Format="yyyy年MM月dd日" Required="true"></MatDatePicker>
+                <MatDatePicker @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true" Required="true" Format="yyyy-MM-dd"></MatDatePicker>
             </p>
             <p>
                 <MatTextField @bind-Value="@_editModel.Address" Label="住址" Outlined="true" Required="true"></MatTextField>
@@ -295,6 +295,7 @@ else
         if (isSuccess)
         {
             _viewModel.EditDialogOpened = false;
+            RefreshData();
         }
         _viewModel.DialogCancelDisabled = false;
         _viewModel.DialogConfirmDisabled = false;

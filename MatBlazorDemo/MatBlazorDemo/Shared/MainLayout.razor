@@ -85,8 +85,20 @@ else
                 <MatAppBarTitle>MatBlazor练习示例</MatAppBarTitle>
             </MatAppBarSection>
             <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                <MatIconButton Icon="person">
-                </MatIconButton>
+                @if (Whe.EnvironmentName == "Development")
+                {
+                    <MatTooltip Tooltip="临时用户" Position="@MatTooltipPosition.Bottom">
+                        <MatIconButton RefBack="@context" Icon="person">
+                        </MatIconButton>
+                    </MatTooltip>
+                }
+                else
+                {
+                    <MatTooltip Tooltip="@_loginDialogName" Position="@MatTooltipPosition.Bottom">
+                        <MatIconButton RefBack="@context" Icon="person">
+                        </MatIconButton>
+                    </MatTooltip>
+                }
                 <MatIconButton Icon="logout" OnClick="@OnClick"></MatIconButton>
             </MatAppBarSection>
         </MatAppBarRow>
