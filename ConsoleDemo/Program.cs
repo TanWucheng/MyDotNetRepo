@@ -2,14 +2,27 @@
 using System.Linq;
 using ConsoleDemo.PasswordValidation;
 using ConsoleDemo.StringComparison;
+using EncryptionLibrary;
 
 namespace ConsoleDemo
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            CheckPasswordIsWeakly();
+            // CheckPasswordIsWeakly();
+            RsaEncrypt();
+
+            PrintLine("Press any key to continue...");
+            Console.ReadKey(true);
+        }
+
+        private static void RsaEncrypt()
+        {
+            Rsa.Encrypt("12345678",
+                "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCMN3TTQAsruN8RG2j3hVP8yf3X\n2ZdyRvEyjbgeNpoVM/OE9X1zVSrWTmr+rp0+E08XfnFbMyii9CuoqIZbAIiLP760\nZcOSSKAk0YWDtvVgr/IjuPMOwr3yLrtR+9v7K35PQtqsUfQJhNzzZcpNA4W4Tpbp\nHU3zML0PZCrQNWxD3wIDAQAB\n-----END PUBLIC KEY-----",
+                out var encryptedText);
+            PrintLine(encryptedText);
         }
 
         /// <summary>

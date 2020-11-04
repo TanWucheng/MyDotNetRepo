@@ -4,45 +4,97 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - EntityGeneratorWebApp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EntityGeneratorWebApp</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <nav>
+            <div class="nav-wrapper container">
+                <a href="#" data-target="mobile-navbar" class="sidenav-trigger">
+                    <i class="material-icons">menu</i>
+                </a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">
+                    <img src="~/img/logo.png" alt="MaXu" style="width: 2.4em;" />
+                </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li class="nav-item active">
+                        <a asp-area="" asp-controller="Home" asp-action="Index">主页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy">隐私</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-trigger" href="#" data-target="dropdownAccount">账号<i class="material-icons right">arrow_drop_down</i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul class="sidenav" id="mobile-navbar">
+            <li class="nav-item">
+                <a asp-area="" asp-controller="Home" asp-action="Index"><i class="material-icons">home</i>主页</a>
+            </li>
+            <li class="nav-item">
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">隐私</a>
+            </li>
+        </ul>
+    </header>
+
+    <main role="main" class="main-container pb-3">
+        @RenderBody()
+    </main>
+
+    <footer class="page-footer teal">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Footer Content</h5>
+                    <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">链接</h5>
+                    <ul>
+                        <li>
+                            <a class="grey-text text-lighten-3" href="#">我的Blazor应用</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li>
+                            <a class="grey-text text-lighten-3" href="#">Link 2</a>
+                        </li>
+                        <li>
+                            <a class="grey-text text-lighten-3" href="#">Link 3</a>
+                        </li>
+                        <li>
+                            <a class="grey-text text-lighten-3" href="#">Link 4</a>
                         </li>
                     </ul>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - EntityGeneratorWebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
+
+        <div class="footer-copyright">
+            <div class="container">
+                &copy; @DateTime.Now.Year - Boring.Tan@@outlook.com - <a class="brown-text text-lighten-3" asp-area="" asp-controller="Home" asp-action="Privacy">隐私</a>
+                <a href="#" class="grey-text text-lighten-5 right">关于我</a>
+            </div>
+        </div>
+
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/class.ie.js"></script>
+    <script src="~/js/my.xmlhttprequest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", false)
 </body>
 </html>

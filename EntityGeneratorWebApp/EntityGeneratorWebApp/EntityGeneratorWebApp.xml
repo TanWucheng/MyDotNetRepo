@@ -4,12 +4,24 @@
         <name>EntityGeneratorWebApp</name>
     </assembly>
     <members>
-        <member name="T:EntityGeneratorWebApp.Config.HttpGlobalExceptionFilter">
+        <member name="T:EntityGeneratorWebApp.Config.ErrorHandlingExtension">
             <summary>
-            捕捉Action异常类
+            400~599响应状态码处理扩展
             </summary>
         </member>
-        <member name="M:EntityGeneratorWebApp.Domain.ErrorHandlingMiddleware.HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext,System.Int32,System.String)">
+        <member name="M:EntityGeneratorWebApp.Config.ErrorHandlingExtension.UseErrorHandling(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            注册400~599响应状态码处理中间件
+            </summary>
+            <param name="builder">IApplicationBuilder</param>
+            <returns></returns>
+        </member>
+        <member name="T:EntityGeneratorWebApp.Config.ErrorHandlingMiddleware">
+            <summary>
+            400~599响应状态码处理中间件
+            </summary>
+        </member>
+        <member name="M:EntityGeneratorWebApp.Config.ErrorHandlingMiddleware.HandleExceptionAsync(Microsoft.AspNetCore.Http.HttpContext,System.Int32,System.String)">
             <summary>
             异常错误信息捕获，将错误信息用HTML方式返回
             </summary>
@@ -17,6 +29,11 @@
             <param name="statusCode">Http Status Code</param>
             <param name="msg">Message</param>
             <returns></returns>
+        </member>
+        <member name="T:EntityGeneratorWebApp.Config.HttpGlobalExceptionFilter">
+            <summary>
+            捕捉Action异常类
+            </summary>
         </member>
         <member name="M:EntityGeneratorWebApp.Controllers.Api.DatabaseController.GetMySqlColumnsInfo(System.String,System.String)">
             <summary>

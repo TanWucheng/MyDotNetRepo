@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,8 +73,35 @@ namespace EntityGeneratorWebApp
                         Url = new Uri("https://github.com/tanwucheng")
                     }
                 });
+
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "EntityGeneratorWebApp.xml");
                 options.IncludeXmlComments(xmlPath);
+
+                var scheme = new OpenApiSecurityScheme
+                {
+                    Scheme = JwtBearerDefaults.AuthenticationScheme,
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Description = "Bearer Token"
+                };
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, scheme);
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
 
             // 添加jwt验证：
@@ -142,28 +170,6 @@ namespace EntityGeneratorWebApp
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
             });
-
-            //app.Run(async (context) =>
-            //{
-            //    context.Response.ContentType = "text/html";
-            //    await using var sw = new StreamWriter(context.Response.Body, Encoding.UTF8);
-            //    await sw.WriteAsync(
-            //        $"<div style=\"display: flex;align-items: center;justify-content: center;text-align: justify;width: 100%;height: 100%;margin: 0 auto;\"><p style=\"color: #ee6e73\">未知请求！<a href=\"../home/index\" style=\"color: #1976D2\">请点击此处返回主页</a></p></div>");
-            //});
-
-            //app.UseStatusCodePages(new StatusCodePagesOptions
-            //{
-            //    HandleAsync = (context) =>
-            //    {
-            //        if (context.HttpContext.Response.StatusCode != 401) return Task.Delay(0);
-            //        context.HttpContext.Response.ContentType = "text/html";
-            //        using var sw = new StreamWriter(context.HttpContext.Response.Body, Encoding.UTF8);
-            //        sw.Write(
-            //            $"<div style=\"display: flex;align-items: center;justify-content: center;text-align: justify;width: 100%;height: 100%;margin: 0 auto;\"><p style=\"color: #ee6e73\">您未登录此网站，禁止访问！<a href=\"../login/signin\" style=\"color: #1976D2\">请点击此处登陆</a></p></div>");
-
-            //        return Task.Delay(0);
-            //    }
-            //});
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("encrypt_the_validate_site_key"));
             var options = new TokenGenerateOption
