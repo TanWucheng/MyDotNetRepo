@@ -30,7 +30,6 @@ namespace MatBlazorDemo
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
 
             // 注册DBContext
             services.AddDbContext<EfDbContext>(options =>
@@ -38,9 +37,13 @@ namespace MatBlazorDemo
                 options.UseSqlite(Configuration.GetConnectionString("EfDbContext"));
             });
 
-            // 注入业务模块
+            // 瞬时方式注入业务模块
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IIdentityService, IdentityService>();
+
+            // 单例模式注入业务模块
+            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<VerifyCodeService>();
 
             // 解决MatTable对HttpClient的依赖
             if (services.All(x => x.ServiceType != typeof(HttpClient)))

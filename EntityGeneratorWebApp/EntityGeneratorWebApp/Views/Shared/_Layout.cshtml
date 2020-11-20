@@ -14,14 +14,50 @@
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-    <header>
+<header>
+    @{
+        var cookies = Context.Request.Cookies;
+        if (cookies["PiaochongAccessToke"] == null)
+        {
+            <ul id="dropdownAccount" class="dropdown-content">
+                <li>
+                    <a asp-area="" asp-controller="Login" asp-action="SignIn">登陆</a>
+                </li>
+                <li style="display: none;">
+                    <a href="#" id="linkLogout">登出</a>
+                </li>
+            </ul>
+        }
+        else
+        {
+            <ul id="dropdownAccount" class="dropdown-content">
+                <li style="display: none;">
+                    <a asp-area="" asp-controller="Login" asp-action="SignIn">登陆</a>
+                </li>
+                <li>
+                    <a href="#" id="linkLogout">登出</a>
+                </li>
+            </ul>
+        }
+
+        <div id="modalConfirmLogout" class="modal" tabindex="0" style="height: auto;">
+            <div class="modal-content">
+                <h4>提示<i class="material-icons text-danger">warning</i></h4>
+                <p>退出登陆将清除您的登陆信息！操作管理员功能将需要您重新登陆！是否确认退出</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-red btn-flat">取消</a>
+                <a id="linkConfirmedLogout" href="#" class="modal-close waves-effect waves-green btn-flat">确认</a>
+            </div>
+        </div>
+
         <nav>
             <div class="nav-wrapper container">
                 <a href="#" data-target="mobile-navbar" class="sidenav-trigger">
                     <i class="material-icons">menu</i>
                 </a>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">
-                    <img src="~/img/logo.png" alt="MaXu" style="width: 2.4em;" />
+                    <img src="~/img/logo.png" alt="MaXu" style="width: 2.4em;"/>
                 </a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
                     <li class="nav-item active">
@@ -45,7 +81,8 @@
                 <a asp-area="" asp-controller="Home" asp-action="Privacy">隐私</a>
             </li>
         </ul>
-    </header>
+    }
+</header>
 
     <main role="main" class="main-container pb-3">
         @RenderBody()
@@ -82,7 +119,7 @@
 
         <div class="footer-copyright">
             <div class="container">
-                &copy; @DateTime.Now.Year - Boring.Tan@@outlook.com - <a class="brown-text text-lighten-3" asp-area="" asp-controller="Home" asp-action="Privacy">隐私</a>
+                &copy; @DateTime.Now.Year - tanwucheng@@outlook.com - <a class="brown-text text-lighten-3" asp-area="" asp-controller="Home" asp-action="Privacy">隐私</a>
                 <a href="#" class="grey-text text-lighten-5 right">关于我</a>
             </div>
         </div>

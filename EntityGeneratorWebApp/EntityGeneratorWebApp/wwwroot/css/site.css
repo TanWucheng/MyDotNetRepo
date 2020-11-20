@@ -87,3 +87,56 @@ html, body {
     background-image: url(https://api.berryapi.net/?service=App.Bing.Images);
     background-repeat: no-repeat;
 }
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    /*background-image: url(../img/welcome.jpg);*/
+    background-image: url(https://api.berryapi.net/?service=App.Bing.Images);
+    background-repeat: no-repeat;
+}
+
+    .login-container h2 {
+        margin: 0 0 1em;
+        padding: 0;
+        text-align: center;
+    }
+
+.login-box {
+    width: 30em;
+    padding: 3em;
+    background: rgba(255,255,255,0.85);
+    box-sizing: border-box;
+    box-shadow: 0 1em 2em rgba(255,255,255,0.5);
+    border-radius: 1em;
+}
+
+@media (max-width: 767.98px) {
+    .login-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        background-size: auto 100%;
+        /*background-image: url(../img/welcome.jpg);*/
+        background-image: url(https://api.berryapi.net/?service=App.Bing.Images);
+        background-repeat: no-repeat;
+    }
+
+    .login-box {
+        width: 95%;
+        padding: 1em;
+        background: rgba(255,255,255,0.85);
+        box-sizing: border-box;
+        box-shadow: 0 1em 1em rgba(255,255,255,0.5);
+        border-radius: 1em;
+    }
+}

@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject IMatToaster Toaster
 @inject IIdentityService IdentityService
+@inject VerifyCodeService VerifyCodeService
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Whe
 
 @if (BlazorSession.Current.Browser == null)
@@ -48,30 +49,90 @@
 
 @if (_viewMode == "login")
 {
+    @*<div class="login-container">
+            <div class="login-box">
+                <h2>请登录</h2>
+                <p>
+                    <MatTextField @bind-Value="@_loginDialogName"
+                                  Label="用户名"
+                                  Icon="person"
+                                  FullWidth="true"
+                                  HelperText="用户名长度为8~16"
+                                  Required="true"></MatTextField>
+                </p>
+                <p>
+                    <MatTextField @bind-Value="@_loginDialogPassword"
+                                  Label="密码"
+                                  Icon="lock"
+                                  Type="password"
+                                  FullWidth="true"
+                                  HelperText="密码长度为8~16"
+                                  Required="true"></MatTextField>
+                </p>
+                <div class="form-row">
+                    <div class="form-group col-md-9">
+                        <MatTextField @bind-Value="@_verifyCode"
+                                      Label="验证码"
+                                      Icon="verified_user"
+                                      FullWidth="true"
+                                      HelperText="请输入验证码"
+                                      Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group col-md-3" style="display: flex ; flex-direction: column; justify-content: center;">
+                        <img style="width: 100px;" id="mixImg" @onclick="RefreshVerifyCode" title="数字验证码" src="@_imgBase64Code" alt="验证码" />
+                    </div>
+                </div>
+                <p>
+                    <MatButton OnClick="@DoLogin" Raised="true" Type="button">登陆</MatButton>
+                    <MatButton OnClick="@(e => { _dialogIsOpen = false; })" Dense="true">取消</MatButton>
+                </p>
+            </div>
+        </div>*@
+
+
     <div class="login-container">
         <div class="login-box">
             <h2>请登录</h2>
-            <p>
-                <MatTextField @bind-Value="@_loginDialogName"
-                              Label="用户名"
-                              Icon="person"
-                              FullWidth="true"
-                              HelperText="用户名长度为8~16"
-                              Required="true"></MatTextField>
-            </p>
-            <p>
-                <MatTextField @bind-Value="@_loginDialogPassword"
-                              Label="密码"
-                              Icon="lock"
-                              Type="password"
-                              FullWidth="true"
-                              HelperText="密码长度为8~16"
-                              Required="true"></MatTextField>
-            </p>
-            <p>
-                <MatButton OnClick="@DoLogin" Raised="true">登陆</MatButton>
-                <MatButton OnClick="@(e => { _dialogIsOpen = false; })" Dense="true">取消</MatButton>
-            </p>
+            <form>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@_loginDialogName"
+                                  Label="用户名"
+                                  Icon="person"
+                                  FullWidth="true"
+                                  HelperText="用户名长度为8~16"
+                                  Required="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@_loginDialogPassword"
+                                  Label="密码"
+                                  Icon="lock"
+                                  Type="password"
+                                  FullWidth="true"
+                                  HelperText="密码长度为8~16"
+                                  Required="true"></MatTextField>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-9">
+                        <MatTextField @bind-Value="@_verifyCode"
+                                      Label="验证码"
+                                      Icon="verified_user"
+                                      FullWidth="true"
+                                      HelperText="请输入验证码(区分大小写)"
+                                      Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group col-md-3" style="display: flex ; flex-direction: column; justify-content: center;">
+                        <img style="width: 100px;" id="mixImg" @onclick="RefreshVerifyCode" title="数字验证码" src="@_imgBase64Code" alt="验证码" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <MatButton OnClick="@DoLogin" Raised="true" Type="button">登陆</MatButton>
+                    <MatButton OnClick="@(e => { _loginDialogName = string.Empty; _loginDialogPassword = string.Empty; _verifyCode = string.Empty; })"
+                               Dense="true"
+                               Type="button">
+                        重置
+                    </MatButton>
+                </div>
+            </form>
         </div>
     </div>
     <MatToastContainer />
@@ -158,6 +219,8 @@ else
     private bool _dialogIsOpen;
     private string _loginDialogName = string.Empty;
     private string _loginDialogPassword = string.Empty;
+    private string _imgBase64Code;
+    private string _verifyCode = string.Empty;
 
 
     protected void ModelDrawerHiddenChanged(bool hidden)
@@ -185,6 +248,9 @@ else
 
         //await Task.Delay(TimeSpan.FromSeconds(5))
         //     .ContinueWith((_) => { this._lazySnackbarIsOpen = true; });
+
+        var bytes = VerifyCodeService.NumberVerifyCode();
+        _imgBase64Code = "data:image/jpeg;base64," + Convert.ToBase64String(bytes);
     }
 
     private void DoLogout()
@@ -196,6 +262,14 @@ else
 
     private void DoLogin()
     {
+        var sessionVerifyCode = BlazorSession.Current["VerifyCode"].ToString();
+        if (sessionVerifyCode != _verifyCode)
+        {
+            Toaster.Add("验证码输入有误，请检查！", MatToastType.Warning, "警告", "cancel");
+            RefreshVerifyCode();
+            return;
+        }
+
         var result = IdentityService.LoginAsync(_loginDialogName, _loginDialogPassword);
         if (result.Result)
         {
@@ -209,7 +283,13 @@ else
         {
             Toaster.Add("登陆失败，请检查输入！", MatToastType.Danger, "提示", "warning");
             BlazorSession.Current.Browser.SetMemoryItem("LogonOk", "NO");
-            _viewMode = "login";
+            RefreshVerifyCode();
         }
+    }
+
+    private void RefreshVerifyCode()
+    {
+        var bytes = VerifyCodeService.NumberVerifyCode();
+        _imgBase64Code = "data:image/jpeg;base64," + Convert.ToBase64String(bytes);
     }
 }
