@@ -9,7 +9,7 @@ namespace MyTimingWebAppDemo.Quartz.Jobs
     internal class HelloJob : IJob
     {
         private readonly ILog _log;
-        private IPersonService _service;
+        private readonly IPersonService _service;
 
         public HelloJob(IPersonService service)
         {

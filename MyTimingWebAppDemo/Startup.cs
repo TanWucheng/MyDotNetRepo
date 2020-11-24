@@ -18,8 +18,6 @@ namespace MyTimingWebAppDemo
 {
     public class Startup
     {
-        public static ILoggerRepository LoggerRepository { get; set; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,10 +26,12 @@ namespace MyTimingWebAppDemo
             XmlConfigurator.Configure(LoggerRepository, new FileInfo("log4net.config"));
         }
 
+        public static ILoggerRepository LoggerRepository { get; set; }
+
         public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        ///     This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
@@ -54,17 +54,14 @@ namespace MyTimingWebAppDemo
         }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        ///     This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
         /// <param name="lifetime"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
 
@@ -72,18 +69,13 @@ namespace MyTimingWebAppDemo
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             //开启&关闭定时任务
-            var quartz = app?.ApplicationServices.GetRequiredService<QuartzStartup>();
-            if (quartz != null)
-            {
-                lifetime?.ApplicationStarted.Register(quartz.Start);
-                lifetime?.ApplicationStopped.Register(quartz.Stop);
-            }
+            var quartz = app.ApplicationServices.GetRequiredService<QuartzStartup>();
+            if (quartz == null) return;
+            lifetime?.ApplicationStarted.Register(quartz.Start);
+            lifetime?.ApplicationStopped.Register(quartz.Stop);
         }
     }
 }

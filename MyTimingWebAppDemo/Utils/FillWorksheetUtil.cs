@@ -14,14 +14,11 @@ namespace MyTimingWebAppDemo.Utils
 
         static FillWorksheetUtil()
         {
-            if (Logger == null)
-            {
-                Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-            }
+            Logger ??= LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
         }
 
         /// <summary>
-        /// 填充worksheet,根据给定属性名称清单
+        ///     填充worksheet,根据给定属性名称清单
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="list"></param>
@@ -32,7 +29,7 @@ namespace MyTimingWebAppDemo.Utils
             var result = FillHead(worksheet, rowHeads);
             if (!result)
             {
-                Logger.Info($"填充列头信息失败");
+                Logger.Info("填充列头信息失败");
                 return false;
             }
 
@@ -41,7 +38,7 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 填充worksheet,根据Entity自身属性名称清单
+        ///     填充worksheet,根据Entity自身属性名称清单
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="list"></param>
@@ -54,7 +51,7 @@ namespace MyTimingWebAppDemo.Utils
             var result = FillHead(worksheet, rowHeads);
             if (!result)
             {
-                Logger.Info($"填充列头信息失败");
+                Logger.Info("填充列头信息失败");
                 return false;
             }
 
@@ -63,7 +60,7 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 填充除了表头之外每一行数据行,根据给定属性名称清单
+        ///     填充除了表头之外每一行数据行,根据给定属性名称清单
         /// </summary>
         /// <param name="list"></param>
         /// <param name="worksheet"></param>
@@ -73,9 +70,11 @@ namespace MyTimingWebAppDemo.Utils
             var rowIndex = 2;
             var propertyList = (from row in rowHeads select row.AttrName).ToList();
             var entities = list as T[] ?? list.ToArray();
-            var keyTypeDic = ReflectPropertyUtil<T>.ReflectGetPropertyKeyTypePairs(entities.FirstOrDefault(), propertyList);
+            var keyTypeDic =
+                ReflectPropertyUtil<T>.ReflectGetPropertyKeyTypePairs(entities.FirstOrDefault(), propertyList);
 
-            foreach (var keyValueDic in entities.Select(t => ReflectPropertyUtil<T>.ReflectGetPropertyKeyValuePairs(t, propertyList)))
+            foreach (var keyValueDic in entities.Select(t =>
+                ReflectPropertyUtil<T>.ReflectGetPropertyKeyValuePairs(t, propertyList)))
             {
                 FillCells(keyValueDic, keyTypeDic, rowHeads, worksheet, rowIndex);
                 rowIndex++;
@@ -83,13 +82,14 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 填充除了表头之外每一行数据行,根据Entity自身属性名称清单
+        ///     填充除了表头之外每一行数据行,根据Entity自身属性名称清单
         /// </summary>
         /// <param name="list"></param>
         /// <param name="worksheet"></param>
         /// <param name="keyTypeDic"></param>
         /// <param name="rowHeads"></param>
-        private static void FillRows(IEnumerable<T> list, ExcelWorksheet worksheet, Dictionary<string, TypeCode> keyTypeDic, List<string> rowHeads)
+        private static void FillRows(IEnumerable<T> list, ExcelWorksheet worksheet,
+            Dictionary<string, TypeCode> keyTypeDic, List<string> rowHeads)
         {
             var rowIndex = 2;
             var entities = list as T[] ?? list.ToArray();
@@ -101,7 +101,7 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 填充列头行数据,根据给定属性名称清单
+        ///     填充列头行数据,根据给定属性名称清单
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="rowHeads"></param>
@@ -110,10 +110,7 @@ namespace MyTimingWebAppDemo.Utils
         {
             try
             {
-                for (var i = 0; i < rowHeads.Count; i++)
-                {
-                    worksheet.Cells[1, i + 1].Value = rowHeads[i].AttrDesc;
-                }
+                for (var i = 0; i < rowHeads.Count; i++) worksheet.Cells[1, i + 1].Value = rowHeads[i].AttrDesc;
                 return true;
             }
             catch (Exception ex)
@@ -124,7 +121,7 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 填充列头行数据,根据Entity自身属性名称清单
+        ///     填充列头行数据,根据Entity自身属性名称清单
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="rowHeads"></param>
@@ -133,10 +130,7 @@ namespace MyTimingWebAppDemo.Utils
         {
             try
             {
-                for (var i = 0; i < rowHeads.Count; i++)
-                {
-                    worksheet.Cells[1, i + 1].Value = rowHeads[i];
-                }
+                for (var i = 0; i < rowHeads.Count; i++) worksheet.Cells[1, i + 1].Value = rowHeads[i];
                 return true;
             }
             catch (Exception ex)
@@ -147,111 +141,115 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 填充非列头行数据,使用dotnet属性类型代码,根据给定属性名称清单
+        ///     填充非列头行数据,使用dotnet属性类型代码,根据给定属性名称清单
         /// </summary>
         /// <param name="keyValueDic"></param>
         /// <param name="keyTypeDic"></param>
         /// <param name="rowHeads"></param>
         /// <param name="worksheet"></param>
         /// <param name="rowIndex"></param>
-        private static void FillCells(Dictionary<string, object> keyValueDic, IReadOnlyDictionary<string, TypeCode> keyTypeDic, IReadOnlyList<RowTitleInfo> rowHeads, ExcelWorksheet worksheet, int rowIndex)
+        private static void FillCells(Dictionary<string, object> keyValueDic,
+            IReadOnlyDictionary<string, TypeCode> keyTypeDic, IReadOnlyList<RowTitleInfo> rowHeads,
+            ExcelWorksheet worksheet, int rowIndex)
         {
             for (var cellIndex = 0; cellIndex < rowHeads.Count; cellIndex++)
-            {
-                if (keyValueDic.TryGetValue(rowHeads[cellIndex].AttrName, out var obj) && keyTypeDic.TryGetValue(rowHeads[cellIndex].AttrName, out var propertyType))
+                if (keyValueDic.TryGetValue(rowHeads[cellIndex].AttrName, out var obj) &&
+                    keyTypeDic.TryGetValue(rowHeads[cellIndex].AttrName, out var propertyType))
                 {
                     var value = obj?.ToString();
                     switch (propertyType)
                     {
                         case TypeCode.Decimal when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDecimal(value, 0);
-                                worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "0.00";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDecimal(value, 0);
+                            worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "0.00";
+                            break;
+                        }
                         case TypeCode.DateTime when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDateTime(value);
-                                worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "yyyy/m/d";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDateTime(value);
+                            worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "yyyy/m/d";
+                            break;
+                        }
                         case TypeCode.Int32 when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseInt32(value, 0);
-                                worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "General";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseInt32(value, 0);
+                            worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "General";
+                            break;
+                        }
                         case TypeCode.Boolean when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseBoolean(value) ? "是" : "否";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value =
+                                TryParseUtil.TryParseBoolean(value) ? "是" : "否";
+                            break;
+                        }
                         default:
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = value;
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = value;
+                            break;
+                        }
                     }
                 }
                 else
                 {
                     worksheet.Cells[rowIndex, cellIndex + 1].Value = string.Empty;
                 }
-            }
         }
 
         /// <summary>
-        /// 填充非列头行数据,使用dotnet属性类型代码,根据Entity自身属性名称清单
+        ///     填充非列头行数据,使用dotnet属性类型代码,根据Entity自身属性名称清单
         /// </summary>
         /// <param name="keyValueDic"></param>
         /// <param name="keyTypeDic"></param>
         /// <param name="rowHeads"></param>
         /// <param name="worksheet"></param>
         /// <param name="rowIndex"></param>
-        private static void FillCells(Dictionary<string, object> keyValueDic, IReadOnlyDictionary<string, TypeCode> keyTypeDic, IReadOnlyList<string> rowHeads, ExcelWorksheet worksheet, int rowIndex)
+        private static void FillCells(Dictionary<string, object> keyValueDic,
+            IReadOnlyDictionary<string, TypeCode> keyTypeDic, IReadOnlyList<string> rowHeads, ExcelWorksheet worksheet,
+            int rowIndex)
         {
             for (var cellIndex = 0; cellIndex < rowHeads.Count; cellIndex++)
-            {
-                if (keyValueDic.TryGetValue(rowHeads[cellIndex], out var obj) && keyTypeDic.TryGetValue(rowHeads[cellIndex], out var propertyType))
+                if (keyValueDic.TryGetValue(rowHeads[cellIndex], out var obj) &&
+                    keyTypeDic.TryGetValue(rowHeads[cellIndex], out var propertyType))
                 {
                     var value = obj?.ToString();
                     switch (propertyType)
                     {
                         case TypeCode.Decimal when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDecimal(value, 0);
-                                worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "0.00";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDecimal(value, 0);
+                            worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "0.00";
+                            break;
+                        }
                         case TypeCode.DateTime when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDateTime(value);
-                                worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "yyyy/m/d";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseDateTime(value);
+                            worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "yyyy/m/d";
+                            break;
+                        }
                         case TypeCode.Int32 when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseInt32(value, 0);
-                                worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "General";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseInt32(value, 0);
+                            worksheet.Cells[rowIndex, cellIndex + 1].Style.Numberformat.Format = "General";
+                            break;
+                        }
                         case TypeCode.Boolean when !string.IsNullOrEmpty(value):
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = TryParseUtil.TryParseBoolean(value) ? "是" : "否";
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value =
+                                TryParseUtil.TryParseBoolean(value) ? "是" : "否";
+                            break;
+                        }
                         default:
-                            {
-                                worksheet.Cells[rowIndex, cellIndex + 1].Value = value;
-                                break;
-                            }
+                        {
+                            worksheet.Cells[rowIndex, cellIndex + 1].Value = value;
+                            break;
+                        }
                     }
                 }
                 else
                 {
                     worksheet.Cells[rowIndex, cellIndex + 1].Value = string.Empty;
                 }
-            }
         }
     }
 }

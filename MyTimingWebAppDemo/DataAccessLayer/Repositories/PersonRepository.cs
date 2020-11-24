@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using MyTimingWebAppDemo.Models;
 
@@ -8,7 +8,9 @@ namespace MyTimingWebAppDemo.DataAccessLayer.Repositories
 {
     internal class PersonRepository : RepositoryBase, IPersonRepository
     {
-        public PersonRepository(IOptions<ConnectionStrings> options) : base(options) { }
+        public PersonRepository(IOptions<ConnectionStrings> options) : base(options)
+        {
+        }
 
         public IEnumerable<PersonEntity> GetAll()
         {
