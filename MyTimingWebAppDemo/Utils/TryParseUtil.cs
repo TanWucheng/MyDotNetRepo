@@ -45,7 +45,7 @@ namespace MyTimingWebAppDemo.Utils
         }
 
         /// <summary>
-        /// 转换为boolen,0:false,1:true,其他值使用系统内置转换方法
+        /// 转换为boolean,0:false,1:true,其他值使用系统内置转换方法
         /// </summary>
         /// <param name="origin"></param>
         /// <returns></returns>

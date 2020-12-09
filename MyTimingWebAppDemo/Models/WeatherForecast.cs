@@ -1,6 +1,6 @@
 using System;
 
-namespace MyTimingWebAppDemo
+namespace MyTimingWebAppDemo.Models
 {
     public class WeatherForecast
     {
