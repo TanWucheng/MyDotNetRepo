@@ -17,28 +17,17 @@ else
 {
     <p>
         <MatButton Raised="true" TrailingIcon="add" OnClick="@NewOnClicked">新增</MatButton>
-        <MatButton Outlined="true"
-                   @bind-Disabled="@_viewModel.BatchDelDisabled"
-                   TrailingIcon="delete"
-                   OnClick="@(e => { _viewModel.BatchDelConfirmDialogOpened = true;})">批量删除</MatButton>
+        <MatButton Outlined="true" @bind-Disabled="@_viewModel.BatchDelDisabled" TrailingIcon="delete"
+            OnClick="@(e => { _viewModel.BatchDelConfirmDialogOpened = true;})">批量删除</MatButton>
     </p>
-    <MatTable Items="@_viewModel.UserModels"
-              LoadInitialData="false"
-              Striped="true"
-              AllowSelection="true"
-              FilterByColumnName="Name"
-              DebounceMilliseconds="150"
-              UseSortHeaderRow="true"
-              ShowPaging="false"
-              PageSize="@_pageSize"
-              class="mat-elevation-z5">
+    <MatTable Items="@_viewModel.UserModels" LoadInitialData="false" Striped="true" AllowSelection="true"
+        FilterByColumnName="Name" DebounceMilliseconds="150" UseSortHeaderRow="true" ShowPaging="false"
+        PageSize="@_pageSize" class="mat-elevation-z5">
         <MatTableHeader>
             <MatSortHeaderRow SortChanged="@SortData">
                 <th>
-                    <MatCheckbox Value="@_viewModel.IsCheckAll"
-                                 ValueChanged="@((bool? s) => OnChangeAllSelected(s))"
-                                 ValueExpression="@(() => _viewModel.IsCheckAll)"
-                                 Indeterminate="true"></MatCheckbox>
+                    <MatCheckbox Value="@_viewModel.IsCheckAll" ValueChanged="@((bool? s) => OnChangeAllSelected(s))"
+                        ValueExpression="@(() => _viewModel.IsCheckAll)" Indeterminate="true"></MatCheckbox>
                 </th>
                 <MatSortHeader SortId="id">Id</MatSortHeader>
                 <th>姓名</th>
@@ -52,9 +41,8 @@ else
         </MatTableHeader>
         <MatTableRow>
             <td>
-                <MatCheckbox Value="@context.Checked"
-                             ValueChanged="@((bool value) => OnValueChanged(context, value))"
-                             ValueExpression="@(() => context.Checked)">
+                <MatCheckbox Value="@context.Checked" ValueChanged="@((bool value) => OnValueChanged(context, value))"
+                    ValueExpression="@(() => context.Checked)">
                 </MatCheckbox>
 
             </td>
@@ -66,11 +54,11 @@ else
             <td>@context.User.Address</td>
             <td>@context.User.Email</td>
             <td>
-                <MatButton Dense="true" TrailingIcon="edit"
-                           OnClick="@(e => { EditOnClicked(context.User.Id); })">
+                <MatButton Dense="true" TrailingIcon="edit" OnClick="@(e => { EditOnClicked(context.User.Id); })">
                     编辑
                 </MatButton>
-                <MatButton Dense="true" TrailingIcon="delete" OnClick="@(e => { OpenDelDialog(context.User.Id);})">删除</MatButton>
+                <MatButton Dense="true" TrailingIcon="delete" OnClick="@(e => { OpenDelDialog(context.User.Id);})">删除
+                </MatButton>
             </td>
         </MatTableRow>
     </MatTable>
@@ -79,20 +67,30 @@ else
         <MatPaginator Length="@_totalCount" PageSize="@_pageSize" Page="@OnPage"></MatPaginator>
     </div>
 
-    <MatDialog IsOpen="@_viewModel.EditDialogOpened" CanBeClosed="false">
+    <MatDialog IsOpen="@_viewModel.EditDialogOpened" CanBeClosed="false" style="margin-top: 2em;">
         <MatDialogTitle>@_viewModel.DialogTitle</MatDialogTitle>
         <MatDialogContent>
             <p style="margin-top: 1em;">
-                <MatTextField @bind-Value="@_editModel.Name" Label="姓名" Outlined="true" Required="true"></MatTextField>
-                @*<MatTextField @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true"></MatTextField>*@
-                <MatDatePicker @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true" Required="true" Format="yyyy-MM-dd"></MatDatePicker>
+                <MatTextField @bind-Value="@_editModel.Name" Label="姓名" Outlined="true" Required="true"
+                    Icon="contacts"></MatTextField>
             </p>
             <p>
-                <MatTextField @bind-Value="@_editModel.Address" Label="住址" Outlined="true" Required="true"></MatTextField>
-                <MatTextField @bind-Value="@_editModel.Email" Label="电子邮件" Outlined="true" Required="true"></MatTextField>
+                <MatDatePicker @bind-Value="@_editModel.Birthday" Label="生日" Outlined="true" Required="true"
+                    Format="yyyy-MM-dd"></MatDatePicker>
             </p>
             <p>
-                <MatTextField @bind-Value="@_editModel.PhoneNum" Label="联系电话" Outlined="true" Required="true"></MatTextField>
+                <MatTextField @bind-Value="@_editModel.Address" Label="住址" Outlined="true" Required="true"
+                    Icon="location_on"></MatTextField>
+            </p>
+            <p>
+                <MatTextField @bind-Value="@_editModel.Email" Type="email" Label="电子邮件" Outlined="true"
+                    Required="true" Icon="contact_mail"></MatTextField>
+            </p>
+            <p>
+                <MatTextField @bind-Value="@_editModel.PhoneNum" Type="number" Label="联系电话" Outlined="true" Required="true"
+                    Icon="contact_phone"></MatTextField>
+            </p>
+            <p>
                 <MatRadioGroup @bind-Value="_editModel.Sex" TValue="Sex">
                     <MatRadioButton Value="@Sex.Male" TValue="Sex">男</MatRadioButton>
                     <MatRadioButton Value="@Sex.Female" TValue="Sex">女</MatRadioButton>
@@ -101,8 +99,10 @@ else
             <MatProgressBar Indeterminate="true" Closed="@_viewModel.ProgressClosed"></MatProgressBar>
         </MatDialogContent>
         <MatDialogActions>
-            <MatButton OnClick="@(e => { _viewModel.EditDialogOpened = false; })" Disabled="@_viewModel.DialogCancelDisabled">取消</MatButton>
-            <MatButton Raised="true" OnClick="@EditDialogOnConfirmed" Disabled="@_viewModel.DialogConfirmDisabled">保存</MatButton>
+            <MatButton OnClick="@(e => { _viewModel.EditDialogOpened = false; })"
+                Disabled="@_viewModel.DialogCancelDisabled">取消</MatButton>
+            <MatButton Raised="true" OnClick="@EditDialogOnConfirmed" Disabled="@_viewModel.DialogConfirmDisabled">保存
+            </MatButton>
         </MatDialogActions>
     </MatDialog>
     <MatDialog IsOpen="@_viewModel.BatchDelConfirmDialogOpened" CanBeClosed="false">
@@ -129,7 +129,7 @@ else
     </MatDialog>
 }
 
-@code {
+    @code {
     private UserViewModel _viewModel;
     private UserModel[] _sortedData;
     private User _editModel;
@@ -155,7 +155,8 @@ else
             UserModels = (from user in result select new UserModel { User = user, Checked = false }).ToArray(),
             BatchDelDisabled = true,
             DialogTitle = string.Empty,
-            ProgressClosed = true
+            ProgressClosed = true,
+            IsCheckAll = false
         };
         _editModel = new User
         {
@@ -194,7 +195,8 @@ else
             UserModels = (from user in result select new UserModel { User = user, Checked = false }).ToArray(),
             BatchDelDisabled = true,
             DialogTitle = string.Empty,
-            ProgressClosed = true
+            ProgressClosed = true,
+            IsCheckAll = false
         };
     }
 

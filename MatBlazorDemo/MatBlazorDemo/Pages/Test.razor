@@ -1,33 +1,44 @@
 ﻿@page "/test"
 
-<div class="container">
-    <div class="row">
-        <div class="col-sm-2">
-            <MatCheckbox Value="@AllSelected"
-                         ValueChanged="@((bool? s) => OnChangeAllSelected(s))"
-                         ValueExpression="@(() => AllSelected)"
-                         Indeterminate="true">
-                <h4>Group</h4>
-            </MatCheckbox>
-        </div>
-        @foreach (var element in _selectElements)
-        {
-            <div class="col-sm-2">
-                <MatCheckbox Value="@element.Selected"
-                             ValueChanged="@((bool value) => OnValueChanged(element, value))"
-                             ValueExpression="@(() => element.Selected)"
-                             Label="@element.Name">
-                </MatCheckbox>
+<MatTabGroup>
+    <MatTab Label="复选框组合">
+        <MatPaper style="margin-top: 1em;">
+            <div class="row">
+                <div class="col-sm-2">
+                    <MatCheckbox Value="@AllSelected" ValueChanged="@((bool? s) => OnChangeAllSelected(s))"
+                        ValueExpression="@(() => AllSelected)" Indeterminate="true">
+                        <h4>Group</h4>
+                    </MatCheckbox>
+                </div>
+                @foreach (var element in _selectElements)
+                {
+                    <div class="col-sm-2">
+                        <MatCheckbox Value="@element.Selected" ValueChanged="@((bool value) => OnValueChanged(element, value))"
+                            ValueExpression="@(() => element.Selected)" Label="@element.Name">
+                        </MatCheckbox>
+                    </div>
+                }
             </div>
-        }
-    </div>
-</div>
+        </MatPaper>
+    </MatTab>
+    <MatTab Label="自动补全列表">
+        <div style="margin-top:2em;">
+            <MatAutocompleteList Items="options" TItem="string" Label="Pick one" Icon="thumb_up_alt" Value="@options[0]"
+                ShowClearButton="true"></MatAutocompleteList>
+        </div>
+    </MatTab>
+</MatTabGroup>
 
 @code
 {
     private readonly List<SelectableElement> _selectElements = new List<SelectableElement>();
 
     bool? AllSelected { get; set; }
+
+    string[] options = new[]
+    {
+        "One","Two","Three"
+    };
 
     protected override Task OnInitializedAsync()
     {
@@ -82,5 +93,4 @@
             Name = name;
         }
     }
-
 }

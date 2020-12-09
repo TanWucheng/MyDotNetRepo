@@ -7,14 +7,17 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MatBlazorDemo</title>
     <base href="~/" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/QPlayer.min.css" />
     <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
     <script src="_content/MatBlazor/dist/matBlazor.js"></script>
     @*Install-BlazorPlus*@
     <script src="/_blazorplus_handler?action=script" type="text/javascript"></script>
@@ -24,8 +27,8 @@
             return "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' width='80px' height='80px' viewBox='0 0 40 40' enable-background='new 0 0 40 40' xml:space='preserve'><path opacity='0.2' fill='#000' d='M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946 s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634 c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z'></path><path fill='#000' d='M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0 C22.32,8.481,24.301,9.057,26.013,10.047z' transform='rotate(228 20 20)'><animateTransform attributeType='xml' attributeName='transform' type='rotate' from='0 20 20' to='360 20 20' dur='0.5s' repeatCount='indefinite'></animateTransform></path></svg>";
         }
     </script>
-    @*<script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>*@
-    @*<script src="js/autoload.js"></script>*@
+    @* <script src="https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script> *@
+    @* <script src="js/autoload.js"></script> *@
 
     <script src="https://eqcn.ajz.miesnfu.com/wp-content/plugins/wp-3d-pony/live2dw/lib/L2Dwidget.min.js"></script>
     <script>
@@ -35,9 +38,9 @@
                 "scale": 1
             },
             "display": {
-                "position": "right",
-                "width": 80,
-                "height": 160,
+                "position": "left",
+                "width": 75,
+                "height": 150,
                 "hOffset": 0,
                 "vOffset": -20
             },
@@ -48,11 +51,30 @@
             "react": {
                 "opacityDefault": 0.8,
                 "opacityOnHover": 1
+            },
+            "dialog": {
+                // 开启对话框
+                enable: true,
+                script: {
+                    // 每空闲 10 秒钟，显示一条一言
+                    'every idle 10s': '$hitokoto$',
+                    // 当触摸到星星图案
+                    'hover .star': '星星在天上而你在我心里 (*/ω＼*)',
+                    // 当触摸到角色身体
+                    'tap body': '哎呀！别碰我！',
+                    // 当触摸到角色头部
+                    'tap face': '人家已经不是小孩子了！'
+                }
             }
         });
     </script>
-    <link href="css/site.css" rel="stylesheet" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jQuery.Marquee/1.5.0/jquery.marquee.min.js"></script>
+    <script src="js/QPlayer.min.js"></script>
 </head>
+
 <body>
     <div style="height:30px">
         Loading..
@@ -96,7 +118,8 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
-
     <script src="_framework/blazor.server.js"></script>
+    <script src="js/site.js"></script>
 </body>
+
 </html>

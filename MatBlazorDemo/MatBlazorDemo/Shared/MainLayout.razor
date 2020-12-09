@@ -49,76 +49,35 @@
 
 @if (_viewMode == "login")
 {
-    @*<div class="login-container">
-            <div class="login-box">
-                <h2>请登录</h2>
-                <p>
-                    <MatTextField @bind-Value="@_loginDialogName"
-                                  Label="用户名"
-                                  Icon="person"
-                                  FullWidth="true"
-                                  HelperText="用户名长度为8~16"
-                                  Required="true"></MatTextField>
-                </p>
-                <p>
-                    <MatTextField @bind-Value="@_loginDialogPassword"
-                                  Label="密码"
-                                  Icon="lock"
-                                  Type="password"
-                                  FullWidth="true"
-                                  HelperText="密码长度为8~16"
-                                  Required="true"></MatTextField>
-                </p>
-                <div class="form-row">
-                    <div class="form-group col-md-9">
-                        <MatTextField @bind-Value="@_verifyCode"
-                                      Label="验证码"
-                                      Icon="verified_user"
-                                      FullWidth="true"
-                                      HelperText="请输入验证码"
-                                      Required="true"></MatTextField>
-                    </div>
-                    <div class="form-group col-md-3" style="display: flex ; flex-direction: column; justify-content: center;">
-                        <img style="width: 100px;" id="mixImg" @onclick="RefreshVerifyCode" title="数字验证码" src="@_imgBase64Code" alt="验证码" />
-                    </div>
-                </div>
-                <p>
-                    <MatButton OnClick="@DoLogin" Raised="true" Type="button">登陆</MatButton>
-                    <MatButton OnClick="@(e => { _dialogIsOpen = false; })" Dense="true">取消</MatButton>
-                </p>
-            </div>
-        </div>*@
-
-
     <div class="login-container">
         <div class="login-box">
             <h2>请登录</h2>
             <form>
                 <div class="form-group">
                     <MatTextField @bind-Value="@_loginDialogName"
-                                  Label="用户名"
-                                  Icon="person"
-                                  FullWidth="true"
-                                  HelperText="用户名长度为8~16"
-                                  Required="true"></MatTextField>
+                                Label="用户名"
+                                Icon="person"
+                                FullWidth="true"
+                                HelperText="请输入用户名"
+                                Required="true"></MatTextField>
                 </div>
                 <div class="form-group">
                     <MatTextField @bind-Value="@_loginDialogPassword"
-                                  Label="密码"
-                                  Icon="lock"
-                                  Type="password"
-                                  FullWidth="true"
-                                  HelperText="密码长度为8~16"
-                                  Required="true"></MatTextField>
+                                Label="密码"
+                                Icon="lock"
+                                Type="password"
+                                FullWidth="true"
+                                HelperText="请输入密码"
+                                Required="true"></MatTextField>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-9">
                         <MatTextField @bind-Value="@_verifyCode"
-                                      Label="验证码"
-                                      Icon="verified_user"
-                                      FullWidth="true"
-                                      HelperText="请输入验证码(区分大小写)"
-                                      Required="true"></MatTextField>
+                                    Label="验证码"
+                                    Icon="verified_user"
+                                    FullWidth="true"
+                                    HelperText="请输入验证码(区分大小写)"
+                                    Required="true"></MatTextField>
                     </div>
                     <div class="form-group col-md-3" style="display: flex ; flex-direction: column; justify-content: center;">
                         <img style="width: 100px;" id="mixImg" @onclick="RefreshVerifyCode" title="数字验证码" src="@_imgBase64Code" alt="验证码" />
@@ -127,8 +86,8 @@
                 <div class="form-group">
                     <MatButton OnClick="@DoLogin" Raised="true" Type="button">登陆</MatButton>
                     <MatButton OnClick="@(e => { _loginDialogName = string.Empty; _loginDialogPassword = string.Empty; _verifyCode = string.Empty; })"
-                               Dense="true"
-                               Type="button">
+                            Dense="true"
+                            Type="button">
                         重置
                     </MatButton>
                 </div>
@@ -206,7 +165,6 @@ else
     <MatSnackbar @bind-IsOpen="@_lazySnackbarIsOpen">
         <MatSnackbarContent>If you like MatBlazor, please put a star on GitHub.</MatSnackbarContent>
         <MatSnackbarActions>
-            @* <MatButton Raised="true">Star</MatButton> *@
             <MatIconButton Icon="@MatIconNames.Stars" Link="https://github.com/BlazorComponents/MatBlazor" style="color: white;" target="_blank"></MatIconButton>
         </MatSnackbarActions>
     </MatSnackbar>
@@ -263,14 +221,14 @@ else
     private void DoLogin()
     {
         var sessionVerifyCode = BlazorSession.Current["VerifyCode"].ToString();
-        if (sessionVerifyCode != _verifyCode)
+        if (sessionVerifyCode.ToLower() != _verifyCode.ToLower())
         {
             Toaster.Add("验证码输入有误，请检查！", MatToastType.Warning, "警告", "cancel");
             RefreshVerifyCode();
             return;
         }
-
-        var result = IdentityService.LoginAsync(_loginDialogName, _loginDialogPassword);
+        var encryptedPwd = Encryption.Md5(Encryption.Md5(_loginDialogPassword));
+        var result = IdentityService.LoginAsync(_loginDialogName, encryptedPwd);
         if (result.Result)
         {
             _loginDialogName = string.Empty;

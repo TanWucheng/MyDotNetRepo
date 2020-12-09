@@ -1,7 +1,20 @@
 ﻿@page "/"
+@using Microsoft.Extensions.DependencyModel
 
-<h1>Hello, world!</h1>
+<h1>欢迎</h1>
 
-Welcome to your new app.
+欢迎访问本网站，以下是一些有用提示
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<HomePrompt Title="How is Blazor working for you?" SdkVersion="@_sdkVersion" />
+
+@code{
+    private string _sdkVersion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var dc = DependencyContext.Default;
+        var library = dc.RuntimeLibraries.FirstOrDefault(x => x.Name.Contains("Microsoft.NETCore.App"));
+        _sdkVersion = library.Version;
+    }
+}

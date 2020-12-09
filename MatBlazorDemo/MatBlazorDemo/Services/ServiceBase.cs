@@ -36,7 +36,7 @@ namespace MatBlazorDemo.Services
 
         protected virtual Task<IEnumerable<T>> PaginationSelectAsync(int pageIndex, int pageSize)
         {
-            return Task.Run(() => _efDbContext.Set<T>().Skip(pageSize * (pageIndex)).Take(pageSize).AsEnumerable());
+            return Task.Run(() => _efDbContext.Set<T>().OrderBy(x => x.Id).Skip(pageSize * (pageIndex)).Take(pageSize).AsEnumerable());
         }
 
         protected virtual Task<IEnumerable<T>> GetCollectionAsync(Expression<Func<T, bool>> predicate)

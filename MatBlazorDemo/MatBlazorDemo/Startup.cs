@@ -12,6 +12,9 @@ using System.Linq;
 using System;
 using Microsoft.AspNetCore.Components;
 using MatBlazor;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
+using CurrieTechnologies.Blazor.Clipboard;
 
 namespace MatBlazorDemo
 {
@@ -74,6 +77,9 @@ namespace MatBlazorDemo
             // 注册BlazorPlus相关服务
             services.AddHttpContextAccessor();
             services.AddScoped<BlazorPlus.BlazorSession>();
+
+            // 注册剪贴板服务
+            // services.AddClipboard();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,7 +97,15 @@ namespace MatBlazorDemo
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+            app.UseFileServer(new FileServerOptions()
+            {
+                FileProvider = new PhysicalFileProvider(
+            Path.Combine(env.ContentRootPath, "MyStaticFiles")),
+                RequestPath = "/StaticFiles",
+                EnableDirectoryBrowsing = true
+            });
 
             app.UseRouting();
 

@@ -20,8 +20,8 @@ namespace MatBlazorDemo.Services
 
         public Task<User> GetUserAsync(string name, string password)
         {
-            var pwd = Encryption.Md5(Encryption.Md5(password));
-            return GetOneAsync(PredicateBuilder.True<User>().And(x => x.Name == name).And(x => x.Password == pwd));
+            // var pwd = Encryption.Md5(Encryption.Md5(password));
+            return GetOneAsync(PredicateBuilder.True<User>().And(x => x.Name == name).And(x => x.Password == password));
         }
 
         public Task<User> GetUserAsync(int id)
