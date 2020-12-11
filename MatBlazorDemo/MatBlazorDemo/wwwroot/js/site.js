@@ -3,11 +3,11 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.addEventListener(
         "click",
         function (e) {
-            let r = Math.random() * 255;
-            let g = Math.random() * 255;
-            let b = Math.random() * 255;
-            var color = "rgb(" + r + "," + g + "," + b + ")";
-            var arr = [
+            const r = Math.random() * 255;
+            const g = Math.random() * 255;
+            const b = Math.random() * 255;
+            const color = "rgb(" + r + "," + g + "," + b + ")";
+            const arr = [
                 "HTML",
                 "JavaScript",
                 "CSS",
@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", function () {
             var promptSpan = document.createElement("span");
             promptSpan.innerText = arr[arrIndex];
             arrIndex = (arrIndex + 1) % arr.length;
-            var x = e.pageX,
-                y = e.pageY;
-            var size = Math.random() * 10 + 8 + "px";
+            const x = e.pageX;
+            const y = e.pageY;
+            const size = Math.random() * 10 + 8 + "px";
             promptSpan.style.zIndex = 99999;
             promptSpan.style.top = `${y - 20}px`;
             promptSpan.style.left = `${x}px`;
@@ -168,12 +168,12 @@ document.addEventListener("DOMContentLoaded", function () {
             lrc:
                 "https://cdn.jsdelivr.net/gh/moeshin/QPlayer-res/Blessing 世界版.lrc",
         },
-        {
-            name: "烟花易冷",
-            artist: "林志炫",
-            audio: "StaticFiles/music/林志炫 - 烟花易冷.wav",
-            cover: "",
-        },
+        //{
+        //    name: "烟花易冷",
+        //    artist: "林志炫",
+        //    audio: "StaticFiles/music/林志炫 - 烟花易冷.wav",
+        //    cover: "",
+        //},
         // 尼尔:自动人形
         {
             name: "意味/無",

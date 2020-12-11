@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="css/QPlayer.min.css" />
     <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
+    <link rel="manifest" href="manifest.json" />
     <script src="_content/MatBlazor/dist/matBlazor.js"></script>
     @*Install-BlazorPlus*@
     <script src="/_blazorplus_handler?action=script" type="text/javascript"></script>
@@ -85,18 +86,18 @@
 
     <script>
         new function () {
-            var div = document.querySelector("div");
-            var app = document.querySelector("app");
-            var html = app.innerHTML;
-            function CheckLoaded() {
-                if (app.innerHTML == html)
-                    setTimeout(CheckLoaded, 500);
+            const div = document.querySelector("div");
+            const app = document.querySelector("app");
+            const html = app.innerHTML;
+            function checkLoaded() {
+                if (app.innerHTML === html)
+                    setTimeout(checkLoaded, 500);
                 else if (div.parentNode)
                     div.parentNode.removeChild(div);
             }
-            CheckLoaded();
+            checkLoaded();
             if (window.MutationObserver) {
-                var observer = new MutationObserver(function (mutations, observer) {
+                const observer = new window.MutationObserver(function (mutations, observer) {
                     if (div.parentNode)
                         div.parentNode.removeChild(div);
                     observer.disconnect();
@@ -106,7 +107,8 @@
             setTimeout(function () {
                 div.style.opacity = "1.0";
             }, 10);
-        }</script>
+        }
+    </script>
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
@@ -120,6 +122,23 @@
     </div>
     <script src="_framework/blazor.server.js"></script>
     <script src="js/site.js"></script>
+    <script type="module">
+        (function () {
+            if (window.addEventListener) {
+                window.addEventListener("load", () => {
+                    let script = document.createElement("script");
+                    script.src = `service-worker.reg.mgr.js?t=${new Date()}`; // 无缓存引用
+                    script.async = true;
+                    script.type = "text/javascript";
+                    script.crossOrigin = "anonymous";
+                    document.head.insertBefore(
+                        script,
+                        document.head.firstChild
+                    );
+                });
+            }
+        })();
+    </script>
 </body>
 
 </html>
