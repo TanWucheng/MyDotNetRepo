@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleDemo.CSharp9;
+using ConsoleDemo.Models;
 using ConsoleDemo.PasswordValidation;
 using ConsoleDemo.StringComparison;
+using ConsoleDemo.Utils;
 using EncryptionLibrary;
 
 namespace ConsoleDemo
@@ -11,12 +14,27 @@ namespace ConsoleDemo
     {
         private static void Main(string[] args)
         {
-            // CheckPasswordIsWeakly();
-            // RsaEncrypt();
-            NewFeatures.RangeOperation();
+            LinqTest();
 
             PrintLine("Press any key to continue...");
             Console.ReadKey(true);
+        }
+
+        private static void LinqTest()
+        {
+            List<Person> persons = new List<Person>{
+                new Person{Id=0,Name="ten",Sex=Sex.Male,Height=170.0f,Weight=65.6f},
+                new Person{Id=1,Name="nine",Sex=Sex.Female,Height=170.0f,Weight=65.6f},
+                new Person{Id=2,Name="eight",Sex=Sex.Male,Height=170.0f,Weight=65.6f},
+                new Person{Id=3,Name="seven",Sex=Sex.Mix,Height=170.0f,Weight=65.6f},
+                new Person{Id=4,Name="six",Sex=Sex.Mix,Height=170.0f,Weight=65.6f}
+            };
+
+            var p1 = persons.Where(x => new[] { Sex.Male }.Contains(x.Sex));
+            foreach (var p in p1)
+            {
+                Console.WriteLine(p.Id);
+            }
         }
 
         private static void RsaEncrypt()

@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Components;
 using MatBlazor;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
-using CurrieTechnologies.Blazor.Clipboard;
 
 namespace MatBlazorDemo
 {
