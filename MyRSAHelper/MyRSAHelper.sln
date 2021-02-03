@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Encrypt", "Encrypt\Encrypt.csproj", "{C9181DC9-9F21-45EF-890A-243A0F331299}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RsaUtils", "RsaHelper\RsaUtils.csproj", "{EA4220F2-64EB-4275-B825-DA00C4A86FF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9181DC9-9F21-45EF-890A-243A0F331299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9181DC9-9F21-45EF-890A-243A0F331299}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9181DC9-9F21-45EF-890A-243A0F331299}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9181DC9-9F21-45EF-890A-243A0F331299}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA4220F2-64EB-4275-B825-DA00C4A86FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA4220F2-64EB-4275-B825-DA00C4A86FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA4220F2-64EB-4275-B825-DA00C4A86FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA4220F2-64EB-4275-B825-DA00C4A86FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8FEBE0B2-2749-47EA-92B8-66CC41613CA5}
+	EndGlobalSection
+EndGlobal

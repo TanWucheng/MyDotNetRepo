@@ -24,8 +24,4 @@
     <ProjectReference Include="..\DaoLibrary\DaoLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\" />
-  </ItemGroup>
-
 </Project>
