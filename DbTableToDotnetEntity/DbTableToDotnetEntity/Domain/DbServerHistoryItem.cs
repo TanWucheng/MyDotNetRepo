@@ -11,7 +11,7 @@ namespace DbTableToDotnetEntity.Domain
         private string _databaseType;
         private ScrollBarVisibility _horizontalScrollBarVisibilityRequirement;
         private ScrollBarVisibility _verticalScrollBarVisibilityRequirement;
-        private Thickness _marginRequirement = new Thickness(16);
+        private Thickness _marginRequirement = new(16);
 
         public DbServerHistoryItem(string ip, string databaseType)
         {

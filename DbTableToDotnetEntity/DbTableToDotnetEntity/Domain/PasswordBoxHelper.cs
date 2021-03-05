@@ -43,7 +43,7 @@ namespace DbTableToDotnetEntity.Domain
         private static void OnPasswordPropertyChanged(DependencyObject sender,
             DependencyPropertyChangedEventArgs e)
         {
-            if (!(sender is PasswordBox passwordBox)) return;
+            if (sender is not PasswordBox passwordBox) return;
             passwordBox.PasswordChanged -= PasswordChanged;
             if (!GetIsUpdating(passwordBox))
             {
@@ -55,7 +55,7 @@ namespace DbTableToDotnetEntity.Domain
         private static void Attach(DependencyObject sender,
             DependencyPropertyChangedEventArgs e)
         {
-            if (!(sender is PasswordBox passwordBox))
+            if (sender is not PasswordBox passwordBox)
                 return;
             if ((bool)e.OldValue)
             {

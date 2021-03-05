@@ -16,8 +16,9 @@
   </ItemGroup>-->
 
 	<ItemGroup>
-		<PackageReference Include="MahApps.Metro" Version="2.4.3" />
-		<PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
+		<PackageReference Include="DotNetUtils" Version="1.0.2" />
+		<PackageReference Include="MahApps.Metro" Version="2.4.4" />
+		<PackageReference Include="MaterialDesignThemes" Version="4.0.0" />
 		<PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
 		<PackageReference Include="Svg2Xaml" Version="0.3.0.7" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />

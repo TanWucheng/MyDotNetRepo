@@ -15,9 +15,9 @@ namespace DbTableToDotnetEntity.Domain
 
         private static void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
-            PasswordBox passwordBox = sender as PasswordBox;
+            var passwordBox = sender as PasswordBox;
 
-            string password = PasswordBoxHelper.GetPassword(passwordBox);
+            var password = PasswordBoxHelper.GetPassword(passwordBox);
 
             if (passwordBox != null && passwordBox.Password != password)
             {

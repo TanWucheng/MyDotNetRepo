@@ -42,18 +42,19 @@ namespace DbTableToDotnetEntity.Domain
         {
             var handler = GetValidationExceptionHandler();
 
-            if (handler == null || !(e.OriginalSource is UIElement element))
+            if (handler == null || e.OriginalSource is not UIElement)
             {
                 return;
             }
 
-            if (e.Action == ValidationErrorEventAction.Added)
+            switch (e.Action)
             {
-                _validationExceptionCount++;
-            }
-            else if (e.Action == ValidationErrorEventAction.Removed)
-            {
-                _validationExceptionCount--;
+                case ValidationErrorEventAction.Added:
+                    _validationExceptionCount++;
+                    break;
+                case ValidationErrorEventAction.Removed:
+                    _validationExceptionCount--;
+                    break;
             }
 
             handler.IsValid = _validationExceptionCount == 0;
