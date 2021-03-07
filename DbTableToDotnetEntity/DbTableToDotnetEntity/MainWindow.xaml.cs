@@ -15,7 +15,7 @@ namespace DbTableToDotnetEntity
     /// </summary>
     public partial class MainWindow
     {
-        public static Snackbar SnackBar;
+        internal static Snackbar SnackBar;
 
         private int _i;
 
@@ -96,7 +96,7 @@ namespace DbTableToDotnetEntity
             {
                 Interval = new TimeSpan(0, 0, 0, 0, 300)
             };
-            timer.Tick += (s, e1) =>
+            timer.Tick += (_, e1) =>
             {
                 timer.IsEnabled = false;
                 _i = 0;

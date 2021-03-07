@@ -11,7 +11,7 @@ namespace DbTableToDotnetEntity.Domain
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (parameter == null) return null;
-            string directory = AppDomain.CurrentDomain.BaseDirectory;
+            var directory = AppDomain.CurrentDomain.BaseDirectory;
             var path = directory + parameter;
             using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
             return SvgReader.Load(stream);

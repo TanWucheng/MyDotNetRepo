@@ -12,6 +12,8 @@ using DbTableToDotnetEntity.Models;
 using DbTableToDotnetEntity.Service.Interface;
 using DbTableToDotnetEntity.UserControls;
 using DbTableToDotnetEntity.Widget;
+using DotNetUtils.Encryption;
+using DotNetUtils.Linq;
 using MaterialDesignThemes.Wpf;
 
 namespace DbTableToDotnetEntity.ViewModel
@@ -170,7 +172,7 @@ namespace DbTableToDotnetEntity.ViewModel
         /// <summary>
         ///     登出按钮点击处理Command
         /// </summary>
-        public ICommand RunLogoutCommand => new AnotherCommandImplementation(async o =>
+        public ICommand RunLogoutCommand => new AnotherCommandImplementation(async _ =>
         {
             var view = new SimpleProgressDialog();
             await DialogHost.Show(view, "RootDialog", LogoutOpenedEventHandler,
@@ -180,7 +182,7 @@ namespace DbTableToDotnetEntity.ViewModel
         /// <summary>
         ///     关于按钮点击处理Command
         /// </summary>
-        public ICommand RunAboutCommand => new AnotherCommandImplementation(async o =>
+        public static ICommand RunAboutCommand => new AnotherCommandImplementation(async _ =>
         {
             var view = new AboutDialog();
             await DialogHost.Show(view, "RootDialog");
@@ -203,13 +205,13 @@ namespace DbTableToDotnetEntity.ViewModel
 
         private async void LoginClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
         {
-            if ((bool)eventArgs.Parameter == false) return;
+            if (eventArgs.Parameter != null && (bool)eventArgs.Parameter == false) return;
 
             //OK, lets cancel the close...
             eventArgs.Cancel();
 
-            if (!(eventArgs.Session.Content is LoginDialog dialog)) return;
-            if (!(dialog.DataContext is LoginDialogViewModel context)) return;
+            if (eventArgs.Session.Content is not LoginDialog dialog) return;
+            if (dialog.DataContext is not LoginDialogViewModel context) return;
 
             if (!context.IsValid)
             {
@@ -261,7 +263,7 @@ namespace DbTableToDotnetEntity.ViewModel
         private async Task<bool> DoLogin(LoginDialogViewModel viewModel)
         {
             var searchPredicate = PredicateBuilder.True<Users>();
-            var password = Encryption.Md5(viewModel.Password).ToLower();
+            var password = EncryptionHelper.Md5(viewModel.Password).ToLower();
             searchPredicate = searchPredicate.And(x => x.Name.Equals(viewModel.Name))
                 .And(x => x.Password.Equals(password));
             var list = await _usersService.GetUserList(searchPredicate);

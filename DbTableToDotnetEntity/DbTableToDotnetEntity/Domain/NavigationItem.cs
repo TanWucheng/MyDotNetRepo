@@ -11,7 +11,7 @@ namespace DbTableToDotnetEntity.Domain
         private object _content;
         private ScrollBarVisibility _horizontalScrollBarVisibilityRequirement;
         private ScrollBarVisibility _verticalScrollBarVisibilityRequirement;
-        private Thickness _marginRequirement = new Thickness(16);
+        private Thickness _marginRequirement = new(16);
 
         public NavigationItem(string name, object content)
         {

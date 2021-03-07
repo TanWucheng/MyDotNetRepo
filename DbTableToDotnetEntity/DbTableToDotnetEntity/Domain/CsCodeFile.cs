@@ -47,7 +47,7 @@ namespace DbTableToDotnetEntity.Domain
 
         private static string ToTitleCase(string str)
         {
-            return str.Substring(0, 1).ToUpper() + str.Substring(1).ToLower();
+            return str.Substring(0, 1).ToUpper() + str[1..].ToLower();
         }
 
         public static string GetEntityClassName(string tableName)

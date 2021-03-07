@@ -11,7 +11,7 @@ namespace DbTableToDotnetEntity.UserControls
     /// <summary>
     /// ExportEntity.xaml 的交互逻辑
     /// </summary>
-    public partial class ExportEntity : UserControl
+    public partial class ExportEntity
     {
         public ExportEntity(ITableInfoService tableInfoService,IColumnInfoService columnInfoService)
         {

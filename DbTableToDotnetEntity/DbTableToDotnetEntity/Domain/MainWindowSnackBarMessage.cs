@@ -28,12 +28,9 @@ namespace DbTableToDotnetEntity.Domain
                         MainWindow.SnackBar.Background = new SolidColorBrush(Color.FromArgb(255, 229, 28, 35));
                         break;
                     }
-                default:
-                    {
-                        break;
-                    }
             }
-            MainWindow.SnackBar.MessageQueue.Enqueue(message);
+
+            if (MainWindow.SnackBar.MessageQueue != null) MainWindow.SnackBar.MessageQueue.Enqueue(message);
         }
     }
 }

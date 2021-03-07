@@ -87,7 +87,7 @@ namespace DbTableToDotnetEntity.ViewModel
             set => this.MutateVerbose(ref _isDialogOpened, value, RaisePropertyChanged());
         }
 
-        public IEnumerable<string> Encodings
+        public static IEnumerable<string> Encodings
         {
             get
             {
@@ -104,7 +104,7 @@ namespace DbTableToDotnetEntity.ViewModel
             }
         }
 
-        public IEnumerable<string> DbTypes
+        public static IEnumerable<string> DbTypes
         {
             get
             {
@@ -118,7 +118,7 @@ namespace DbTableToDotnetEntity.ViewModel
 
         public ICommand SelectCommand => _selectCommand ??= new DelegateCommand<int>(Select);
 
-        public ICommand RunGetTableInfoCommand => new AnotherCommandImplementation(async (o) =>
+        public ICommand RunGetTableInfoCommand => new AnotherCommandImplementation(async (_) =>
         {
             if (!IsValid)
             {
