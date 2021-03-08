@@ -4,7 +4,6 @@ using Android.App;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
-using Android.Text;
 using Android.Views;
 using Android.Webkit;
 using Android.Widget;
@@ -18,6 +17,7 @@ using Google.Android.Material.Snackbar;
 using Infideap.DrawerBehavior;
 using TenBlogDroidApp.Adapters;
 using TenBlogDroidApp.Extensions;
+using TenBlogDroidApp.Utils;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 
 namespace TenBlogDroidApp
@@ -59,16 +59,22 @@ namespace TenBlogDroidApp
                 "<h1>卜算子・咏梅</h1><p>毛泽东 〔近现代〕</p><p>风雨送春归，飞雪迎春到。</p><p>已是悬崖百丈冰，犹有花枝俏。</p><p>俏也不争春，只把春来报。</p><p>待到山花烂漫时，她在丛中笑。</p>"
             };
             _adapter = new StandardRecyclerViewAdapter<string>(
-                Resource.Layout.item_main, items);
+                Resource.Layout.item_blog, items);
             _adapter.OnGetView += Adapter_OnGetView;
             _recyclerView.SetAdapter(_adapter);
         }
 
         private View Adapter_OnGetView(int position, View convertView, ViewGroup parent, string item, StandardRecyclerViewHolder viewHolder)
         {
-            var textView = viewHolder.GetView<TextView>(Resource.Id.tv_donation_desc);
-            textView.SetHtml(item);
-            return viewHolder.GetConvertView();
+            //var textView = viewHolder.GetView<TextView>(Resource.Id.tv_donation_desc);
+            //textView.SetHtml(item);
+
+            var tvBlogContent = viewHolder.GetView<TextView>(Resource.Id.tv_blog_content);
+            tvBlogContent.SetHtml(item);
+
+            FontManager.MarkAsIconContainer(convertView, FontManager.GetTypeface(this, FontManager.FontAwesome), TypefaceStyle.Normal);
+
+            return convertView;
         }
 
         private void InitRefreshLayout()
