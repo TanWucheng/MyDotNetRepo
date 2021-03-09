@@ -15,16 +15,29 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<TextView
-			android:id="@+id/tv_donation_desc"
+<!--        <TenBlogDroidApp.XRichText.RichTextView
+			android:id="@+id/tv_item_content"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textColor="@color/white"
 			android:text="岱宗夫如何，齐鲁青未了。造化钟神秀，阴阳割昏晓。荡胸生层云，决眦入归鸟。会当凌绝顶，一览众山小。"
+			app:rt_view_text_line_space="6dp"
+			app:rt_view_image_height="0"
+			app:rt_view_image_bottom="10"
+			app:rt_view_text_size="16sp"
+			app:rt_view_text_color="@color/black"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"/>
+			app:layout_constraintTop_toTopOf="parent"/>-->
+
+		<TextView
+			android:id="@+id/tv_item_content"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="岱宗夫如何，齐鲁青未了。造化钟神秀，阴阳割昏晓。荡胸生层云，决眦入归鸟。会当凌绝顶，一览众山小。"
+			android:textColor="@color/black"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintTop_toTopOf="parent"/>
 
 	</androidx.constraintlayout.widget.ConstraintLayout>
 
