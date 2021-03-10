@@ -7,7 +7,7 @@
 	android:foreground="?android:attr/selectableItemBackground"
 	android:stateListAnimator="@drawable/selector_elevation"
 	android:layout_margin="@dimen/card_margin"
-	android:background="@color/colorDivider"
+	app:cardElevation="@dimen/dp_6"
 	app:contentPadding="@dimen/dp_8"
 	app:cardCornerRadius="@dimen/dp_8"
 	app:cardPreventCornerOverlap="false"
@@ -16,18 +16,6 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
-
-		<!--        <ImageView
-			android:id="@+id/iv_blog_picture"
-			android:layout_width="@dimen/dp_128"
-			android:layout_height="wrap_content"
-			android:src="@mipmap/landscape_1"
-			android:contentDescription="@string/app_name"
-			android:adjustViewBounds="true"
-			android:scaleType="fitXY"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="parent"
-			app:layout_constraintBottom_toTopOf="parent"/>-->
 
 		<de.hdodenhof.circleimageview.CircleImageView
 			android:id="@+id/iv_blog_picture"
@@ -52,7 +40,7 @@
 
 		<TextView
 			android:id="@+id/tv_blog_abstract"
-			android:layout_width="wrap_content"
+			android:layout_width="@dimen/dp_0"
 			android:layout_height="wrap_content"
 			android:lines="2"
 			android:ellipsize="end"
@@ -62,7 +50,11 @@
 			android:layout_marginEnd="@dimen/dp_4"
 			android:layout_marginTop="@dimen/dp_4"
 			app:layout_constraintStart_toEndOf="@id/iv_blog_picture"
-			app:layout_constraintTop_toBottomOf="@id/tv_blog_title"/>
+			app:layout_constraintTop_toBottomOf="@id/tv_blog_title"
+			app:layout_constrainedWidth="true"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="1.0"
+			app:layout_constraintHorizontal_weight="1"/>
 
 		<TextView
 			android:id="@+id/tv_blog_publish_fa"
@@ -105,7 +97,7 @@
 			android:id="@+id/tv_blog_category_fa"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="&#xf114;分类 "
+			android:text="&#xf114; "
 			android:textSize="@dimen/sp_12"
 			android:textColor="@color/colorAccent"
 			android:layout_marginStart="@dimen/dp_8"

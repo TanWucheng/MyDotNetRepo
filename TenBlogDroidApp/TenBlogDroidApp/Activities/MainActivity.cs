@@ -90,7 +90,7 @@ namespace TenBlogDroidApp.Activities
 
                 if (status == PermissionStatus.Granted)
                 {
-                    ShowToast("成功授予存储权限", ToastLength.Short);
+                    // ShowToast("成功授予存储权限", ToastLength.Short);
                 }
                 else if (status != PermissionStatus.Unknown)
                 {
@@ -131,7 +131,7 @@ namespace TenBlogDroidApp.Activities
             tvBlogTitle.Text = item.Title;
 
             var tvBlogContent = viewHolder.GetView<TextView>(Resource.Id.tv_blog_abstract);
-            tvBlogContent.SetHtml(item.Summary.Content, new HtmlImageGetter<Entry>(this, _adapter));
+            tvBlogContent.SetHtml(item.Summary.Content);
 
             var tvPublished = viewHolder.GetView<TextView>(Resource.Id.tv_blog_published);
             tvPublished.Text = $"{item.Published:yyyy-MM-dd}";

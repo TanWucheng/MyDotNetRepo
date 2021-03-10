@@ -91,10 +91,6 @@
     <Compile Include="RssSubscriber\Models\Summary.cs" />
     <Compile Include="RssSubscriber\Models\SummaryType.cs" />
     <Compile Include="Utils\FontManager.cs" />
-    <Compile Include="XRichText\DataImageView.cs" />
-    <Compile Include="XRichText\IImageLoader.cs" />
-    <Compile Include="XRichText\RichTextView.cs" />
-    <Compile Include="XRichText\XRichText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -308,14 +304,6 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\drawable\img_load_fail.png">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\edit_imageview.xml">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\layout\rich_textview.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
