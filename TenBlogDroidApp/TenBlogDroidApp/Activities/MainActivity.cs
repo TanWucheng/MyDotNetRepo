@@ -7,6 +7,7 @@ using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
+using Android.Views.Animations;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.View;
@@ -14,14 +15,14 @@ using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
-using Google.Android.Material.Snackbar;
 using Infideap.DrawerBehavior;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using RecyclerViewItemAnimator.Adapter;
 using TenBlogDroidApp.Adapters;
 using TenBlogDroidApp.Extensions;
 using TenBlogDroidApp.Fragments;
-using TenBlogDroidApp.RssSubscriber.ImageGetter;
+using TenBlogDroidApp.Listeners;
 using TenBlogDroidApp.RssSubscriber.Models;
 using TenBlogDroidApp.Services;
 using TenBlogDroidApp.Utils;
@@ -31,15 +32,18 @@ using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 namespace TenBlogDroidApp.Activities
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener, IDialogFragmentCallBack
+    public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener,
+        IDialogFragmentCallBack, IFabDisplayListener
     {
         private Advance3DDrawerLayout _drawer;
         private Toolbar _toolbar;
         private SwipeRefreshLayout _swipeRefreshLayout;
         private RecyclerView _recyclerView;
+        private FloatingActionButton _fab;
         private LinearLayoutManager _layoutManager;
         private StandardRecyclerViewAdapter<Entry> _adapter;
         private SimpleProgressDialogFragment _dialogFragment;
+        private AnimatorAdapter _animatorAdapter;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -55,6 +59,7 @@ namespace TenBlogDroidApp.Activities
             InitNavigationView();
             InitRefreshLayout();
             InitRecyclerView();
+            InitFab();
             RssSubscribeAsync();
         }
 
@@ -113,14 +118,18 @@ namespace TenBlogDroidApp.Activities
             _adapter = new StandardRecyclerViewAdapter<Entry>(
                 Resource.Layout.item_blog, items);
             _adapter.OnGetView += Adapter_OnGetView;
-            _recyclerView.SetAdapter(_adapter);
+
+            _animatorAdapter = new ScaleInAnimatorAdapter(_adapter, _recyclerView);
+            _recyclerView.SetAdapter(_animatorAdapter);
+
+            _recyclerView.AddOnScrollListener(new FabScrollListener(this));
         }
 
         private async void RssSubscribeAsync()
         {
             _dialogFragment = SimpleProgressDialogFragment.NewInstance("博文拼命加载中...");
             Show();
-            var entries = await RssSubscribeService.GetBlogEntries();
+            var entries = await RssSubscribeService.GetBlogEntries(this);
             _adapter.RefreshItems(entries);
             Dismiss();
         }
@@ -180,16 +189,17 @@ namespace TenBlogDroidApp.Activities
         {
             _toolbar = FindViewById<Toolbar>(Resource.Id.toolbar_main);
             SetSupportActionBar(_toolbar);
-            var fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            if (fab != null) fab.Click += Fab_Click;
+        }
+
+        private void InitFab()
+        {
+            _fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
+            if (_fab != null) _fab.Click += Fab_Click;
         }
 
         private void Fab_Click(object sender, EventArgs e)
         {
-            Snackbar.Make((View)sender, "FloatingActionButton OnClicked", BaseTransientBottomBar.LengthLong).SetAction("Action", _ =>
-            {
-                Toast.MakeText(this, "Snackbar Action", ToastLength.Long)?.Show();
-            }).Show();
+            _recyclerView.SmoothScrollToPosition(0);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
@@ -242,6 +252,28 @@ namespace TenBlogDroidApp.Activities
                     }
             }
             return base.OnOptionsItemSelected(item);
+        }
+
+        public void FabShow()
+        {
+            _fab.Animate()?.TranslationY(0)?.SetInterpolator(new DecelerateInterpolator(3));
+        }
+
+        public void FabHide()
+        {
+            //if (_fab.LayoutParameters is RelativeLayout.LayoutParams parameters)
+            //{
+            //    _fab.Animate()
+            //        ?.TranslationY(_fab.Height + parameters.BottomMargin)
+            //        ?.SetInterpolator(new AccelerateInterpolator(3));
+            //}
+
+            var marinParams = new ViewGroup.MarginLayoutParams(_fab.LayoutParameters);
+
+            // var layoutParams = (RelativeLayout.LayoutParams)_fab.LayoutParameters;
+            _fab.Animate()
+                ?.TranslationY(_fab.Height * 2 + marinParams.BottomMargin)
+                ?.SetInterpolator(new AccelerateInterpolator(3));
         }
     }
 }

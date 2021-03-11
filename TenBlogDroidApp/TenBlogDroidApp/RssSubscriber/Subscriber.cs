@@ -1,30 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
+using Android.Content;
+using Java.IO;
 using TenBlogDroidApp.RssSubscriber.Models;
 using TenBlogDroidApp.Utils;
+using Console = System.Console;
+using Environment = Android.OS.Environment;
+using File = Java.IO.File;
 
 namespace TenBlogDroidApp.RssSubscriber
 {
     /// <summary>
     /// RSS订阅器
     /// </summary>
-    public class Subscriber
+    public static class Subscriber
     {
+        private const string RssXmlFileName = "atom.xml";
+
         /// <summary>
         /// 订阅RSS
         /// </summary>
         /// <param name="rssUrl">RSS订阅源URL，文件系统路径或者HTTP链接</param>
+        /// <param name="context">Activity上下文</param>
         /// <param name="articleCount">文章数量</param>
+        /// <param name="doHttpRequest">是否执行HTTP请求获取最新订阅，如果是则用HTTP响应数据覆盖本地缓存XML，如果不是则直接读取本地缓存XML</param>
         /// <returns></returns>
-        public static Feed Subscribe(string rssUrl, int articleCount = int.MaxValue)
+        public static async Task<Feed> Subscribe(string rssUrl, Context context, int articleCount = int.MaxValue, bool doHttpRequest = false)
         {
             var xmlDoc = new XmlDocument();
             if (string.IsNullOrWhiteSpace(rssUrl)) return null;
             try
             {
                 xmlDoc.Load(rssUrl);
+
+                if (doHttpRequest)
+                {
+                    var xml = await HttpRequestRssFeedAsync(context, rssUrl);
+                    xmlDoc.LoadXml(xml);
+                    try
+                    {
+                        WriteCacheRssXmlAsync(context, xml);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+                else
+                {
+                    var xml = await ReadCacheRssXmlAsync(context);
+                    if (string.IsNullOrWhiteSpace(xml))
+                    {
+                        xml = await HttpRequestRssFeedAsync(context, rssUrl);
+                        try
+                        {
+                            WriteCacheRssXmlAsync(context, xml);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+                    xmlDoc.LoadXml(xml);
+                }
+
                 if (!xmlDoc.HasChildNodes) return null;
                 //var entryNodeList = xmlDoc.GetElementsByTagName("entry");
                 var childList = xmlDoc.ChildNodes;
@@ -44,6 +88,81 @@ namespace TenBlogDroidApp.RssSubscriber
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 读取本地RSS订阅XML缓存文件
+        /// </summary>
+        /// <param name="context">Activity上下文</param>
+        /// <returns></returns>
+        private static async Task<string> ReadCacheRssXmlAsync(Context context)
+        {
+            var sdCardPath = context.GetExternalFilesDir(Environment.DirectoryPictures)?.AbsolutePath;
+            var absFilePath = System.IO.Path.Combine(sdCardPath ?? string.Empty, RssXmlFileName);
+            try
+            {
+                var file = new File(absFilePath);
+                if (!file.Exists())
+                {
+                    return string.Empty;
+                }
+                var xml = await System.IO.File.ReadAllTextAsync(absFilePath, encoding: Encoding.UTF8);
+                return xml;
+            }
+            catch (Exception e)
+            {
+                LogFileUtil.NewInstance(context).SaveLogToFile("TenBlogDroidApp.RssSubscriber.Subscriber.ReadCacheRssXmlAsync读取文件发生异常:" + e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 保存RSS订阅XML为本地文件
+        /// </summary>
+        /// <param name="context">Activity上下文</param>
+        /// <param name="xml">XML内容</param>
+        private static async void WriteCacheRssXmlAsync(Context context, string xml)
+        {
+            try
+            {
+                var sdCardPath = context.GetExternalFilesDir(Environment.DirectoryPictures)?.AbsolutePath;
+                var absFilePath = System.IO.Path.Combine(sdCardPath ?? string.Empty, RssXmlFileName);
+                var file = new File(absFilePath);
+                if (file.Exists())
+                {
+                    file.Delete();
+                }
+
+                using var stream = new FileOutputStream(file, false);
+                var msg = new Java.Lang.String(xml);
+                await stream.WriteAsync(msg.GetBytes());
+            }
+            catch (Exception e)
+            {
+                LogFileUtil.NewInstance(context).SaveLogToFile("TenBlogDroidApp.RssSubscriber.Subscriber.WriteCacheRssXmlAsync读取文件发生异常:" + e.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 执行HTTP请求获取RSS订阅XML
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private static async Task<string> HttpRequestRssFeedAsync(Context context, string url)
+        {
+            using var httpClient = new HttpClient();
+            try
+            {
+                var response = await httpClient.GetAsync(url);
+                return response.Content.ReadAsStringAsync().Result;
+            }
+            catch (HttpRequestException e)
+            {
+                LogFileUtil.NewInstance(context).SaveLogToFile("TenBlogDroidApp.RssSubscriber.Subscriber.HttpRequestRssFeedAsync请求发生异常:" + e.Message);
                 throw;
             }
         }
