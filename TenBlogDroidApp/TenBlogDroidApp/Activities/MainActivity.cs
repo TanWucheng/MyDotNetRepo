@@ -6,6 +6,7 @@ using Android.App;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
+using Android.Text;
 using Android.Views;
 using Android.Views.Animations;
 using Android.Widget;
@@ -13,6 +14,7 @@ using AndroidX.AppCompat.App;
 using AndroidX.Core.View;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
+using DE.Hdodenhof.CircleImageViewLib;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Infideap.DrawerBehavior;
@@ -23,9 +25,9 @@ using TenBlogDroidApp.Adapters;
 using TenBlogDroidApp.Extensions;
 using TenBlogDroidApp.Fragments;
 using TenBlogDroidApp.Listeners;
-using TenBlogDroidApp.RssSubscriber.Models;
 using TenBlogDroidApp.Services;
 using TenBlogDroidApp.Utils;
+using TenBlogDroidApp.ViewModels;
 using Permission = Android.Content.PM.Permission;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 
@@ -35,13 +37,15 @@ namespace TenBlogDroidApp.Activities
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener,
         IDialogFragmentCallBack, IFabDisplayListener
     {
+        private const int AbstractLines = 2;
+
         private Advance3DDrawerLayout _drawer;
         private Toolbar _toolbar;
         private SwipeRefreshLayout _swipeRefreshLayout;
         private RecyclerView _recyclerView;
         private FloatingActionButton _fab;
         private LinearLayoutManager _layoutManager;
-        private StandardRecyclerViewAdapter<Entry> _adapter;
+        private StandardRecyclerViewAdapter<BlogEntryViewModel> _adapter;
         private SimpleProgressDialogFragment _dialogFragment;
         private AnimatorAdapter _animatorAdapter;
 
@@ -73,7 +77,7 @@ namespace TenBlogDroidApp.Activities
             _dialogFragment?.Dismiss();
         }
 
-        private void ShowToast(string message, ToastLength duration)
+        private void ShowToast(string message, ToastLength duration = ToastLength.Short)
         {
             Toast.MakeText(this, message, duration)?.Show();
         }
@@ -87,7 +91,7 @@ namespace TenBlogDroidApp.Activities
                 {
                     if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions.Abstractions.Permission.Location))
                     {
-                        ShowToast("应用程序需要授予存储权限", ToastLength.Short);
+                        ShowToast("应用程序需要授予存储权限");
                     }
 
                     status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
@@ -99,7 +103,7 @@ namespace TenBlogDroidApp.Activities
                 }
                 else if (status != PermissionStatus.Unknown)
                 {
-                    ShowToast("您已拒绝授予存储权限", ToastLength.Short);
+                    ShowToast("您已拒绝授予存储权限");
                 }
             }
             catch (Exception ex)
@@ -114,15 +118,21 @@ namespace TenBlogDroidApp.Activities
             _layoutManager = new LinearLayoutManager(this);
             if (_recyclerView == null) return;
             _recyclerView.SetLayoutManager(_layoutManager);
-            var items = new List<Entry>();
-            _adapter = new StandardRecyclerViewAdapter<Entry>(
+
+            var items = new List<BlogEntryViewModel>();
+            _adapter = new StandardRecyclerViewAdapter<BlogEntryViewModel>(
                 Resource.Layout.item_blog, items);
             _adapter.OnGetView += Adapter_OnGetView;
-
+            _adapter.ItemClick += Adapter_ItemClick;
             _animatorAdapter = new ScaleInAnimatorAdapter(_adapter, _recyclerView);
             _recyclerView.SetAdapter(_animatorAdapter);
 
             _recyclerView.AddOnScrollListener(new FabScrollListener(this));
+        }
+
+        private void Adapter_ItemClick(object sender, RecyclerItemClickEventArgs e)
+        {
+            ShowToast($"当前点击Item: {e.Position}");
         }
 
         private async void RssSubscribeAsync()
@@ -130,23 +140,52 @@ namespace TenBlogDroidApp.Activities
             _dialogFragment = SimpleProgressDialogFragment.NewInstance("博文拼命加载中...");
             Show();
             var entries = await RssSubscribeService.GetBlogEntries(this);
-            _adapter.RefreshItems(entries);
+            _adapter.RefreshItems(entries, _recyclerView);
+
             Dismiss();
         }
 
-        private View Adapter_OnGetView(int position, View convertView, ViewGroup parent, Entry item, StandardRecyclerViewHolder viewHolder)
+        private View Adapter_OnGetView(int position, View convertView, ViewGroup parent, BlogEntryViewModel item, StandardRecyclerViewHolder viewHolder)
         {
             var tvBlogTitle = viewHolder.GetView<TextView>(Resource.Id.tv_blog_title);
-            tvBlogTitle.Text = item.Title;
+            tvBlogTitle.Text = item.Entry.Title;
 
-            var tvBlogContent = viewHolder.GetView<TextView>(Resource.Id.tv_blog_abstract);
-            tvBlogContent.SetHtml(item.Summary.Content);
+            var tvBlogAbstract = viewHolder.GetView<TextView>(Resource.Id.tv_blog_abstract);
+            var tvExpand = viewHolder.GetView<TextView>(Resource.Id.tv_blog_abstract_expand);
+
+            tvBlogAbstract.SetHtml(item.Entry.Summary.Content);
+
+            tvExpand.Click += delegate
+            {
+                // 未展开
+                if (!item.AbstractExpanded)
+                {
+                    tvBlogAbstract.Ellipsize = null;
+                    tvBlogAbstract.SetSingleLine(false);
+                    tvExpand.SetText(Resource.String.fa_chevron_up);
+                }
+                else
+                {
+                    tvBlogAbstract.Ellipsize = TextUtils.TruncateAt.End;
+                    tvBlogAbstract.SetLines(AbstractLines);
+                    tvExpand.SetText(Resource.String.fa_chevron_down);
+                }
+
+                item.AbstractExpanded = !item.AbstractExpanded;
+            };
 
             var tvPublished = viewHolder.GetView<TextView>(Resource.Id.tv_blog_published);
-            tvPublished.Text = $"{item.Published:yyyy-MM-dd}";
+            tvPublished.Text = $"{item.Entry.Published:yyyy-MM-dd}";
 
             var tvCategory = viewHolder.GetView<TextView>(Resource.Id.tv_blog_category);
-            tvCategory.Text = string.Join(", ", from category in item.Categories select category.Term);
+            var categories = string.Join(", ", from category in item.Entry.Categories select category.Term);
+            tvCategory.Text = categories;
+
+            var ivBlogPicture = viewHolder.GetView<CircleImageView>(Resource.Id.iv_blog_picture);
+            ivBlogPicture.SetImageResource(categories.Contains("笔记")
+                ? Resource.Drawable.ic_event_note_black_48dp
+                : Resource.Drawable.ic_code_black_48dp);
+
 
             var convertedView = viewHolder.GetConvertView();
 
@@ -261,16 +300,7 @@ namespace TenBlogDroidApp.Activities
 
         public void FabHide()
         {
-            //if (_fab.LayoutParameters is RelativeLayout.LayoutParams parameters)
-            //{
-            //    _fab.Animate()
-            //        ?.TranslationY(_fab.Height + parameters.BottomMargin)
-            //        ?.SetInterpolator(new AccelerateInterpolator(3));
-            //}
-
             var marinParams = new ViewGroup.MarginLayoutParams(_fab.LayoutParameters);
-
-            // var layoutParams = (RelativeLayout.LayoutParams)_fab.LayoutParameters;
             _fab.Animate()
                 ?.TranslationY(_fab.Height * 2 + marinParams.BottomMargin)
                 ?.SetInterpolator(new AccelerateInterpolator(3));

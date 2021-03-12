@@ -73,6 +73,8 @@
   <ItemGroup>
     <Compile Include="Activities\MainActivity.cs" />
     <Compile Include="Activities\TestActivity.cs" />
+    <Compile Include="Adapters\BlogRecyclerViewAdapter.cs" />
+    <Compile Include="Adapters\BlogViewHolder.cs" />
     <Compile Include="Fragments\IDialogFragmentCallBack.cs" />
     <Compile Include="Fragments\SimpleProgressDialogFragment.cs" />
     <Compile Include="Listeners\FabScrollListener.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="RssSubscriber\Models\SummaryType.cs" />
     <Compile Include="Utils\FontManager.cs" />
     <Compile Include="Utils\LogFileUtil.cs" />
+    <Compile Include="ViewModels\BlogEntryViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -108,33 +111,15 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\values\colors.xml" />
-    <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
-    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher.xml" />
-    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher_round.xml" />
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
     <AndroidResource Include="Resources\layout\content_notification.xml">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\ic_notifications_none_white_24dp.xml">
+    <AndroidResource Include="Resources\drawable-anydpi\ic_notifications_none_white_24dp.xml">
       <SubType>
       </SubType>
       <Generator>
@@ -182,73 +167,67 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\facebook.png">
+    <AndroidResource Include="Resources\drawable-anydpi\facebook.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\header.jpg">
+    <AndroidResource Include="Resources\drawable-anydpi\header.jpg">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_toolbar_add.png">
+    <AndroidResource Include="Resources\drawable-anydpi\linkedin.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\linkedin.png">
+    <AndroidResource Include="Resources\drawable-anydpi\pocket.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\pocket.png">
+    <AndroidResource Include="Resources\drawable-anydpi\qq.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\qq.png">
+    <AndroidResource Include="Resources\drawable-anydpi\telegram.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\telegram.png">
+    <AndroidResource Include="Resources\drawable-anydpi\toast_radius_info.xml">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\toast_radius_info.xml">
+    <AndroidResource Include="Resources\drawable-anydpi\toast_radius_verify.xml">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\toast_radius_verify.xml">
+    <AndroidResource Include="Resources\drawable-anydpi\twitter.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\twitter.png">
+    <AndroidResource Include="Resources\drawable-anydpi\wechat.png">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\wechat.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\weibo.png">
+    <AndroidResource Include="Resources\drawable-anydpi\weibo.png">
       <SubType>
       </SubType>
       <Generator>
@@ -260,7 +239,7 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable\selector_elevation.xml">
+    <AndroidResource Include="Resources\drawable-anydpi\selector_elevation.xml">
       <SubType>
       </SubType>
       <Generator>
@@ -272,7 +251,7 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\landscape_1.jpg">
+    <AndroidResource Include="Resources\drawable-anydpi\landscape_1.jpg">
       <SubType>
       </SubType>
       <Generator>
@@ -308,14 +287,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <AndroidResource Include="Resources\drawable\icon_close.png">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-      <SubType>Designer</SubType>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable\img_load_fail.png">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-      <SubType>Designer</SubType>
-    </AndroidResource>
     <AndroidResource Include="Resources\values\attrs.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
@@ -324,10 +295,17 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\dialog_progress_custom.axml" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_arrow_drop_up_black_48dp.png" />
-    <AndroidResource Include="Resources\drawable-hdpi\ic_expand_less_black_36dp.png" />
-    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_expand_less_black_36dp.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_expand_less_black_36dp.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_arrow_upward_black_36dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_code_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_event_note_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_event_note_teal_500_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_code_teal_500_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\favicon_round_741x741.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\favicon_round_327x327.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\fonts\fontawesome-webfont.ttf" />

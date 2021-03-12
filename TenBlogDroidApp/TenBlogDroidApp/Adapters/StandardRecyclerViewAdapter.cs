@@ -30,7 +30,7 @@ namespace TenBlogDroidApp.Adapters
         /// </summary>
         /// <param name="layoutId">Item view的layout id</param>
         /// <param name="items">数据集合</param>
-        public StandardRecyclerViewAdapter(int layoutId, List<T> items) : base()
+        public StandardRecyclerViewAdapter(int layoutId, List<T> items)
         {
             CheckStates = new SparseBooleanArray();
             _layoutId = layoutId;
@@ -92,18 +92,20 @@ namespace TenBlogDroidApp.Adapters
         /// <returns></returns>
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            var itemView = LayoutInflater.From(parent.Context).Inflate(_layoutId, parent, false);
+            var itemView = LayoutInflater.From(parent.Context)?.Inflate(_layoutId, parent, false);
             return StandardRecyclerViewHolder.Get(itemView, parent, OnClick, OnLongClick);
         }
 
         /// <summary>
         /// 刷新Adapter里的绑定数据集
         /// </summary>
-        /// <param name="items"></param>
-        public void RefreshItems(List<T> items)
+        /// <param name="items">新的数据集</param>
+        /// <param name="recyclerView">RecyclerView</param>
+        public void RefreshItems(List<T> items, RecyclerView recyclerView)
         {
             _items = items;
             NotifyDataSetChanged();
+            // recyclerView.SetItemViewCacheSize(items.Count - 4);
         }
 
         /// <summary>

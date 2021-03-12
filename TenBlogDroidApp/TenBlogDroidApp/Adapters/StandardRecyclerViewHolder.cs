@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Android.Util;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 
@@ -18,19 +17,18 @@ namespace TenBlogDroidApp.Adapters
         /// New Instance
         /// </summary>
         /// <param name="itemView">RecyclerView的Item View</param>
-        /// <param name="parent">父级视图</param>
         /// <param name="clickListener">点击响应事件</param>
         /// <param name="longClickListener">长按响应时间</param>
-        public StandardRecyclerViewHolder(View itemView, ViewGroup parent, Action<RecyclerItemClickEventArgs> clickListener, Action<RecyclerItemClickEventArgs> longClickListener) : base(itemView)
+        public StandardRecyclerViewHolder(View itemView, Action<RecyclerItemClickEventArgs> clickListener, Action<RecyclerItemClickEventArgs> longClickListener) : base(itemView)
         {
             _views = new Dictionary<int, View>();
             _convertView = itemView;
-            itemView.Click += (sender, e) => clickListener?.Invoke(new RecyclerItemClickEventArgs
+            itemView.Click += (_, _) => clickListener?.Invoke(new RecyclerItemClickEventArgs
             {
                 View = itemView,
                 Position = AdapterPosition
             });
-            itemView.LongClick += (sender, e) => longClickListener?.Invoke(new RecyclerItemClickEventArgs
+            itemView.LongClick += (_, _) => longClickListener?.Invoke(new RecyclerItemClickEventArgs
             {
                 View = itemView,
                 Position = AdapterPosition
@@ -48,14 +46,7 @@ namespace TenBlogDroidApp.Adapters
         /// <returns></returns>
         public static StandardRecyclerViewHolder Get(View itemView, ViewGroup parent, Action<RecyclerItemClickEventArgs> clickListener, Action<RecyclerItemClickEventArgs> longClickListener)
         {
-            if (itemView == null)
-            {
-                return new StandardRecyclerViewHolder(itemView, parent, clickListener, longClickListener);
-            }
-            else
-            {
-                return new StandardRecyclerViewHolder(itemView, parent, clickListener, longClickListener);
-            }
+            return itemView == null ? new StandardRecyclerViewHolder(null, clickListener, longClickListener) : new StandardRecyclerViewHolder(itemView, clickListener, longClickListener);
         }
 
         /// <summary>
@@ -73,11 +64,9 @@ namespace TenBlogDroidApp.Adapters
         public T GetView<T>(int viewId) where T : View
         {
             _views.TryGetValue(viewId, out var view);
-            if (view == null)
-            {
-                view = _convertView.FindViewById<T>(viewId);
-                _views.Add(viewId, view);
-            }
+            if (view != null) return (T) view;
+            view = _convertView.FindViewById<T>(viewId);
+            _views.Add(viewId, view);
             return (T)view;
         }
 
