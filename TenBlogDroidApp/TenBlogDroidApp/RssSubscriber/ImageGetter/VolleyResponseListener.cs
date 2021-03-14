@@ -3,12 +3,12 @@ using Volley;
 
 namespace TenBlogDroidApp.RssSubscriber.ImageGetter
 {
-    internal class VolleyResponseListener<T> : Java.Lang.Object, Response.IListener
+    internal class VolleyResponseListener : Java.Lang.Object, Response.IListener
     {
         private readonly string _fileName;
-        private readonly HtmlImageGetter<T> _imageGetter;
+        private readonly HtmlImageGetter _imageGetter;
 
-        public VolleyResponseListener(string fileName, HtmlImageGetter<T> imageGetter)
+        public VolleyResponseListener(string fileName, HtmlImageGetter imageGetter)
         {
             _fileName = fileName;
             _imageGetter = imageGetter;

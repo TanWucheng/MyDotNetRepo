@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
-using Android.Text;
 using Android.Views;
 using Android.Views.Animations;
 using Android.Widget;
@@ -14,7 +11,6 @@ using AndroidX.AppCompat.App;
 using AndroidX.Core.View;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
-using DE.Hdodenhof.CircleImageViewLib;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Infideap.DrawerBehavior;
@@ -22,11 +18,9 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using RecyclerViewItemAnimator.Adapter;
 using TenBlogDroidApp.Adapters;
-using TenBlogDroidApp.Extensions;
 using TenBlogDroidApp.Fragments;
 using TenBlogDroidApp.Listeners;
 using TenBlogDroidApp.Services;
-using TenBlogDroidApp.Utils;
 using TenBlogDroidApp.ViewModels;
 using Permission = Android.Content.PM.Permission;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
@@ -45,9 +39,10 @@ namespace TenBlogDroidApp.Activities
         private RecyclerView _recyclerView;
         private FloatingActionButton _fab;
         private LinearLayoutManager _layoutManager;
-        private StandardRecyclerViewAdapter<BlogEntryViewModel> _adapter;
         private SimpleProgressDialogFragment _dialogFragment;
         private AnimatorAdapter _animatorAdapter;
+        private BlogRecyclerViewAdapter _blogAdapter;
+        private List<BlogEntryViewModel> _entryViewModels;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -119,79 +114,22 @@ namespace TenBlogDroidApp.Activities
             if (_recyclerView == null) return;
             _recyclerView.SetLayoutManager(_layoutManager);
 
-            var items = new List<BlogEntryViewModel>();
-            _adapter = new StandardRecyclerViewAdapter<BlogEntryViewModel>(
-                Resource.Layout.item_blog, items);
-            _adapter.OnGetView += Adapter_OnGetView;
-            _adapter.ItemClick += Adapter_ItemClick;
-            _animatorAdapter = new ScaleInAnimatorAdapter(_adapter, _recyclerView);
+            _entryViewModels = new List<BlogEntryViewModel>();
+
+            _blogAdapter = new BlogRecyclerViewAdapter(this, _entryViewModels, Resource.Layout.item_blog);
+            _animatorAdapter = new ScaleInAnimatorAdapter(_blogAdapter, _recyclerView);
             _recyclerView.SetAdapter(_animatorAdapter);
 
             _recyclerView.AddOnScrollListener(new FabScrollListener(this));
-        }
-
-        private void Adapter_ItemClick(object sender, RecyclerItemClickEventArgs e)
-        {
-            ShowToast($"当前点击Item: {e.Position}");
         }
 
         private async void RssSubscribeAsync()
         {
             _dialogFragment = SimpleProgressDialogFragment.NewInstance("博文拼命加载中...");
             Show();
-            var entries = await RssSubscribeService.GetBlogEntries(this);
-            _adapter.RefreshItems(entries, _recyclerView);
-
+            _entryViewModels = await RssSubscribeService.GetBlogEntries(this);
+            _blogAdapter.RefreshItems(_entryViewModels);
             Dismiss();
-        }
-
-        private View Adapter_OnGetView(int position, View convertView, ViewGroup parent, BlogEntryViewModel item, StandardRecyclerViewHolder viewHolder)
-        {
-            var tvBlogTitle = viewHolder.GetView<TextView>(Resource.Id.tv_blog_title);
-            tvBlogTitle.Text = item.Entry.Title;
-
-            var tvBlogAbstract = viewHolder.GetView<TextView>(Resource.Id.tv_blog_abstract);
-            var tvExpand = viewHolder.GetView<TextView>(Resource.Id.tv_blog_abstract_expand);
-
-            tvBlogAbstract.SetHtml(item.Entry.Summary.Content);
-
-            tvExpand.Click += delegate
-            {
-                // 未展开
-                if (!item.AbstractExpanded)
-                {
-                    tvBlogAbstract.Ellipsize = null;
-                    tvBlogAbstract.SetSingleLine(false);
-                    tvExpand.SetText(Resource.String.fa_chevron_up);
-                }
-                else
-                {
-                    tvBlogAbstract.Ellipsize = TextUtils.TruncateAt.End;
-                    tvBlogAbstract.SetLines(AbstractLines);
-                    tvExpand.SetText(Resource.String.fa_chevron_down);
-                }
-
-                item.AbstractExpanded = !item.AbstractExpanded;
-            };
-
-            var tvPublished = viewHolder.GetView<TextView>(Resource.Id.tv_blog_published);
-            tvPublished.Text = $"{item.Entry.Published:yyyy-MM-dd}";
-
-            var tvCategory = viewHolder.GetView<TextView>(Resource.Id.tv_blog_category);
-            var categories = string.Join(", ", from category in item.Entry.Categories select category.Term);
-            tvCategory.Text = categories;
-
-            var ivBlogPicture = viewHolder.GetView<CircleImageView>(Resource.Id.iv_blog_picture);
-            ivBlogPicture.SetImageResource(categories.Contains("笔记")
-                ? Resource.Drawable.ic_event_note_black_48dp
-                : Resource.Drawable.ic_code_black_48dp);
-
-
-            var convertedView = viewHolder.GetConvertView();
-
-            FontManager.MarkAsIconContainer(convertedView, FontManager.GetTypeface(this, FontManager.FontAwesome), TypefaceStyle.Normal);
-
-            return convertedView;
         }
 
         private void InitRefreshLayout()

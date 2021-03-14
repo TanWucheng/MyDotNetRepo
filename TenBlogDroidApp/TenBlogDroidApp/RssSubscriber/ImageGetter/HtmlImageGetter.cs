@@ -15,12 +15,12 @@ using Permission = Android.Content.PM.Permission;
 
 namespace TenBlogDroidApp.RssSubscriber.ImageGetter
 {
-    internal class HtmlImageGetter<T> : Java.Lang.Object, Html.IImageGetter
+    internal class HtmlImageGetter : Java.Lang.Object, Html.IImageGetter
     {
         private readonly Context _context;
-        private readonly StandardRecyclerViewAdapter<T> _adapter;
+        private readonly BlogRecyclerViewAdapter _adapter;
 
-        public HtmlImageGetter(Context context, StandardRecyclerViewAdapter<T> adapter)
+        public HtmlImageGetter(Context context, BlogRecyclerViewAdapter adapter)
         {
             _context = context;
             _adapter = adapter;
@@ -51,7 +51,7 @@ namespace TenBlogDroidApp.RssSubscriber.ImageGetter
         {
 
             var requestQueue = Volley.Toolbox.Volley.NewRequestQueue(_context);
-            var imageRequest = new ImageRequest(url, new VolleyResponseListener<T>(GetFileName(url), this)
+            var imageRequest = new ImageRequest(url, new VolleyResponseListener(GetFileName(url), this)
                 , 0, 0, ImageView.ScaleType.Center, Bitmap.Config.Rgb565, new VolleyResponseErrorListener());
             requestQueue.Add(imageRequest);
         }

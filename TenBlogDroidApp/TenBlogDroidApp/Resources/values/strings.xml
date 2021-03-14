@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<string name="app_name">TenBlogDroidApp</string>
+	<string name="app_name">Ten Blog</string>
+	<string name="app_name_cn">Ten的博客安卓客户端</string>
+	<string name="contact_email">tanwucheng@outlook.com</string>
+	<string name="blog_website">tanwucheng.github.io</string>
 	<string name="action_settings">Settings</string>
 	<string name="notification">Notification</string>
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
 	<string name="action_right_drawer">Right Drawer</string>
-	<string name="fa-chevron-down">&#xf078;展开</string>
-	<string name="fa-chevron-up">&#xf077;收起</string>
+	<string name="fa_calendar_o">&#xf133;</string>
+	<string name="fa_folder_o">&#xf114;</string>
+	<string name="fa_chevron_down">&#xf078;展开</string>
+	<string name="fa_chevron_up">&#xf077;收起</string>
 </resources>

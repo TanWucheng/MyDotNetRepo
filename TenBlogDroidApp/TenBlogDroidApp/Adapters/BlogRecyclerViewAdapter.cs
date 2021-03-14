@@ -3,17 +3,17 @@ using Android.Views;
 using System.Collections.Generic;
 using System.Linq;
 using Android.Graphics;
-using Android.Text;
 using AndroidX.RecyclerView.Widget;
 using TenBlogDroidApp.Utils;
 using TenBlogDroidApp.ViewModels;
+using Com.Devs.ReadMoreOptionLib;
+using Android.Text;
+using TenBlogDroidApp.RssSubscriber.ImageGetter;
 
 namespace TenBlogDroidApp.Adapters
 {
     public class BlogRecyclerViewAdapter : RecyclerView.Adapter
     {
-        private const int AbstractLines = 2;
-
         private readonly Context _context;
         private List<BlogEntryViewModel> _entryViewModels;
         private readonly int _itemViewId;
@@ -25,41 +25,30 @@ namespace TenBlogDroidApp.Adapters
             _itemViewId = itemViewId;
         }
 
-
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
             if (holder is not BlogViewHolder blogViewHolder) return;
             var item = _entryViewModels[position];
             var categories = string.Join(", ", from category in item.Entry.Categories select category.Term);
 
-            blogViewHolder.IvBlogPicture.SetImageResource(categories.Contains("笔记")
+            blogViewHolder.IvBlogPicture.SetImageResource(categories.Contains("杂谈")
                 ? Resource.Drawable.ic_event_note_black_48dp
                 : Resource.Drawable.ic_code_black_48dp);
 
-            blogViewHolder.TvBlogAbstract.Text = item.Entry.Summary.Content;
-            blogViewHolder.TvBlogAbstractExpand.Tag = item.Entry.Id;
-            blogViewHolder.TvBlogCategory.Text = categories;
-            blogViewHolder.TvBlogPublished.Text = $"{item.Entry.Published:yyyy-MM-dd}";
+            ReadMoreOption readMoreOption = new ReadMoreOption.Builder(_context)
+                          .TextLength(2, ReadMoreOption.TypeLine)
+                          .MoreLabel("展开")
+                          .LessLabel("收起")
+                          .MoreLabelColor(_context.Resources.GetColor(Resource.Color.colorAccent, null))
+                          .LessLabelColor(_context.Resources.GetColor(Resource.Color.colorAccent, null))
+                          .LabelUnderLine(true)
+                          .ExpandAnimation(true)
+                          .Build();
+            readMoreOption.AddReadMoreTo(blogViewHolder.TvBlogAbstract, Html.FromHtml(item.Entry.Summary.Content, FromHtmlOptions.ModeCompact, new HtmlImageGetter(_context, this), null));
+
+            blogViewHolder.TvBlogPublishCategory.Text = $"{_context.Resources.GetString(Resource.String.fa_calendar_o)} {item.Entry.Published:yyyy-MM-dd}   |   {_context.Resources.GetString(Resource.String.fa_folder_o)} {categories}";
+
             blogViewHolder.TvBlogTitle.Text = item.Entry.Title;
-
-            blogViewHolder.TvBlogAbstractExpand.Click += delegate
-            {
-                // 未展开
-                if (!item.AbstractExpanded)
-                {
-                    blogViewHolder.TvBlogAbstract.Ellipsize = null;
-                    blogViewHolder.TvBlogAbstract.SetSingleLine(false);
-                    blogViewHolder.TvBlogAbstractExpand.SetText(Resource.String.fa_chevron_up);
-                }
-                else
-                {
-                    blogViewHolder.TvBlogAbstract.Ellipsize = TextUtils.TruncateAt.End;
-                    blogViewHolder.TvBlogAbstract.SetLines(AbstractLines);
-                    blogViewHolder.TvBlogAbstractExpand.SetText(Resource.String.fa_chevron_down);
-                }
-
-                item.AbstractExpanded = !item.AbstractExpanded;
-            };
 
             FontManager.MarkAsIconContainer(holder.ItemView, FontManager.GetTypeface(_context, FontManager.FontAwesome), TypefaceStyle.Normal);
         }
@@ -76,12 +65,10 @@ namespace TenBlogDroidApp.Adapters
         /// 刷新Adapter里的绑定数据集
         /// </summary>
         /// <param name="items">新的数据集</param>
-        /// <param name="recyclerView">RecyclerView</param>
-        public void RefreshItems(List<BlogEntryViewModel> items, RecyclerView recyclerView)
+        public void RefreshItems(List<BlogEntryViewModel> items)
         {
             _entryViewModels = items;
             NotifyDataSetChanged();
-            recyclerView.SetItemViewCacheSize(items.Count - 4);
         }
     }
 }
