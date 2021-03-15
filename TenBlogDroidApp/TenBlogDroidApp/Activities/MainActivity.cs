@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content.PM;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -15,14 +18,16 @@ using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Infideap.DrawerBehavior;
 using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
-using RecyclerViewItemAnimator.Adapter;
+using Ten.Droid.App.Extensions;
+using Ten.Droid.App.RecyclerView.Adapters;
 using TenBlogDroidApp.Adapters;
 using TenBlogDroidApp.Fragments;
 using TenBlogDroidApp.Listeners;
+using TenBlogDroidApp.RssSubscriber.Models;
 using TenBlogDroidApp.Services;
-using TenBlogDroidApp.ViewModels;
-using Permission = Android.Content.PM.Permission;
+using Xamarin.Essentials;
+using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
+using RemovableEditText = TenBlogDroidApp.Widgets.RemovableEditText;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
 
 namespace TenBlogDroidApp.Activities
@@ -31,36 +36,20 @@ namespace TenBlogDroidApp.Activities
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener,
         IDialogFragmentCallBack, IFabDisplayListener
     {
-        private const int AbstractLines = 2;
-
-        private Advance3DDrawerLayout _drawer;
-        private Toolbar _toolbar;
-        private SwipeRefreshLayout _swipeRefreshLayout;
-        private RecyclerView _recyclerView;
-        private FloatingActionButton _fab;
-        private LinearLayoutManager _layoutManager;
-        private SimpleProgressDialogFragment _dialogFragment;
         private AnimatorAdapter _animatorAdapter;
         private BlogRecyclerViewAdapter _blogAdapter;
-        private List<BlogEntryViewModel> _entryViewModels;
-
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            base.OnCreate(savedInstanceState);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-
-            RequestPermissionAsync();
-
-            SetContentView(Resource.Layout.activity_main);
-
-            InitToolbar();
-            InitDrawer();
-            InitNavigationView();
-            InitRefreshLayout();
-            InitRecyclerView();
-            InitFab();
-            RssSubscribeAsync();
-        }
+        private SimpleProgressDialogFragment _dialogFragment;
+        private Advance3DDrawerLayout _drawer;
+        private List<Entry> _entries;
+        private FloatingActionButton _fab;
+        private LinearLayoutManager _layoutManager;
+        private RecyclerView _blogRecyclerView;
+        private SwipeRefreshLayout _swipeRefreshLayout;
+        private Toolbar _toolbar;
+        private RemovableEditText _searchEditText;
+        private StandardRecyclerViewAdapter<string> _searchResultAdapter;
+        private RecyclerView _searchResultRecyclerView;
+        private string _keywords = string.Empty;
 
         public void Show()
         {
@@ -72,11 +61,59 @@ namespace TenBlogDroidApp.Activities
             _dialogFragment?.Dismiss();
         }
 
+        public void FabShow()
+        {
+            _fab.Animate()?.TranslationY(0)?.SetInterpolator(new DecelerateInterpolator(3));
+        }
+
+        public void FabHide()
+        {
+            var marinParams = new ViewGroup.MarginLayoutParams(_fab.LayoutParameters);
+            _fab.Animate()
+                ?.TranslationY(_fab.Height * 2 + marinParams.BottomMargin)
+                ?.SetInterpolator(new AccelerateInterpolator(3));
+        }
+
+        public bool OnNavigationItemSelected(IMenuItem menuItem)
+        {
+            _drawer?.CloseDrawer(GravityCompat.Start);
+
+            return true;
+        }
+
+        protected override async void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            Platform.Init(this, savedInstanceState);
+
+            RequestPermissionAsync();
+
+            SetContentView(Resource.Layout.activity_main);
+
+            InitToolbar();
+            InitDrawer();
+            InitNavigationView();
+            InitRefreshLayout();
+            InitRecyclerView();
+            InitFab();
+            InitSearchResultRecyclerView();
+            InitSearchEditText();
+            await RssSubscribeAsync();
+        }
+
+        /// <summary>
+        /// 展示Toast
+        /// </summary>
+        /// <param name="message">消息</param>
+        /// <param name="duration">时长</param>
         private void ShowToast(string message, ToastLength duration = ToastLength.Short)
         {
             Toast.MakeText(this, message, duration)?.Show();
         }
 
+        /// <summary>
+        /// 应用请求系统权限
+        /// </summary>
         private async void RequestPermissionAsync()
         {
             try
@@ -84,10 +121,8 @@ namespace TenBlogDroidApp.Activities
                 var status = await CrossPermissions.Current.CheckPermissionStatusAsync<StoragePermission>();
                 if (status != PermissionStatus.Granted)
                 {
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions.Abstractions.Permission.Location))
-                    {
-                        ShowToast("应用程序需要授予存储权限");
-                    }
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions
+                        .Abstractions.Permission.Location)) ShowToast("应用程序需要授予存储权限");
 
                     status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
                 }
@@ -107,53 +142,125 @@ namespace TenBlogDroidApp.Activities
             }
         }
 
-        private void InitRecyclerView()
+        /// <summary>
+        /// 初始化搜索输入框
+        /// </summary>
+        private void InitSearchEditText()
         {
-            _recyclerView = FindViewById<RecyclerView>(Resource.Id.rv_main);
-            _layoutManager = new LinearLayoutManager(this);
-            if (_recyclerView == null) return;
-            _recyclerView.SetLayoutManager(_layoutManager);
-
-            _entryViewModels = new List<BlogEntryViewModel>();
-
-            _blogAdapter = new BlogRecyclerViewAdapter(this, _entryViewModels, Resource.Layout.item_blog);
-            _animatorAdapter = new ScaleInAnimatorAdapter(_blogAdapter, _recyclerView);
-            _recyclerView.SetAdapter(_animatorAdapter);
-
-            _recyclerView.AddOnScrollListener(new FabScrollListener(this));
+            _searchEditText = FindViewById<RemovableEditText>(Resource.Id.edit_search);
+            if (_searchEditText != null)
+            {
+                _searchEditText.TextChanged += (_, e) =>
+                {
+                    if (e.Text == null) return;
+                    var text = e.Text.ToString();
+                    _keywords = text;
+                    var titles = new List<string>();
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        titles = (from entry in _entries where entry.Title.ToLower().Contains(text.ToLower()) select entry.Title).Take(20).ToList();
+                    }
+                    _searchResultAdapter.RefreshItems(titles);
+                };
+            }
         }
 
-        private async void RssSubscribeAsync()
+        /// <summary>
+        /// 初始化搜索结果RecyclerView
+        /// </summary>
+        private void InitSearchResultRecyclerView()
+        {
+            _searchResultRecyclerView = FindViewById<RecyclerView>(Resource.Id.rv_search_result);
+            if (_searchResultRecyclerView == null) return;
+            _searchResultRecyclerView.SetLayoutManager(new LinearLayoutManager(this));
+            _searchResultAdapter =
+                new StandardRecyclerViewAdapter<string>(Android.Resource.Layout.SimpleListItem1,
+                    new List<string>());
+            _searchResultAdapter.OnGetConvertView += SearchResultAdapter_OnGetConvertView;
+            _searchResultRecyclerView.SetAdapter(_searchResultAdapter);
+        }
+
+        /// <summary>
+        /// 搜索结果RecyclerView适配器OnGetConvertView实现
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="parent"></param>
+        /// <param name="item"></param>
+        /// <param name="viewHolder"></param>
+        /// <returns></returns>
+        private View SearchResultAdapter_OnGetConvertView(int position, ViewGroup parent, string item, StandardRecyclerViewHolder viewHolder)
+        {
+            var textView = viewHolder.GetView<TextView>(Android.Resource.Id.Text1);
+            textView.SetHighLightText(this, item, _keywords,
+                Resources?.GetColor(Resource.Color.colorAccent, null) ?? Color.Black);
+
+            return viewHolder.GetConvertView();
+        }
+
+        /// <summary>
+        /// 初始化RecyclerView
+        /// </summary>
+        private void InitRecyclerView()
+        {
+            _blogRecyclerView = FindViewById<RecyclerView>(Resource.Id.rv_main);
+            _layoutManager = new LinearLayoutManager(this);
+            if (_blogRecyclerView == null) return;
+            _blogRecyclerView.SetLayoutManager(_layoutManager);
+
+            _entries = new List<Entry>();
+
+            _blogAdapter = new BlogRecyclerViewAdapter(this, _entries, Resource.Layout.item_blog);
+            _animatorAdapter = new ScaleInAnimatorAdapter(_blogAdapter, _blogRecyclerView);
+            _blogRecyclerView.SetAdapter(_animatorAdapter);
+
+            _blogRecyclerView.AddOnScrollListener(new FabScrollListener(this));
+        }
+
+        /// <summary>
+        /// 查询RSS订阅
+        /// </summary>
+        private async Task RssSubscribeAsync()
         {
             _dialogFragment = SimpleProgressDialogFragment.NewInstance("博文拼命加载中...");
             Show();
-            _entryViewModels = await RssSubscribeService.GetBlogEntries(this);
-            _blogAdapter.RefreshItems(_entryViewModels);
+
+            _entries = await RssSubscribeService.GetBlogEntries(this);
+            _blogAdapter.RefreshItems(_entries);
+
             Dismiss();
         }
 
+        /// <summary>
+        /// 初始化SwipeRefreshLayout
+        /// </summary>
         private void InitRefreshLayout()
         {
             _swipeRefreshLayout = FindViewById<SwipeRefreshLayout>(Resource.Id.srl_main);
-            if (_swipeRefreshLayout != null) _swipeRefreshLayout.Refresh += SwipeRefreshLayout_Refresh;
+            if (_swipeRefreshLayout != null) _swipeRefreshLayout.Refresh += async (_, _) =>
+             {
+                 await Task.Delay(1000);
+                 await RssSubscribeAsync();
+                 _swipeRefreshLayout.Refreshing = false;
+             };
         }
 
-        private async void SwipeRefreshLayout_Refresh(object sender, EventArgs e)
-        {
-            await Task.Delay(1000);
-            _swipeRefreshLayout.Refreshing = false;
-        }
-
+        /// <summary>
+        /// 初始化抽屉NavigationView
+        /// </summary>
         private void InitNavigationView()
         {
             var navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView?.SetNavigationItemSelectedListener(this);
         }
 
+        /// <summary>
+        /// 初始化抽屉导航栏
+        /// </summary>
         private void InitDrawer()
         {
             _drawer = FindViewById<Advance3DDrawerLayout>(Resource.Id.drawer_layout);
-            var toggle = new ActionBarDrawerToggle(this, _drawer, _toolbar, Resource.String.navigation_drawer_open, Resource.String.navigation_drawer_close);
+            var toggle = new ActionBarDrawerToggle(this, _drawer, _toolbar, Resource.String.navigation_drawer_open,
+                Resource.String.navigation_drawer_close);
             if (_drawer == null) return;
             _drawer.AddDrawerListener(toggle);
             toggle.SyncState();
@@ -162,26 +269,31 @@ namespace TenBlogDroidApp.Activities
             _drawer.SetViewRotation(GravityCompat.Start, 15f);
         }
 
+        /// <summary>
+        /// 初始化工具栏
+        /// </summary>
         private void InitToolbar()
         {
             _toolbar = FindViewById<Toolbar>(Resource.Id.toolbar_main);
             SetSupportActionBar(_toolbar);
         }
 
+        /// <summary>
+        /// 初始化FloatingActionButton
+        /// </summary>
         private void InitFab()
         {
             _fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            if (_fab != null) _fab.Click += Fab_Click;
+            if (_fab != null) _fab.Click += (_, _) =>
+            {
+                _blogRecyclerView.SmoothScrollToPosition(0);
+            };
         }
 
-        private void Fab_Click(object sender, EventArgs e)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
+            [GeneratedEnum] Permission[] grantResults)
         {
-            _recyclerView.SmoothScrollToPosition(0);
-        }
-
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
-        {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -190,22 +302,12 @@ namespace TenBlogDroidApp.Activities
         {
             if (_drawer != null)
             {
-                if (_drawer.IsDrawerOpen(GravityCompat.Start))
-                {
-                    _drawer.CloseDrawer(GravityCompat.Start);
-                }
+                if (_drawer.IsDrawerOpen(GravityCompat.Start)) _drawer.CloseDrawer(GravityCompat.Start);
             }
             else
             {
                 base.OnBackPressed();
             }
-        }
-
-        public bool OnNavigationItemSelected(IMenuItem menuItem)
-        {
-            _drawer?.CloseDrawer(GravityCompat.Start);
-
-            return true;
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -225,23 +327,12 @@ namespace TenBlogDroidApp.Activities
                             _drawer.OpenDrawer(GravityCompat.End);
                             return true;
                         }
+
                         break;
                     }
             }
+
             return base.OnOptionsItemSelected(item);
-        }
-
-        public void FabShow()
-        {
-            _fab.Animate()?.TranslationY(0)?.SetInterpolator(new DecelerateInterpolator(3));
-        }
-
-        public void FabHide()
-        {
-            var marinParams = new ViewGroup.MarginLayoutParams(_fab.LayoutParameters);
-            _fab.Animate()
-                ?.TranslationY(_fab.Height * 2 + marinParams.BottomMargin)
-                ?.SetInterpolator(new AccelerateInterpolator(3));
         }
     }
 }

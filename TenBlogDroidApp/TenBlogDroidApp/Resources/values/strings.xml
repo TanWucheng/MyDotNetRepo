@@ -8,7 +8,8 @@
 	<string name="notification">Notification</string>
 	<string name="navigation_drawer_open">Open navigation drawer</string>
 	<string name="navigation_drawer_close">Close navigation drawer</string>
-	<string name="action_right_drawer">Right Drawer</string>
+	<string name="search">搜索</string>
+	<!--FontAwesome-->
 	<string name="fa_calendar_o">&#xf133;</string>
 	<string name="fa_folder_o">&#xf114;</string>
 	<string name="fa_chevron_down">&#xf078;展开</string>

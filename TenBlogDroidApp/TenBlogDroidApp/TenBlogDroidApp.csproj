@@ -60,15 +60,15 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RecyclerViewItemAnimator">
-      <HintPath>..\..\RecyclerViewItemAnimator\RecyclerViewItemAnimator\bin\Release\RecyclerViewItemAnimator.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors" />
+    <Reference Include="Ten.Droid.App">
+      <HintPath>..\..\..\XamarinAndroidDemos\Ten.Droid.App\Ten.Droid.App\bin\Release\Ten.Droid.App.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\MainActivity.cs" />
@@ -81,10 +81,6 @@
     <Compile Include="Listeners\IFabDisplayListener.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Adapters\StandardRecyclerViewAdapter.cs" />
-    <Compile Include="Adapters\StandardRecyclerViewHolder.cs" />
-    <Compile Include="Adapters\RecyclerItemClickEventArgs.cs" />
-    <Compile Include="Extensions\TextViewHtmlExtension.cs" />
     <Compile Include="RssSubscriber\ImageGetter\HtmlImageGetter.cs" />
     <Compile Include="RssSubscriber\ImageGetter\VolleyResponseErrorListener.cs" />
     <Compile Include="RssSubscriber\ImageGetter\VolleyResponseListener.cs" />
@@ -92,14 +88,13 @@
     <Compile Include="RssSubscriber\Models\Category.cs" />
     <Compile Include="RssSubscriber\Models\Entry.cs" />
     <Compile Include="Services\RssSubscribeService.cs" />
-    <Compile Include="Utils\EnumParser.cs" />
     <Compile Include="RssSubscriber\Models\Feed.cs" />
     <Compile Include="RssSubscriber\Subscriber.cs" />
     <Compile Include="RssSubscriber\Models\Summary.cs" />
     <Compile Include="RssSubscriber\Models\SummaryType.cs" />
     <Compile Include="Utils\FontManager.cs" />
-    <Compile Include="Utils\LogFileUtil.cs" />
-    <Compile Include="ViewModels\BlogEntryViewModel.cs" />
+    <Compile Include="Widgets\RemovableAutoCompleteTextView.cs" />
+    <Compile Include="Widgets\RemovableEditText.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -279,7 +274,6 @@
     <AndroidResource Include="Resources\layout\activity_test.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\layout\dialog_progress_custom.axml" />
     <AndroidResource Include="Resources\drawable-anydpi\ic_arrow_upward_black_36dp.xml" />
     <AndroidResource Include="Resources\drawable-anydpi\ic_code_black_48dp.xml" />
     <AndroidResource Include="Resources\drawable-anydpi\ic_event_note_black_48dp.xml" />
@@ -288,6 +282,12 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_message_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_settings_black_48dp.xml" />
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_settings_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_close_black_24dp.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_search_black_24dp.xml" />
+    <AndroidResource Include="Resources\layout\simple_progress_dialog.xml" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

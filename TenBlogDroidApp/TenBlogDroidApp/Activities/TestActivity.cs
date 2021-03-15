@@ -7,7 +7,7 @@ using TenBlogDroidApp.Utils;
 using Com.Devs.ReadMoreOptionLib;
 using Android.Text;
 using AndroidX.ConstraintLayout.Widget;
-using TenBlogDroidApp.Extensions;
+using Ten.Droid.App.Extensions;
 
 namespace TenBlogDroidApp.Activities
 {
@@ -15,7 +15,7 @@ namespace TenBlogDroidApp.Activities
     public class TestActivity : Activity
     {
         private ConstraintLayout _rootView;
-        private bool _expandState = false;
+        private bool _expandState;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -43,39 +43,51 @@ namespace TenBlogDroidApp.Activities
             };
 
             var tvAutoExpand = FindViewById<TextView>(Resource.Id.tv_auto_expand);
-            ReadMoreOption readMoreOption = new ReadMoreOption.Builder(this)
-                          .TextLength(20, ReadMoreOption.TypeCharacter)
-                          .MoreLabel("展开")
-                          .LessLabel("收起")
-                          .MoreLabelColor(Resources.GetColor(Resource.Color.colorAccent, null))
-                          .LessLabelColor(Resources.GetColor(Resource.Color.colorAccent, null))
-                          .LabelUnderLine(true)
-                          .ExpandAnimation(true)
-                          .Build();
-            readMoreOption.AddReadMoreTo(tvAutoExpand, Html.FromHtml(items[0], FromHtmlOptions.ModeCompact, null, null));
+            if (Resources != null)
+            {
+                var readMoreOption = new ReadMoreOption.Builder(this)
+                    .TextLength(20, ReadMoreOption.TypeCharacter)
+                    .MoreLabel("展开")
+                    .LessLabel("收起")
+                    .MoreLabelColor(Resources.GetColor(Resource.Color.colorAccent, null))
+                    .LessLabelColor(Resources.GetColor(Resource.Color.colorAccent, null))
+                    .LabelUnderLine(true)
+                    .ExpandAnimation(true)
+                    .Build();
+                readMoreOption.AddReadMoreTo(tvAutoExpand, Html.FromHtml(items[0], FromHtmlOptions.ModeCompact, null, null));
+            }
 
             var tvExpandSource = FindViewById<TextView>(Resource.Id.tv_expand_source);
             tvExpandSource.SetHtml(items[4]);
 
             var tvExpandAction = FindViewById<TextView>(Resource.Id.tv_expand_action);
-            tvExpandAction.Click += delegate
-            {
-                // 未展开
-                if (!_expandState)
+            if (tvExpandAction != null)
+                tvExpandAction.Click += delegate
                 {
-                    tvExpandSource.Ellipsize = null;
-                    tvExpandSource.SetSingleLine(false);
-                    tvExpandAction.SetText(Resource.String.fa_chevron_up);
-                }
-                else
-                {
-                    tvExpandSource.Ellipsize = TextUtils.TruncateAt.End;
-                    tvExpandSource.SetLines(2);
-                    tvExpandAction.SetText(Resource.String.fa_chevron_down);
-                }
+                    // 未展开
+                    if (!_expandState)
+                    {
+                        if (tvExpandSource != null)
+                        {
+                            tvExpandSource.Ellipsize = null;
+                            tvExpandSource.SetSingleLine(false);
+                        }
 
-                _expandState = !_expandState;
-            };
+                        tvExpandAction.SetText(Resource.String.fa_chevron_up);
+                    }
+                    else
+                    {
+                        if (tvExpandSource != null)
+                        {
+                            tvExpandSource.Ellipsize = TextUtils.TruncateAt.End;
+                            tvExpandSource.SetLines(2);
+                        }
+
+                        tvExpandAction.SetText(Resource.String.fa_chevron_down);
+                    }
+
+                    _expandState = !_expandState;
+                };
         }
     }
 }

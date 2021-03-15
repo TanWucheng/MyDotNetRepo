@@ -5,7 +5,7 @@ using AndroidX.Fragment.App;
 
 namespace TenBlogDroidApp.Fragments
 {
-    internal class SimpleProgressDialogFragment : DialogFragment
+    public class SimpleProgressDialogFragment : DialogFragment
     {
         private readonly string _strHint;
         private static SimpleProgressDialogFragment _progressDialogFragment;
@@ -26,7 +26,7 @@ namespace TenBlogDroidApp.Fragments
             Dialog.Window?.RequestFeature(WindowFeatures.NoTitle);
             _rootView = base.OnCreateView(inflater, container, savedInstanceState);
             if (_rootView != null) return _rootView;
-            _rootView = LayoutInflater.Inflate(Resource.Layout.dialog_progress_custom, null);
+            _rootView = LayoutInflater.Inflate(Resource.Layout.simple_progress_dialog, null);
             var textView = _rootView?.FindViewById<TextView>(Resource.Id.tv_dialog_progress_hint);
             if (textView != null)
             {

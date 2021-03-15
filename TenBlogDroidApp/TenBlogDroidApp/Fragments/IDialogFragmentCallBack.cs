@@ -1,6 +1,6 @@
 ﻿namespace TenBlogDroidApp.Fragments
 {
-    internal interface IDialogFragmentCallBack
+    public interface IDialogFragmentCallBack
     {
         void Show();
 

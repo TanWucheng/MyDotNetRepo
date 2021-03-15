@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<group android:checkableBehavior="single">
 		<item android:id="@+id/nav_share" android:icon="@drawable/ic_menu_share" android:title="分享" />
-		<item android:id="@+id/nav_blog_website" android:icon="@android:drawable/sym_contact_card" android:title="联系与反馈" />
+		<item android:id="@+id/nav_blog_website" android:icon="@drawable/ic_message_black_48dp" android:title="联系与反馈" />
 	</group>
 	<item android:title="工具">
 		<menu>
-			<item android:id="@+id/nav_settings" android:icon="@android:drawable/ic_dialog_email" android:title="设置" />
+			<item android:id="@+id/nav_settings" android:icon="@drawable/ic_settings_black_48dp" android:title="设置" />
 			<item android:id="@+id/nav_about" android:icon="@android:drawable/ic_dialog_info" android:title="关于" />
 		</menu>
 	</item>

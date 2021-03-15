@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/card_margin"
-    android:clickable="false"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:stateListAnimator="@drawable/selector_elevation"
     app:cardElevation="@dimen/dp_6"
     app:contentPadding="@dimen/dp_16"
     app:cardCornerRadius="@dimen/dp_8"
@@ -67,54 +69,6 @@
             app:layout_constraintStart_toEndOf="@id/iv_blog_picture"
             app:layout_constraintTop_toBottomOf="@id/tv_blog_abstract"
             app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <!--<TextView
-            android:id="@+id/tv_blog_published"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_10"
-            android:textColor="@color/colorAccent"
-            android:layout_marginTop="@dimen/dp_4"
-            app:layout_constraintStart_toEndOf="@id/tv_blog_publish_fa"
-            app:layout_constraintTop_toBottomOf="@id/tv_blog_abstract"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/tv_category_divider"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_10"
-            android:text="|"
-            android:textColor="@color/colorAccent"
-            android:layout_marginTop="@dimen/dp_4"
-            android:layout_marginStart="@dimen/dp_8"
-            app:layout_constraintStart_toEndOf="@id/tv_blog_published"
-            app:layout_constraintTop_toBottomOf="@id/tv_blog_abstract"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/tv_blog_category_fa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="&#xf114; "
-            android:textSize="@dimen/sp_10"
-            android:textColor="@color/colorAccent"
-            android:layout_marginStart="@dimen/dp_8"
-            android:layout_marginTop="@dimen/dp_4"
-            app:layout_constraintStart_toEndOf="@id/tv_category_divider"
-            app:layout_constraintTop_toBottomOf="@id/tv_blog_abstract"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/tv_blog_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_10"
-            android:textColor="@color/colorAccent"
-            android:layout_marginTop="@dimen/dp_4"
-            app:layout_constraintStart_toEndOf="@id/tv_blog_category_fa"
-            app:layout_constraintTop_toBottomOf="@id/tv_blog_abstract"
-            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
