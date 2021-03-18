@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Android.Content;
 using Java.IO;
-using Ten.Droid.App.Utils;
+using Ten.Droid.Lib.Utils;
 using TenBlogDroidApp.RssSubscriber.Models;
 using Console = System.Console;
 using Environment = Android.OS.Environment;

@@ -2,8 +2,8 @@
 {
     public interface IDialogFragmentCallBack
     {
-        void Show();
+        void DialogShow();
 
-        void Dismiss();
+        void DialogDismiss();
     }
 }

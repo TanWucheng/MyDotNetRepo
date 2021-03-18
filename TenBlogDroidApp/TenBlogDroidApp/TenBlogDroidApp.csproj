@@ -66,8 +66,8 @@
     <Reference Include="Mono.Android" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors" />
-    <Reference Include="Ten.Droid.App">
-      <HintPath>..\..\..\XamarinAndroidDemos\Ten.Droid.App\Ten.Droid.App\bin\Release\Ten.Droid.App.dll</HintPath>
+    <Reference Include="Ten.Droid.Lib">
+      <HintPath>..\..\..\DotNetForAndroidRepo\Ten.Droid.Lib\Ten.Droid.Lib\bin\Release\Ten.Droid.Lib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +79,8 @@
     <Compile Include="Fragments\SimpleProgressDialogFragment.cs" />
     <Compile Include="Listeners\FabScrollListener.cs" />
     <Compile Include="Listeners\IFabDisplayListener.cs" />
+    <Compile Include="Listeners\UmShareListener.cs" />
+    <Compile Include="MyApplication.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RssSubscriber\ImageGetter\HtmlImageGetter.cs" />
@@ -108,7 +110,7 @@
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
     <AndroidResource Include="Resources\values\styles.xml" />
-    <AndroidResource Include="Resources\layout\content_notification.xml">
+    <AndroidResource Include="Resources\layout\content_search.xml">
       <SubType>
       </SubType>
       <Generator>
@@ -162,55 +164,7 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\facebook.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
     <AndroidResource Include="Resources\drawable-anydpi\header.jpg">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\linkedin.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\pocket.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\qq.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\telegram.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\twitter.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\wechat.png">
-      <SubType>
-      </SubType>
-      <Generator>
-      </Generator>
-    </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\weibo.png">
       <SubType>
       </SubType>
       <Generator>
@@ -245,6 +199,9 @@
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
+    </PackageReference>
+    <PackageReference Include="UMeng.Android.Shares">
+      <Version>6.4.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Volley">
       <Version>1.1.1.1</Version>
@@ -288,6 +245,19 @@
     <AndroidResource Include="Resources\drawable-anydpi\ic_close_black_24dp.xml" />
     <AndroidResource Include="Resources\drawable-anydpi\ic_search_black_24dp.xml" />
     <AndroidResource Include="Resources\layout\simple_progress_dialog.xml" />
+    <AndroidResource Include="Resources\layout\social_share_bottom_dialog_content.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\linear_ripple_background.xml" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_wechat.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_wxcircle.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_sina.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_qq.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\ic_sys_share_tethering_primary_24dp.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_copyurl.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_sms.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\umeng_socialize_gmail.png" />
+    <AndroidResource Include="Resources\drawable-anydpi\welcome_background.jpg" />
+    <AndroidResource Include="Resources\xml\network_security_config.xml" />
+    <AndroidResource Include="Resources\xml\provider_paths.xml" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

@@ -14,4 +14,17 @@
 	<string name="fa_folder_o">&#xf114;</string>
 	<string name="fa_chevron_down">&#xf078;展开</string>
 	<string name="fa_chevron_up">&#xf077;收起</string>
+	<!--Social share-->
+	<string name="twitter">Twitter</string>
+	<string name="facebook">Facebook</string>
+	<string name="telegram">Telegram</string>
+	<string name="linkedin">LinkedIn</string>
+	<string name="wechat">微信</string>
+	<string name="wechat_moment">微信朋友圈</string>
+	<string name="weibo">微博</string>
+	<string name="qq">QQ</string>
+	<string name="sys_share">系统分享</string>
+	<string name="sms">短信</string>
+	<string name="email">邮件</string>
+	<string name="copy_url">复制链接</string>
 </resources>
