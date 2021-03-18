@@ -7,7 +7,7 @@ using TenBlogDroidApp.Utils;
 using Com.Devs.ReadMoreOptionLib;
 using Android.Text;
 using AndroidX.ConstraintLayout.Widget;
-using Ten.Droid.Lib.Extensions;
+using Ten.Droid.Library.Extensions;
 
 namespace TenBlogDroidApp.Activities
 {

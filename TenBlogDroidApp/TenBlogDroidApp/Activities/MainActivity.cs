@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
@@ -16,16 +14,12 @@ using AndroidX.AppCompat.App;
 using AndroidX.Core.View;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
-using Com.Umeng.Socialize;
-using Com.Umeng.Socialize.Bean;
-using Com.Umeng.Socialize.Media;
-using Google.Android.Material.BottomSheet;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Infideap.DrawerBehavior;
 using Plugin.Permissions;
-using Ten.Droid.Lib.Extensions;
-using Ten.Droid.Lib.RecyclerView.Adapters;
+using Ten.Droid.Library.Extensions;
+using Ten.Droid.Library.RecyclerView.Adapters;
 using TenBlogDroidApp.Adapters;
 using TenBlogDroidApp.Fragments;
 using TenBlogDroidApp.Listeners;
@@ -35,7 +29,6 @@ using TenBlogDroidApp.Widgets;
 using Xamarin.Essentials;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
-using Uri = Android.Net.Uri;
 
 namespace TenBlogDroidApp.Activities
 {
@@ -57,7 +50,7 @@ namespace TenBlogDroidApp.Activities
         private RecyclerView _searchResultRecyclerView;
         private SwipeRefreshLayout _swipeRefreshLayout;
         private Toolbar _toolbar;
-        private BottomSheetDialog _bottomSheetDialog;
+        private SocialShareBottomSheetDialog _bottomSheetDialog;
 
         public void DialogShow()
         {
@@ -90,16 +83,7 @@ namespace TenBlogDroidApp.Activities
                     {
                         if (_bottomSheetDialog == null)
                         {
-                            _bottomSheetDialog = new BottomSheetDialog(this);
-                            var contentView = LayoutInflater.From(this)
-                                ?.Inflate(Resource.Layout.social_share_bottom_dialog_content, null);
-
-                            InitBottomShareMenu(contentView);
-
-                            _bottomSheetDialog.Window?.AddFlags(WindowManagerFlags.TranslucentStatus); //←重点在这里
-                            _bottomSheetDialog.SetContentView(contentView!);
-                            _bottomSheetDialog.SetCancelable(true);
-                            _bottomSheetDialog.SetCanceledOnTouchOutside(true);
+                            _bottomSheetDialog = new SocialShareBottomSheetDialog(this);
                         }
 
                         _bottomSheetDialog.Show();
@@ -130,89 +114,6 @@ namespace TenBlogDroidApp.Activities
             InitSearchResultRecyclerView();
             InitSearchEditText();
             await RssSubscribeAsync();
-        }
-
-        private void InitBottomShareMenu(View contentView)
-        {
-            var sysShareMenu = contentView.FindViewById(Resource.Id.linear_sys_share);
-            if (sysShareMenu != null)
-                sysShareMenu.Click += delegate
-                {
-                    var intent = new Intent(Intent.ActionSend);
-                    intent.SetType("text/plain");
-                    intent.PutExtra(Intent.ExtraText, "内容");
-                    StartActivity(Intent.CreateChooser(intent, "分享到"));
-                    _bottomSheetDialog.Dismiss();
-                };
-
-            var copyUrlMenu = contentView.FindViewById(Resource.Id.linear_copy_url);
-            if (copyUrlMenu != null)
-                copyUrlMenu.Click += delegate
-                {
-                    if (GetSystemService(Context.ClipboardService) is not ClipboardManager manager) return;
-                    var data = ClipData.NewPlainText("shareUrl",
-                        $"");
-                    manager.PrimaryClip = data;
-                    ShowToast("链接已复制到剪贴板");
-                    _bottomSheetDialog.Dismiss();
-                };
-
-            var smsShareMenu = contentView.FindViewById(Resource.Id.linear_sms_share);
-            if (smsShareMenu != null)
-                smsShareMenu.Click += delegate
-                {
-                    var uri = Uri.Parse("smsto:");
-                    var intent = new Intent(Intent.ActionSendto, uri);
-                    intent.PutExtra("sms_body", "来自Ten's Blog的分享短信，欢迎访问的我的博客网站：https://tanwucheng.github.io");
-                    StartActivity(intent);
-                    _bottomSheetDialog.Dismiss();
-                };
-
-            var emailShareMenu = contentView.FindViewById(Resource.Id.linear_email_share);
-            if (emailShareMenu != null)
-                emailShareMenu.Click += delegate
-                {
-                    var intent = new Intent(Intent.ActionSend);
-                    intent.SetData(Uri.Parse("mailto:example@example.com"));
-                    intent.PutExtra(Intent.ExtraSubject, "欢迎访问我的博客网站");
-                    intent.PutExtra(Intent.ExtraText, "<h5>来自Ten's Blog的分享邮件</h5><p><a href='https://tanwucheng.github.io'>点此</a>访问博客网站</p>");
-                    StartActivity(Intent.CreateChooser(intent, "选择邮箱客户端"));
-                    _bottomSheetDialog.Dismiss();
-                };
-
-            var weChatMenu = contentView.FindViewById(Resource.Id.linear_wechat_share);
-            if (weChatMenu != null)
-                weChatMenu.Click += delegate
-                {
-                    var image = new UMImage(this, Resource.Drawable.welcome_background); //资源文件
-                    var thumb = new UMImage(this, Resource.Mipmap.ic_launcher_round); //缩略图
-                    image.SetThumb(thumb);
-                    new ShareAction(this)
-                        .SetPlatform(SHARE_MEDIA.Weixin)
-                        .WithText("分享测试")
-                        .WithMedia(image)
-                        .SetCallback(new UmShareListener(this))
-                        .Share();
-                };
-
-            var weChatCircleMenu = contentView.FindViewById(Resource.Id.linear_wechat_circle);
-            if (weChatCircleMenu != null)
-                weChatCircleMenu.Click += delegate
-                {
-                    var thumb = new UMImage(this, Resource.Mipmap.ic_launcher_round); //缩略图
-                    var web = new UMWeb("https://tanwucheng.github.io")
-                    {
-                        Title = "Ten's Blog",
-                        Description = "记录分享一些心得-https://tanwucheng.github.io"
-                    };
-                    web.SetThumb(thumb);
-                    new ShareAction(this)
-                        .SetPlatform(SHARE_MEDIA.WeixinCircle)
-                        .WithText("来自Ten's Blog的分享")
-                        .WithMedia(web)
-                        .SetCallback(new UmShareListener(this))
-                        .Share();
-                };
         }
 
         /// <summary>
