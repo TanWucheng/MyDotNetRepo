@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<string name="app_name">Ten Blog</string>
-	<string name="app_name_cn">Ten的博客安卓客户端</string>
+	<string name="app_name_cn">Ten Blog安卓客户端</string>
 	<string name="contact_email">tanwucheng@outlook.com</string>
 	<string name="blog_website">tanwucheng.github.io</string>
 	<string name="action_settings">Settings</string>

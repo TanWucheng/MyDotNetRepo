@@ -92,6 +92,7 @@
     <Compile Include="RssSubscriber\Subscriber.cs" />
     <Compile Include="RssSubscriber\Models\Summary.cs" />
     <Compile Include="RssSubscriber\Models\SummaryType.cs" />
+    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\FontManager.cs" />
     <Compile Include="Widgets\RemovableAutoCompleteTextView.cs" />
     <Compile Include="Widgets\RemovableEditText.cs" />
@@ -188,44 +189,64 @@
       </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\content_social_shara_sheet.xml">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_sys_share_tethering_primary_24dp.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_copyurl.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_gmail.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_qq.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_share_web.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_sina.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_sms.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_wechat.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\umeng_socialize_wxcircle.png">
-      <SubType></SubType>
-      <Generator></Generator>
+      <SubType>
+      </SubType>
+      <Generator>
+      </Generator>
     </AndroidResource>
   </ItemGroup>
   <ItemGroup />
@@ -257,9 +278,11 @@
     <PackageReference Include="Karamunting.Android.Devsideal.ReadMoreOption">
       <Version>1.0.2</Version>
     </PackageReference>
+    <PackageReference Include="XamarinLibrary.Xamarin.Android.Sina.WeiBo.Sdk">
+      <Version>4.4.3</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".gitignore" />
     <AndroidResource Include="Resources\values\attrs.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>

@@ -1,17 +1,42 @@
 ﻿using Android.Content;
+using Android.Content.Res;
+using Android.Graphics;
+using Android.Provider;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
+using AndroidX.AppCompat.App;
+using Com.Sina.Weibo.Sdk;
+using Com.Sina.Weibo.Sdk.Api;
+using Com.Sina.Weibo.Sdk.Auth;
+using Com.Sina.Weibo.Sdk.Share;
 using Google.Android.Material.BottomSheet;
 using Ten.Droid.Library.Utils;
+using TenBlogDroidApp.Utils;
 using Uri = Android.Net.Uri;
 
 namespace TenBlogDroidApp.Widgets
 {
-    public class SocialShareBottomSheetDialog : BottomSheetDialog
+    public class SocialShareBottomSheetDialog : BottomSheetDialog, IWbShareCallback
     {
-        public SocialShareBottomSheetDialog(Context context) : base(context)
+        private const string Tag = nameof(SocialShareBottomSheetDialog);
+
+        private WbShareHandler _shareHandler;
+        private readonly AppCompatActivity _activity;
+
+        public SocialShareBottomSheetDialog(AppCompatActivity activity) : base(activity)
         {
-            Init(context);
+            _activity = activity;
+            Init(activity);
+            InitWeiboSdk();
+        }
+
+        private void InitWeiboSdk()
+        {
+            // 创建微博API接口类对象
+            WbSdk.Install(Context, new AuthInfo(Context, Constants.SinaAppKey, Constants.SinaRedirectUrl, string.Empty));
+            _shareHandler = new WbShareHandler(_activity);
+            _shareHandler.RegisterApp();
         }
 
         /// <summary>
@@ -20,9 +45,24 @@ namespace TenBlogDroidApp.Widgets
         /// <param name="context">Activity上下文</param>
         /// <param name="message">消息</param>
         /// <param name="duration">时长</param>
-        private void ShowToast(Context context, string message, ToastLength duration = ToastLength.Short)
+        private static void ShowToast(Context context, string message, ToastLength duration = ToastLength.Short)
         {
             Toast.MakeText(context, message, duration)?.Show();
+        }
+
+        public void OnWbShareCancel()
+        {
+            Log.Debug(Tag, "微博分享取消");
+        }
+
+        public void OnWbShareFail()
+        {
+            Log.Debug(Tag, "微博分享取消");
+        }
+
+        public void OnWbShareSuccess()
+        {
+            Log.Debug(Tag, "微博分享成功");
         }
 
         private void Init(Context context)
@@ -46,7 +86,8 @@ namespace TenBlogDroidApp.Widgets
                 {
                     var intent = new Intent(Intent.ActionSend);
                     intent.SetType("text/plain");
-                    intent.PutExtra(Intent.ExtraText, "内容");
+                    intent.PutExtra(Intent.ExtraTitle, "分享博客网址");
+                    intent.PutExtra(Intent.ExtraText, "https://tanwucheng.github.io");
                     context.StartActivity(Intent.CreateChooser(intent, "分享到"));
                     Dismiss();
                 };
@@ -117,6 +158,54 @@ namespace TenBlogDroidApp.Widgets
                     Dismiss();
                 };
             }
+
+            var weiboMenu = contentView.FindViewById(Resource.Id.linear_weibo_share);
+            if (weiboMenu != null)
+            {
+                if (PlatformUtils.IsInstallApp(context, PlatformUtils.WeiboPackage))
+                {
+                    weiboMenu.Click += delegate
+                    {
+                        WeiboMultiMessage weiboMessage = new() { ImageObject = GetImageObj(_activity) };
+                        if (_activity.Resources != null)
+                            weiboMessage.TextObject = GetTextObj(
+                                _activity.Resources.GetString(Resource.String.app_name_cn)
+                                , "来自Ten's Blog的分享");
+                        _shareHandler.ShareMessage(weiboMessage, false);
+                    };
+                }
+                else
+                {
+                    ShowToast(context, "您需要安装微博客户端");
+                }
+            }
+        }
+
+        /// <summary>
+        ///  创建文本消息对象
+        /// </summary>
+        /// <returns></returns>
+        private TextObject GetTextObj(string title, string text)
+        {
+            var textObject = new TextObject
+            {
+                Text = text,
+                Title = title,
+                ActionUrl = "https://tanwucheng.github.io"
+            };
+            return textObject;
+        }
+
+        /// <summary>
+        /// 创建图片消息对象
+        /// </summary>
+        /// <returns></returns>
+        private ImageObject GetImageObj(Context context)
+        {
+            var imageObject = new ImageObject();
+            var bitmap = BitmapFactory.DecodeResource(context.Resources, Resource.Mipmap.ic_launcher_round);
+            imageObject.SetImageObject(bitmap);
+            return imageObject;
         }
     }
 }
