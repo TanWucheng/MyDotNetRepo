@@ -87,7 +87,7 @@ namespace TenBlogDroidApp.RssSubscriber
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                LogFileUtil.NewInstance(context).SaveLogToFile($"Subscriber.Subscribe() Exception: {e.Message}");
                 throw;
             }
         }
@@ -99,8 +99,8 @@ namespace TenBlogDroidApp.RssSubscriber
         /// <returns></returns>
         private static async Task<string> ReadCacheRssXmlAsync(Context context)
         {
-            var sdCardPath = context.GetExternalFilesDir(Environment.DirectoryPictures)?.AbsolutePath;
-            var absFilePath = System.IO.Path.Combine(sdCardPath ?? string.Empty, RssXmlFileName);
+            var appDocPath = context.GetExternalFilesDir(Environment.DirectoryDocuments)?.AbsolutePath;
+            var absFilePath = System.IO.Path.Combine(appDocPath ?? string.Empty, RssXmlFileName);
             try
             {
                 var file = new File(absFilePath);

@@ -52,7 +52,7 @@ namespace TenBlogDroidApp.RssSubscriber.ImageGetter
 
             var requestQueue = Volley.Toolbox.Volley.NewRequestQueue(_context);
             var imageRequest = new ImageRequest(url, new VolleyResponseListener(GetFileName(url), this)
-                , 0, 0, ImageView.ScaleType.Center, Bitmap.Config.Rgb565, new VolleyResponseErrorListener());
+                , 0, 0, ImageView.ScaleType.Center, Bitmap.Config.Rgb565, new VolleyResponseErrorListener(_context));
             requestQueue.Add(imageRequest);
         }
 

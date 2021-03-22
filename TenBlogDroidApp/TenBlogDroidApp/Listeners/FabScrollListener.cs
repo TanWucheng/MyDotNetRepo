@@ -1,5 +1,4 @@
-﻿using Android.Views;
-using AndroidX.RecyclerView.Widget;
+﻿using AndroidX.RecyclerView.Widget;
 
 namespace TenBlogDroidApp.Listeners
 {

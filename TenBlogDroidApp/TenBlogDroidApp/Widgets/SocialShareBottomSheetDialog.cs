@@ -1,10 +1,8 @@
-﻿using Android.Content;
-using Android.Content.Res;
+﻿using System.Threading.Tasks;
+using Android.Content;
 using Android.Graphics;
-using Android.Provider;
 using Android.Util;
 using Android.Views;
-using Android.Widget;
 using AndroidX.AppCompat.App;
 using Com.Sina.Weibo.Sdk;
 using Com.Sina.Weibo.Sdk.Api;
@@ -37,17 +35,6 @@ namespace TenBlogDroidApp.Widgets
             WbSdk.Install(Context, new AuthInfo(Context, Constants.SinaAppKey, Constants.SinaRedirectUrl, string.Empty));
             _shareHandler = new WbShareHandler(_activity);
             _shareHandler.RegisterApp();
-        }
-
-        /// <summary>
-        ///     展示Toast
-        /// </summary>
-        /// <param name="context">Activity上下文</param>
-        /// <param name="message">消息</param>
-        /// <param name="duration">时长</param>
-        private static void ShowToast(Context context, string message, ToastLength duration = ToastLength.Short)
-        {
-            Toast.MakeText(context, message, duration)?.Show();
         }
 
         public void OnWbShareCancel()
@@ -102,7 +89,8 @@ namespace TenBlogDroidApp.Widgets
                     var data = ClipData.NewPlainText("shareUrl",
                         "https://tanwucheng.github.io");
                     manager.PrimaryClip = data;
-                    ShowToast(context, "链接已复制到剪贴板");
+                    SnackbarUtil.Show(_activity, copyUrlMenu, "链接已复制到剪贴板");
+
                     Dismiss();
                 };
             }
@@ -116,6 +104,7 @@ namespace TenBlogDroidApp.Widgets
                     var intent = new Intent(Intent.ActionSendto, uri);
                     intent.PutExtra("sms_body", "来自Ten's Blog的分享短信，欢迎访问的我的博客网站：https://tanwucheng.github.io");
                     context.StartActivity(intent);
+
                     Dismiss();
                 };
             }
@@ -130,6 +119,7 @@ namespace TenBlogDroidApp.Widgets
                     intent.PutExtra(Intent.ExtraSubject, "欢迎访问我的博客网站");
                     intent.PutExtra(Intent.ExtraText, "<h5>来自Ten's Blog的分享邮件</h5><p><a href='https://tanwucheng.github.io'>点此</a>访问博客网站</p>");
                     context.StartActivity(Intent.CreateChooser(intent, "选择邮箱客户端"));
+
                     Dismiss();
                 };
             }
@@ -139,45 +129,63 @@ namespace TenBlogDroidApp.Widgets
             {
                 weChatMenu.Click += delegate
                 {
-                    if (PlatformUtils.IsInstallApp(context, PlatformUtils.WeChatPackage))
+                    if (PlatformUtil.IsInstallApp(context, PlatformUtil.WeChatPackage))
                     {
                         Intent intent = new();
-                        ComponentName cop = new(PlatformUtils.WeChatPackage, "com.tencent.mm.ui.tools.ShareImgUI");
+                        ComponentName cop = new(PlatformUtil.WeChatPackage, "com.tencent.mm.ui.tools.ShareImgUI");
                         intent.SetComponent(cop);
                         intent.SetAction(Intent.ActionSend);
                         intent.PutExtra("android.intent.extra.TEXT", "https://tanwucheng.github.io");
                         intent.PutExtra("Kdescription", "Ten's Blog网站地址");
                         intent.SetFlags(ActivityFlags.NewTask);
                         context.StartActivity(intent);
+
+                        Dismiss();
                     }
                     else
                     {
-                        ShowToast(context, "您需要安装微信客户端");
+                        SnackbarUtil.Show(_activity, contentView, "您需要安装微信客户端");
                     }
-
-                    Dismiss();
                 };
             }
 
             var weiboMenu = contentView.FindViewById(Resource.Id.linear_weibo_share);
             if (weiboMenu != null)
             {
-                if (PlatformUtils.IsInstallApp(context, PlatformUtils.WeiboPackage))
-                {
-                    weiboMenu.Click += delegate
-                    {
-                        WeiboMultiMessage weiboMessage = new() { ImageObject = GetImageObj(_activity) };
-                        if (_activity.Resources != null)
-                            weiboMessage.TextObject = GetTextObj(
-                                _activity.Resources.GetString(Resource.String.app_name_cn)
-                                , "来自Ten's Blog的分享");
-                        _shareHandler.ShareMessage(weiboMessage, false);
-                    };
-                }
-                else
-                {
-                    ShowToast(context, "您需要安装微博客户端");
-                }
+                weiboMenu.Click += delegate
+                 {
+                     if (PlatformUtil.IsInstallApp(context, PlatformUtil.WeiboPackage))
+                     {
+                         WeiboMultiMessage weiboMessage = new() { ImageObject = GetImageObj(_activity) };
+                         if (_activity.Resources != null)
+                             weiboMessage.TextObject = GetTextObj(_activity.Resources.GetString(Resource.String.app_name_cn), "来自Ten's Blog的分享");
+                         _shareHandler.ShareMessage(weiboMessage, false);
+
+                         Dismiss();
+                     }
+                     else
+                     {
+                         SnackbarUtil.Show(_activity, contentView, "您需要安装微博客户端");
+                     }
+                 };
+            }
+
+            var qqMenu = contentView.FindViewById(Resource.Id.linear_qq_share);
+            if (qqMenu != null)
+            {
+                qqMenu.Click += async delegate
+                 {
+                     if (PlatformUtil.IsInstallApp(context, PlatformUtil.QqPackage))
+                     {
+                         SnackbarUtil.Show(_activity, contentView, "稍后版本将实现该功能");
+                         await Task.Delay(2000);
+                         Dismiss();
+                     }
+                     else
+                     {
+                         SnackbarUtil.Show(_activity, contentView, "您需要QQ客户端");
+                     }
+                 };
             }
         }
 

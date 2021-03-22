@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
 using Android.OS;
@@ -17,18 +18,22 @@ using AndroidX.SwipeRefreshLayout.Widget;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Navigation;
 using Infideap.DrawerBehavior;
+using Java.IO;
 using Plugin.Permissions;
 using Ten.Droid.Library.Extensions;
 using Ten.Droid.Library.RecyclerView.Adapters;
+using Ten.Droid.Library.Utils;
 using TenBlogDroidApp.Adapters;
 using TenBlogDroidApp.Fragments;
 using TenBlogDroidApp.Listeners;
 using TenBlogDroidApp.RssSubscriber.Models;
 using TenBlogDroidApp.Services;
+using TenBlogDroidApp.Utils;
 using TenBlogDroidApp.Widgets;
 using Xamarin.Essentials;
 using PermissionStatus = Plugin.Permissions.Abstractions.PermissionStatus;
 using Toolbar = AndroidX.AppCompat.Widget.Toolbar;
+using Uri = Android.Net.Uri;
 
 namespace TenBlogDroidApp.Activities
 {
@@ -89,11 +94,32 @@ namespace TenBlogDroidApp.Activities
                         _bottomSheetDialog.Show();
                         break;
                     }
+                case Resource.Id.nav_contact_feedback:
+                    {
+                        Intent intent = new(Intent.ActionSend);
+                        //intent.AddFlags(ActivityFlags.GrantReadUriPermission);
+                        intent.SetData(Uri.Parse("mailto:tanwucheng@outlook.com"));
+                        intent.PutExtra(Intent.ExtraSubject, "示例标题:运行Bug日志反馈");
+                        var appDocPath = FilesDir?.AbsolutePath;
+                        var absFilePath = System.IO.Path.Combine(appDocPath ?? string.Empty, $"applog_{DateTime.Now:yyyyMMdd}.log");
+                        var logUri = AndroidX.Core.Content.FileProvider.GetUriForFile(this, PackageName + ".fileprovider", new File(absFilePath));
+                        //GrantUriPermission("com.microsoft.office.outlook", logUri, ActivityFlags.GrantReadUriPermission);
+                        intent.PutExtra(Intent.ExtraText, $"<h2>App运行错误日志反馈</h2><p>注：邮件附件默认添加的最新一份App运行错误日志，如果您有其他疑问或者建议，请在正文里补充。</p><p>{DateTime.Now.ToLongDateString()} {DateTime.Now.ToLongTimeString()}</p>");
+                        intent.PutExtra(Intent.ExtraStream, logUri);
+                        StartActivityForResult(intent, RequestCodes.SendEmail);
+                        break;
+                    }
             }
             menuItem.SetChecked(false);
             _drawer?.CloseDrawer(GravityCompat.Start);
 
             return true;
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+            LogFileUtil.NewInstance(this).SaveLogToFile("开发日志：Ten's Blog安卓客户端OnStart()");
         }
 
         protected override async void OnCreate(Bundle savedInstanceState)
@@ -117,16 +143,6 @@ namespace TenBlogDroidApp.Activities
         }
 
         /// <summary>
-        ///     展示Toast
-        /// </summary>
-        /// <param name="message">消息</param>
-        /// <param name="duration">时长</param>
-        private void ShowToast(string message, ToastLength duration = ToastLength.Short)
-        {
-            Toast.MakeText(this, message, duration)?.Show();
-        }
-
-        /// <summary>
         ///     应用请求系统权限
         /// </summary>
         private async void RequestPermissionAsync()
@@ -139,7 +155,7 @@ namespace TenBlogDroidApp.Activities
                     if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Plugin.Permissions
                         .Abstractions.Permission.Storage))
                     {
-                        ShowToast("应用程序需要授予存储权限");
+                        SnackbarUtil.Show(this, Window.DecorView, "应用程序需要授予存储权限");
                     }
 
                     status = await CrossPermissions.Current.RequestPermissionAsync<StoragePermission>();
@@ -151,12 +167,14 @@ namespace TenBlogDroidApp.Activities
                 }
                 else if (status != PermissionStatus.Unknown)
                 {
-                    ShowToast("您已拒绝授予存储权限");
+                    SnackbarUtil.Show(this, Window.DecorView, "您已拒绝授予存储权限");
                 }
             }
             catch (Exception ex)
             {
-                ShowToast("请求授予存储权限发生错误:" + ex.Message, ToastLength.Long);
+                var message = $"请求授予存储权限发生错误: {ex.Message}";
+                SnackbarUtil.Show(this, Window.DecorView, message);
+                LogFileUtil.NewInstance(this).SaveLogToFile(message);
             }
         }
 

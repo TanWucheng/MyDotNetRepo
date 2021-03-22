@@ -97,6 +97,8 @@
     <Compile Include="Widgets\RemovableAutoCompleteTextView.cs" />
     <Compile Include="Widgets\RemovableEditText.cs" />
     <Compile Include="Widgets\SocialShareBottomSheetDialog.cs" />
+    <Compile Include="Utils\SnackbarUtil.cs" />
+    <Compile Include="Utils\RequestCodes.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
