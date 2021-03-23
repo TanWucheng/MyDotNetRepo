@@ -99,6 +99,7 @@
     <Compile Include="Widgets\SocialShareBottomSheetDialog.cs" />
     <Compile Include="Utils\SnackbarUtil.cs" />
     <Compile Include="Utils\RequestCodes.cs" />
+    <Compile Include="Activities\ContactFeedbackActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -118,7 +119,7 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\ic_notifications_none_white_24dp.xml">
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_notifications_none_white_24dp.xml">
       <SubType>
       </SubType>
       <Generator>
@@ -166,13 +167,13 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\header.jpg">
+    <AndroidResource Include="Resources\drawable-xxxhdpi\header.jpg">
       <SubType>
       </SubType>
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\selector_elevation.xml">
+    <AndroidResource Include="Resources\drawable-xxxhdpi\selector_elevation.xml">
       <SubType>
       </SubType>
       <Generator>
@@ -184,7 +185,7 @@
       <Generator>
       </Generator>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\landscape_1.jpg">
+    <AndroidResource Include="Resources\drawable-xxxhdpi\landscape_1.jpg">
       <SubType>
       </SubType>
       <Generator>
@@ -250,6 +251,18 @@
       <Generator>
       </Generator>
     </AndroidResource>
+    <AndroidResource Include="Resources\layout\activity_contact_feedback.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\toolbar_include.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
+    <AndroidResource Include="Resources\color\fab_ripple.xml">
+      <SubType></SubType>
+      <Generator></Generator>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -292,27 +305,30 @@
     <AndroidResource Include="Resources\layout\activity_test.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
-    <AndroidResource Include="Resources\drawable-anydpi\ic_arrow_upward_black_36dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_code_black_48dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_event_note_black_48dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_event_note_teal_500_48dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_code_teal_500_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_arrow_upward_black_36dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_code_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_event_note_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_event_note_teal_500_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_code_teal_500_48dp.xml" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
     <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_message_black_48dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_settings_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_message_black_48dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_settings_black_48dp.xml" />
     <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_settings_black_48dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_close_black_24dp.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\ic_search_black_24dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_close_black_24dp.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_search_black_24dp.xml" />
     <AndroidResource Include="Resources\layout\simple_progress_dialog.xml" />
-    <AndroidResource Include="Resources\drawable-anydpi\linear_ripple_background.xml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\linear_ripple_background.xml" />
     <AndroidResource Include="Resources\xml\network_security_config.xml" />
     <AndroidResource Include="Resources\xml\provider_paths.xml" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\fonts\fontawesome-webfont.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\color\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

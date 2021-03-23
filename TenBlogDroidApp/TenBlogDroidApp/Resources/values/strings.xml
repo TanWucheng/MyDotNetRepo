@@ -2,6 +2,9 @@
 <resources>
 	<string name="app_name">Ten Blog</string>
 	<string name="app_name_cn">Ten Blog安卓客户端</string>
+	<string name="contact_feedback">联系和反馈</string>
+	<string name="contact">联系作者</string>
+	<string name="feedback">反馈错误</string>
 	<string name="contact_email">tanwucheng@outlook.com</string>
 	<string name="blog_website">tanwucheng.github.io</string>
 	<string name="action_settings">Settings</string>

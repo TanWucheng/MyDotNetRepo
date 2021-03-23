@@ -32,7 +32,7 @@ namespace TenBlogDroidApp.Widgets
         private void InitWeiboSdk()
         {
             // 创建微博API接口类对象
-            WbSdk.Install(Context, new AuthInfo(Context, Constants.SinaAppKey, Constants.SinaRedirectUrl, string.Empty));
+            WbSdk.Install(Context, new AuthInfo(Context, Constants.SinaAppKey, Constants.BlogUrl, string.Empty));
             _shareHandler = new WbShareHandler(_activity);
             _shareHandler.RegisterApp();
         }
@@ -58,7 +58,7 @@ namespace TenBlogDroidApp.Widgets
                                 ?.Inflate(Resource.Layout.content_social_shara_sheet, null);
             InitBottomShareMenu(context, contentView);
 
-            Window?.AddFlags(WindowManagerFlags.TranslucentStatus); //←重点在这里
+            Window?.AddFlags(WindowManagerFlags.TranslucentStatus);
             SetContentView(contentView!);
             SetCancelable(true);
             SetCanceledOnTouchOutside(true);
@@ -74,7 +74,7 @@ namespace TenBlogDroidApp.Widgets
                     var intent = new Intent(Intent.ActionSend);
                     intent.SetType("text/plain");
                     intent.PutExtra(Intent.ExtraTitle, "分享博客网址");
-                    intent.PutExtra(Intent.ExtraText, "https://tanwucheng.github.io");
+                    intent.PutExtra(Intent.ExtraText, Constants.BlogUrl);
                     context.StartActivity(Intent.CreateChooser(intent, "分享到"));
                     Dismiss();
                 };
@@ -102,7 +102,7 @@ namespace TenBlogDroidApp.Widgets
                 {
                     var uri = Uri.Parse("smsto:");
                     var intent = new Intent(Intent.ActionSendto, uri);
-                    intent.PutExtra("sms_body", "来自Ten's Blog的分享短信，欢迎访问的我的博客网站：https://tanwucheng.github.io");
+                    intent.PutExtra("sms_body", $"来自Ten's Blog的分享短信，欢迎访问的我的博客网站：{Constants.BlogUrl}");
                     context.StartActivity(intent);
 
                     Dismiss();
@@ -117,7 +117,7 @@ namespace TenBlogDroidApp.Widgets
                     var intent = new Intent(Intent.ActionSend);
                     intent.SetData(Uri.Parse("mailto:example@example.com"));
                     intent.PutExtra(Intent.ExtraSubject, "欢迎访问我的博客网站");
-                    intent.PutExtra(Intent.ExtraText, "<h5>来自Ten's Blog的分享邮件</h5><p><a href='https://tanwucheng.github.io'>点此</a>访问博客网站</p>");
+                    intent.PutExtra(Intent.ExtraText, $"<h5>来自Ten's Blog的分享邮件</h5><p><a href='{Constants.BlogUrl}'>点此</a>访问博客网站</p>");
                     context.StartActivity(Intent.CreateChooser(intent, "选择邮箱客户端"));
 
                     Dismiss();
@@ -199,7 +199,7 @@ namespace TenBlogDroidApp.Widgets
             {
                 Text = text,
                 Title = title,
-                ActionUrl = "https://tanwucheng.github.io"
+                ActionUrl = Constants.BlogUrl
             };
             return textObject;
         }

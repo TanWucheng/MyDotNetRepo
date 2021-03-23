@@ -9,11 +9,18 @@ namespace ConsoleDemo
     {
         private static void Main(string[] args)
         {
-            var str = "12345678";
-            Console.WriteLine(str.Substring(0, 6));
+            var str = "123";
+            var value = ParseInt(str);
+            PrintLine(value ?? int.MinValue);
 
             PrintLine("Press any key to continue...");
             Console.ReadKey(true);
+        }
+
+        private static int? ParseInt(string origin)
+        {
+            var b = int.TryParse(origin, out var value);
+            return b ? value : null;
         }
 
         /// <summary>
