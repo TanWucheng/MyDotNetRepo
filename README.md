@@ -1,11 +1,11 @@
 # 个人.NET Core练习示例仓库
 
-欢迎下载[我的.Net core示例](https://github.com/TanWucheng/DotNetCoreDemos)仓库
+欢迎下载[我的.Net core示例](https://github.com/TanWucheng/MyDotNetRepo.git)仓库
 
 **克隆**
 
 ```bash
-git clone https://github.com/TanWucheng/DotNetCoreDemos.git
+git clone https://github.com/TanWucheng/MyDotNetRepo.git
 ```
 
 **Restore**
